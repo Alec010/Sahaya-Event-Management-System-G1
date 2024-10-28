@@ -1,0 +1,18 @@
+{
+  "dependencies": {
+    "daisyui": "^4.12.13",
+    "event_management_system": "file:",
+    "tailwindcss": "^3.4.14"
+  },
+  "name": "event_management_system",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build:css": "npx tailwindcss -i ./static/users/styles.css -o ./static/css/styles.css --watch"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": ""
+}
