@@ -28,7 +28,8 @@
             <div class="flex flex-col p-10 bg-white md:w-1/2">
                 <nav class="tabs mb-5 flex gap-4">
                     <button class="tab tab-bordered font-bold tab-active text-[#16423C]">Sign Up</button>
-                    <button class="tab tab-bordered font-bold text-gray-500">Login</button>
+                    <a href="{% url 'login' %}" class="tab tab-bordered font-bold text-gray-500">Log in</a>
+
                 </nav>
                 <form method="post" action="{% url 'signup' %}">
                     {% csrf_token %}
