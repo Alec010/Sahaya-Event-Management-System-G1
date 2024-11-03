@@ -25,10 +25,10 @@
             <!-- Left Section (Form) -->
             <div class="flex flex-col p-10 bg-white md:w-1/2">
                 <nav class="tabs mb-5 flex gap-4">
-                    <a href="{% url 'signup' %}" class="tab tab-bordered font-bold text-gray-500">Sign Up</a>
+                    <a href="{% url 'users:signup' %}" class="tab tab-bordered font-bold text-gray-500">Sign Up</a>
                     <button class="tab tab-bordered font-bold tab-active text-[#16423C]">Login</button>
                 </nav>
-                <form method="post" action="{% url 'login' %}">
+                <form method="post" action="{% url 'users:login' %}">
                     {% csrf_token %}
                     {{ form.non_field_errors }}
                     <div class="mb-4">

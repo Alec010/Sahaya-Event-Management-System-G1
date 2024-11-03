@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Account</title>
+    <link href="https://cdn.tailwindcss.com" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@latest/dist/full.css" rel="stylesheet">
+    <link href="{% static 'css/styles.css' %}" rel="stylesheet">
+</head>
+<body class="bg-[#E9EFEC] font-ABeeZee min-h-screen flex flex-col items-center p-6">
+
+    <!-- Account Details Container -->
+    <div class="bg-white shadow-lg rounded-lg w-full max-w-2xl p-8">
+        <h2 class="text-3xl font-bold mb-6 text-center">Account Details</h2>
+
+        <!-- Display User Information -->
+        <div class="mb-6">
+            <p><span class="font-semibold">Username:</span> {{ user.username }}</p>
+            <p><span class="font-semibold">Email:</span> {{ user.email }}</p>
+            <p><span class="font-semibold">First Name:</span> {{ user.first_name }}</p>
+            <p><span class="font-semibold">Last Name:</span> {{ user.last_name }}</p>
+            <p><span class="font-semibold">Contact Number:</span> {{ user.contact_number }}</p>
+            <p><span class="font-semibold">Date Joined:</span> {{ user.date_joined|date:"F j, Y" }}</p>
+        </div>
+
+        <!-- Buttons for Edit, Delete, and Dashboard -->
+        <div class="flex justify-center gap-4 mt-8">
+            <!-- Trigger to open modal -->
+            <label for="editModal" class="btn btn-primary w-32">Edit</label>
+            <button onclick="confirmDelete()" class="btn btn-error w-32">Delete</button>
+            <a href="{% url 'users:dashboard' %}" class="btn btn-secondary w-32">Return to Dashboard</a>
+        </div>
+    </div>
+
+    <!-- Edit Account Modal -->
+    <input type="checkbox" id="editModal" class="modal-toggle">
+    <div class="modal">
+        <div class="modal-box bg-white max-w-lg">
+            <h3 class="font-bold text-2xl mb-4">Edit Account Details</h3>
+            <form method="post" action="{% url 'users:edit_account' %}">
+                {% csrf_token %}
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700">First Name</label>
+                    <input type="text" name="first_name" value="{{ user.first_name }}" class="input input-bordered w-full" required>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700">Last Name</label>
+                    <input type="text" name="last_name" value="{{ user.last_name }}" class="input input-bordered w-full" required>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700">Email</label>
+                    <input type="email" name="email" value="{{ user.email }}" class="input input-bordered w-full" required>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700">Contact Number</label>
+                    <input type="text" name="contact_number" value="{{ user.contact_number }}" class="input input-bordered w-full">
+                </div>
+                <!-- Password Update -->
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700">New Password</label>
+                    <input type="password" name="new_password" class="input input-bordered w-full">
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700">Confirm New Password</label>
+                    <input type="password" name="confirm_password" class="input input-bordered w-full">
+                </div>
+                <div class="modal-action">
+                    <label for="editModal" class="btn btn-secondary">Cancel</label>
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Success Message Modal -->
+    {% if messages %}
+        {% for message in messages %}
+            {% if message.tags == 'success' and message.message == "Account successfully edited." %}
+                <input type="checkbox" id="successModal" class="modal-toggle" checked>
+                <div class="modal">
+                    <div class="modal-box bg-white max-w-md text-center">
+                        <h3 class="font-bold text-lg">Account Successfully Edited</h3>
+                        <p>Your account details have been updated.</p>
+                        <div class="modal-action justify-center">
+                            <label for="successModal" class="btn btn-primary">OK</label>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+
+    <!-- JavaScript for Delete Confirmation -->
+    <script>
+        function confirmDelete() {
+            if (confirm("Are you sure you want to delete your account? This action cannot be undone.")) {
+                window.location.href = "{% url 'users:delete_account' %}";
+            }
+        }
+    </script>
+</body>
+</html>

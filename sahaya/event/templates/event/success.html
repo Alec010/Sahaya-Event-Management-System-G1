@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Created Successfully</title>
+    <link href="https://cdn.tailwindcss.com" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@latest/dist/full.css" rel="stylesheet">
+</head>
+<body class="bg-[#E9EFEC] font-ABeeZee min-h-screen flex flex-col items-center justify-center">
+    <div class="text-center p-6 bg-white rounded shadow-lg max-w-md w-full">
+        <h1 class="text-2xl font-bold mb-4">Event Created Successfully!</h1>
+        <p class="text-lg">The event "<strong>{{ event_name }}</strong>" was successfully created.</p>
+        <a href="{% url 'users:dashboard' %}" class="btn btn-primary mt-6">Go to Dashboard</a>
+    </div>
+</body>
+</html>

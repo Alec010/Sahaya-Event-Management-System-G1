@@ -1,10 +1,16 @@
 from django.urls import path
 from . import views
 
+app_name = 'users'  # Set the app_name for namespacing
+
 urlpatterns = [
     path('', views.home_view, name='home'),  # Home page URL (landing page)
     path('signup/', views.signup_view, name='signup'),  # Sign-up page
     path('login/', views.login_view, name='login'),  # Login page
     path('dashboard/', views.dashboard_view, name='dashboard'),  # Dashboard page
     path('logout/', views.logout_view, name='logout'),
+    path('account/edit/', views.edit_account, name='edit_account'),
+    path('account/delete/', views.delete_account, name='delete_account'),
+    path('account/', views.account_view, name='account'),
+
 ]

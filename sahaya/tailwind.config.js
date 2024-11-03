@@ -2,7 +2,8 @@
 module.exports = {
   content: [
     './users/templates/**/*.html', // Adjust to the path where your HTML files are located
-    './users/static/**/*.css' // Include the CSS files
+    './users/static/**/*.css', // Include the CSS files
+    './event/static/**/*.css' // Include the CSS files
   ],
   theme: {
     extend: {},

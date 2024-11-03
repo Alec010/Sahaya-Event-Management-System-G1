@@ -2,7 +2,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
     {% load static %}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,89 +9,157 @@
     <link href="{% static 'css/styles.css' %}" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=ABeeZee&display=swap" rel="stylesheet">
 </head>
-<!-- Updated logo positioning -->
-<!-- Updated logo positioning -->
-<div class="absolute top-3 left-10">
-    <img src="{% static 'users/sahayalogo.png' %}" alt="Sahaya Logo" class="w-60 h-auto">
-</div>
-
-
 
 <body class="font-ABeeZee bg-[#E9EFEC]">
-    
+    <div class="absolute top-3 left-10">
+        <img src="{% static 'users/sahayalogo.png' %}" alt="Sahaya Logo" class="w-60 h-auto">
+    </div>
+
     <div class="min-h-screen flex items-center justify-center relative">
         <div class="w-full max-w-5xl flex flex-col md:flex-row shadow-lg rounded-3xl overflow-hidden bg-white relative z-10">
-
-
             <!-- Left Section (Form) -->
             <div class="flex flex-col p-10 bg-white md:w-1/2">
                 <nav class="tabs mb-5 flex gap-4">
                     <button class="tab tab-bordered font-bold tab-active text-[#16423C]">Sign Up</button>
-                    <a href="{% url 'login' %}" class="tab tab-bordered font-bold text-gray-500">Log in</a>
-
+                    <a href="{% url 'users:login' %}" class="tab tab-bordered font-bold text-gray-500">Log in</a>
                 </nav>
-                <form method="post" action="{% url 'signup' %}">
+
+                <form method="post" action="{% url 'users:signup' %}">
                     {% csrf_token %}
-                    {{ form.non_field_errors }}
+
+                    <!-- Display non-field errors (general form errors) -->
+                    {% if form.non_field_errors %}
+                        <div class="text-red-500 mb-4">
+                            {% for error in form.non_field_errors %}
+                                <p>{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+
+                    <!-- Username Field with Error Display -->
                     <div class="mb-4">
                         {{ form.username|add_class:"input input-bordered w-full rounded-full p-5 focus:outline-none focus:ring-2 ring-offset-2 ring-[#16423C] shadow-md" }}
+                        {% if form.username.errors %}
+                            <div class="text-red-500">
+                                {% for error in form.username.errors %}
+                                    <p>{{ error }}</p>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
                     </div>
+
+                    <!-- First Name and Last Name Fields with Error Display -->
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
                         {{ form.first_name|add_class:"input input-bordered w-full rounded-full p-5 focus:outline-none focus:ring-2 ring-offset-2 ring-[#16423C] shadow-md" }}
+                        {% if form.first_name.errors %}
+                            <div class="text-red-500">
+                                {% for error in form.first_name.errors %}
+                                    <p>{{ error }}</p>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+
                         {{ form.last_name|add_class:"input input-bordered w-full rounded-full p-5 focus:outline-none focus:ring-2 ring-offset-2 ring-[#16423C] shadow-md" }}
+                        {% if form.last_name.errors %}
+                            <div class="text-red-500">
+                                {% for error in form.last_name.errors %}
+                                    <p>{{ error }}</p>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
                     </div>
+
+                    <!-- Middle Initial Field with Error Display -->
                     <div class="mb-4">
                         {{ form.middle_initial|add_class:"input input-bordered w-full rounded-full p-5 focus:outline-none focus:ring-2 ring-offset-2 ring-[#16423C] shadow-md" }}
+                        {% if form.middle_initial.errors %}
+                            <div class="text-red-500">
+                                {% for error in form.middle_initial.errors %}
+                                    <p>{{ error }}</p>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
                     </div>
+
+                    <!-- Contact Number Field with Error Display -->
                     <div class="mb-4">
                         {{ form.contact_number|add_class:"input input-bordered w-full rounded-full p-5 focus:outline-none focus:ring-2 ring-offset-2 ring-[#16423C] shadow-md" }}
+                        {% if form.contact_number.errors %}
+                            <div class="text-red-500">
+                                {% for error in form.contact_number.errors %}
+                                    <p>{{ error }}</p>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
                     </div>
+
+                    <!-- Email Field with Error Display -->
                     <div class="mb-4">
                         {{ form.email|add_class:"input input-bordered w-full rounded-full p-5 focus:outline-none focus:ring-2 ring-offset-2 ring-[#16423C] shadow-md" }}
+                        {% if form.email.errors %}
+                            <div class="text-red-500">
+                                {% for error in form.email.errors %}
+                                    <p>{{ error }}</p>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
                     </div>
+
+                    <!-- Password1 Field with Error Display -->
                     <div class="mb-4">
                         {{ form.password1|add_class:"input input-bordered w-full rounded-full p-5 focus:outline-none focus:ring-2 ring-offset-2 ring-[#16423C] shadow-md" }}
+                        {% if form.password1.errors %}
+                            <div class="text-red-500">
+                                {% for error in form.password1.errors %}
+                                    <p>{{ error }}</p>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
                     </div>
+
+                    <!-- Password2 Field with Error Display -->
                     <div class="mb-4">
                         {{ form.password2|add_class:"input input-bordered w-full rounded-full p-5 focus:outline-none focus:ring-2 ring-offset-2 ring-[#16423C] shadow-md" }}
+                        {% if form.password2.errors %}
+                            <div class="text-red-500">
+                                {% for error in form.password2.errors %}
+                                    <p>{{ error }}</p>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
                     </div>
+
+                    <!-- Submit Button -->
                     <button type="submit"
                         class="btn bg-gradient-to-r from-[#6A9C89] to-[#16423C] text-white w-full rounded-full py-4 mt-2 shadow-md hover:bg-gradient-to-r hover:from-[#6A9C89] hover:to-[#16423C]">
                         Sign Up Now
                     </button>
                 </form>
+                
+                <!-- Other Sign Up Options -->
                 <hr class="my-8">
                 <p class="text-center font-bold mb-4">Sign Up with Others</p>
-                <button
-                    class="btn w-full py-4 mb-3 shadow-md flex items-center justify-center space-x-2 border border-gray-300 text-black">
-                    <img
-                        src="{% static 'users/googlelogo.png' %}"
-                        alt="Google" class="w-6">
+                <button class="btn w-full py-4 mb-3 shadow-md flex items-center justify-center space-x-2 border border-gray-300 text-black">
+                    <img src="{% static 'users/googlelogo.png' %}" alt="Google" class="w-6">
                     <span>Sign up with Google</span>
                 </button>
-                <button
-                    class="btn w-full py-4 shadow-md flex items-center justify-center space-x-2 border border-gray-300 text-blue-600">
-                    <img src="{% static 'users/fblogo.png' %}"
-                        alt="Facebook" class="w-6">
+                <button class="btn w-full py-4 shadow-md flex items-center justify-center space-x-2 border border-gray-300 text-blue-600">
+                    <img src="{% static 'users/fblogo.png' %}" alt="Facebook" class="w-6">
                     <span>Sign up with Facebook</span>
                 </button>
             </div>
 
             <!-- Right Section (Image and Text) -->
             <div class="relative md:w-1/2 overflow-hidden">
-                <div class="absolute top-0 left-0 right-0 bottom-0 bg-cover bg-center"
-                style="background-image: url('{% static 'users/rect.png' %}')"
-                >
-                </div>
+                <div class="absolute top-0 left-0 right-0 bottom-0 bg-cover bg-center" style="background-image: url('{% static 'users/rect.png' %}')"></div>
                 <div class="relative z-10 flex flex-col items-center justify-center p-10 bg-[#E9EFEC] bg-opacity-50 rounded-3xl w-[80%] h-[70%] mt-20 ml-10">
                     <h4 class="text-2xl font-bold mb-6 text-[#E9EFEC]">Very good events are waiting for you. Sign Up Now!!!</h4>
                 </div>
                 <div class="relative z-20 flex justify-center items-center mt-[-18rem]">
-                    <img src="{% static 'users/women.png' %}" alt="Happy Woman" >
+                    <img src="{% static 'users/women.png' %}" alt="Happy Woman">
                 </div>
             </div>
         </div>
     </div>
 </body>
-
 </html>
