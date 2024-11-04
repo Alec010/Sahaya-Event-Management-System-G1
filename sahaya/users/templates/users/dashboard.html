@@ -107,18 +107,23 @@
                     {% endif %}
                 </figure>
                 <div class="card-body">
-                    <h3 class="card-title text-black">{{ event.title }}</h3> <!-- Event title -->
-                    <p class="text-black">By {{ event.organizer.first_name }} {{ event.organizer.last_name }}</p> <!-- Organizer's name -->
+                    <h3 class="card-title text-black">{{ event.title }}</h3>
+                    <p class="text-black">By {{ event.organizer.first_name }} {{ event.organizer.last_name }}</p>
                     <div class="flex items-center gap-2">
                         <div class="avatar"><div class="w-8 rounded-full bg-gray-300"></div></div>
                         <div class="avatar"><div class="w-8 rounded-full bg-gray-400"></div></div>
                     </div>
-                    <p class="text-sm mt-4 text-black">{{ event.start_date|date:"F j, Y" }} at {{ event.event_time|time:"H:i" }}</p> <!-- Event date and time -->
+                    <p class="text-sm mt-4 text-black">{{ event.start_date|date:"F j, Y" }} at {{ event.event_time|time:"H:i" }}</p>
 
-                    <!-- Conditional Button -->
-                    {% if event.organizer == request.user %}
+                    <!-- Conditional Button based on registration status -->
+                    {% if event in user_registered_events %}
+                        <!-- If user is registered, show "Registered" button -->
+                        <a href="{% url 'event:view_event' event.id %}" class="btn bg-[#16423C] text-white">Registered</a>
+                    {% elif event.organizer == request.user %}
+                        <!-- If user is the organizer, show "Edit Event" button -->
                         <a href="{% url 'event:edit_event' event.id %}" class="btn bg-[#16423C] text-white">Edit Event</a>
                     {% else %}
+                        <!-- If user is not registered and not the organizer, show "Register" button -->
                         <a href="{% url 'event:view_event' event.id %}" class="btn bg-[#16423C] text-white">Register</a>
                     {% endif %}
                 </div>

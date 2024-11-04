@@ -31,9 +31,12 @@
             <p><span class="font-semibold">Start Date:</span> {{ event.start_date|date:"F j, Y" }}</p>
             <p><span class="font-semibold">End Date:</span> {{ event.end_date|date:"F j, Y" }}</p>
             <p><span class="font-semibold">Event Time:</span> {{ event.event_time }}</p>
-        </div>
-        <button onclick="openUpdateModal()" class="bg-blue-500 text-white px-4 py-2 rounded mt-4">Update Event Details</button>
-    </div>
+ <!-- Update and Delete Event Buttons -->
+ <div class="flex mt-4 space-x-4">
+    <button onclick="openUpdateModal()" class="bg-blue-500 text-white px-4 py-2 rounded">Update Event Details</button>
+    <button onclick="deleteEvent()" class="bg-red-500 text-white px-4 py-2 rounded">Delete Event</button>
+</div>
+</div>
 
     <!-- Participants Section -->
     <h3 class="text-2xl font-semibold mb-4 text-[#6A9C89]">List of Participants</h3>
@@ -49,7 +52,7 @@
         </thead>
         <tbody>
             {% for registration in participants %}
-                <tr>
+                <tr id="participant-{{ registration.participant.id }}">
                     <td class="border px-4 py-2">{{ registration.participant.first_name }}</td>
                     <td class="border px-4 py-2">{{ registration.participant.last_name }}</td>
                     <td class="border px-4 py-2">{{ registration.status }}</td>
@@ -143,6 +146,72 @@
             alert("An error occurred. Please try again.");
         });
     }
+    function removeParticipant(participantId) {
+    fetch("{% url 'event:remove_participant' event.id %}", {
+        method: "POST",
+        headers: {
+            "X-CSRFToken": "{{ csrf_token }}",
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ participant_id: participantId })
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error("Network response was not OK");
+        }
+        return response.json();
+    })
+    .then(data => {
+        if (data.success) {
+            const row = document.getElementById(`participant-${participantId}`);
+            console.log(`Trying to remove row with ID: participant-${participantId}`);
+            if (row) {
+                row.remove();  // Immediately remove the row from the DOM
+                alert("Participant removed successfully.");
+            } else {
+                console.warn(`Row with ID participant-${participantId} not found in the DOM.`);
+            }
+        } else {
+            alert(data.error || "Failed to remove participant.");
+        }
+    })
+    .catch(error => {
+        console.error("Error:", error);
+        alert("An error occurred. Please try again.");
+    });
+}
+function deleteEvent() {
+        if (!confirm("Are you sure you want to delete this event? This action cannot be undone.")) {
+            return;
+        }
+
+        fetch("{% url 'event:delete_event' event.id %}", {
+            method: "POST",
+            headers: {
+                "X-CSRFToken": "{{ csrf_token }}",
+            }
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Network response was not OK");
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.success) {
+                alert("Event deleted successfully.");
+                window.location.href = "{% url 'users:dashboard' %}";
+            } else {
+                alert(data.error || "Failed to delete event.");
+            }
+        })
+        .catch(error => {
+            console.error("Error:", error);
+            alert("An error occurred. Please try again.");
+        });
+    }
+
+
 </script>
 
 </body>

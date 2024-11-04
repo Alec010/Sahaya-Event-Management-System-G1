@@ -1,0 +1,19 @@
+<!-- notification/templates/notification/registration_email.html -->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Event Registration Confirmation</title>
+</head>
+<body>
+    <h2>Thank you for registering for {{ event.title }}!</h2>
+    <p>Dear {{ participant.first_name }},</p>
+    <p>You've successfully registered for the event "{{ event.title }}" organized by {{ event.organizer.first_name }}.</p>
+    <p>Event Details:</p>
+    <ul>
+        <li>Date: {{ event.start_date }} to {{ event.end_date }}</li>
+        <li>Location: {{ event.location }}</li>
+    </ul>
+    <p>We look forward to your participation!</p>
+</body>
+</html>

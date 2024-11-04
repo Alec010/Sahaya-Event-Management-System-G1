@@ -28,5 +28,6 @@ urlpatterns = [
     path('', views.home_view, name='home'),  # Set the root URL to the home page
     path('event/', include('event.urls')),  # For event-related URLs
     path('registration/', include('registration.urls')),  # For registration-related URLs
+    path('notification/', include('notification.urls')),  # For registration-related URLs
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

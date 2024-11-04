@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from .forms import CustomUserCreationForm
 from django.contrib.auth.forms import AuthenticationForm
 from event.models import Event
+from registration.models import Registration 
 
 
 def signup_view(request):
@@ -83,6 +84,15 @@ def logout_view(request):
     logout(request)
     return redirect('users:home')  # Redirect to the home page after logging out
 
+@login_required
 def dashboard_view(request):
     trending_events = Event.objects.all()  # Fetch all events, or apply filters as needed
-    return render(request, 'users/dashboard.html', {'trending_events': trending_events})
+
+    # Fetch events the user is already registered in
+    user_registered_events = Event.objects.filter(registration__participant=request.user)
+
+    context = {
+        'trending_events': trending_events,
+        'user_registered_events': user_registered_events,  # Pass this to template
+    }
+    return render(request, 'users/dashboard.html', context)

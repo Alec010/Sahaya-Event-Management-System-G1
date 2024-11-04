@@ -18,10 +18,51 @@
             <p><strong>Status:</strong> {{ registration.status }}</p>
             <p><strong>Registration Date:</strong> {{ registration.registration_date|date:"F j, Y, g:i a" }}</p>
 
-            <a href="{% url 'event:view_event' registration.event.id %}" class="btn bg-[#16423C] text-white py-3 px-6 rounded-lg mt-6">
+            <button onclick="confirmRegistration()" class="btn bg-[#16423C] text-white py-3 px-6 rounded-lg mt-6">
                 Confirm Registration
-            </a>
+            </button>
         </div>
     </div>
+
+    <!-- Success Modal -->
+    <div id="successModal" class="fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center hidden z-50">
+        <div class="bg-white p-6 rounded-lg shadow-lg max-w-md w-full text-center">
+            <h3 class="text-xl font-semibold mb-4">Registration Successful</h3>
+            <p>Kindly check your email for details!</p>
+            <button onclick="closeModalAndRedirect()" class="bg-green-500 text-white py-2 px-4 rounded mt-4">Go Back to Dashboard</button>
+        </div>
+    </div>
+
+    <script>
+        function confirmRegistration() {
+            const registrationId = "{{ registration.id }}";
+            
+            fetch("{% url 'registration:confirm_registration' registration.id %}", {
+                method: "POST",
+                headers: {
+                    "X-CSRFToken": "{{ csrf_token }}",
+                    "Content-Type": "application/json"
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Show the success modal with the custom message
+                    document.getElementById("successModal").classList.remove("hidden");
+                } else {
+                    alert("Failed to confirm registration.");
+                }
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                alert("An error occurred. Please try again.");
+            });
+        }
+
+        function closeModalAndRedirect() {
+            document.getElementById("successModal").classList.add("hidden");
+            window.location.href = "{% url 'users:dashboard' %}";  // Redirect to dashboard
+        }
+    </script>
 </body>
 </html>

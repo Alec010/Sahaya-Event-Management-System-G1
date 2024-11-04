@@ -1,5 +1,6 @@
+# report/models.py
 from django.db import models
-from django.contrib.auth.models import event
+from event.models import Event  # Import the Event model
 
 # Report Model
 class Report(models.Model):
@@ -7,7 +8,7 @@ class Report(models.Model):
     generated_at = models.DateTimeField()
     report_type = models.CharField(max_length=50)
     report_content = models.TextField()
-    event = models.ForeignKey(event, on_delete=models.CASCADE)
+    event = models.ForeignKey(Event, on_delete=models.CASCADE)  # Correctly reference Event model
 
     def __str__(self):
         return f"Report {self.report_id} for Event {self.event.title}"
