@@ -105,4 +105,15 @@ def remove_participant(request, event_id):
         return JsonResponse({"success": True})
     except Registration.DoesNotExist:
         return JsonResponse({"success": False, "error": "Participant not found"})
-    
+@login_required
+def list_of_events(request):
+    # Get events organized by the logged-in user
+    organized_events = Event.objects.filter(organizer=request.user)
+
+    # Get events the user has registered for (participated in)
+    participated_events = Event.objects.filter(registration__participant=request.user).distinct()
+
+    return render(request, "event/list_of_events.html", {
+        "organized_events": organized_events,
+        "participated_events": participated_events,
+    })

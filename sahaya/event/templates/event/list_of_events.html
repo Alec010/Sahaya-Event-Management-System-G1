@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>List of Events</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 font-sans leading-normal tracking-normal">
+
+<div class="container mx-auto px-4 py-8">
+    <h2 class="text-4xl font-bold mb-6 text-[#16423C]">Events</h2>
+    
+    <!-- Organized Events Section -->
+    <section class="mb-16">
+        <h3 class="text-3xl font-semibold mb-4 text-[#6A9C89]">Organized Events</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {% for event in organized_events %}
+            <div class="card bg-white shadow-lg rounded-lg overflow-hidden">
+                <!-- Event image or placeholder -->
+                <figure class="h-48">
+                    {% if event.image %}
+                        <img src="{{ event.image.url }}" alt="{{ event.title }}" class="w-full h-full object-cover">
+                    {% else %}
+                        <div class="h-full bg-gradient-to-br from-[#E9EFEC] to-[#C4DAD2]"></div>
+                    {% endif %}
+                </figure>
+                <div class="p-4">
+                    <h3 class="text-xl font-semibold text-black">{{ event.title }}</h3>
+                    <p class="text-gray-600">By {{ event.organizer.first_name }} {{ event.organizer.last_name }}</p>
+                    <div class="flex items-center gap-2 my-2">
+                        <div class="avatar"><div class="w-8 rounded-full bg-gray-300"></div></div>
+                        <div class="avatar"><div class="w-8 rounded-full bg-gray-400"></div></div>
+                    </div>
+                    <p class="text-sm text-black">{{ event.start_date|date:"F j, Y" }} at {{ event.event_time|time:"H:i" }}</p>
+                    <a href="{% url 'event:edit_event' event.id %}" class="btn bg-[#16423C] text-white mt-4 inline-block px-4 py-2 rounded">Edit Event</a>
+                </div>
+            </div>
+            {% empty %}
+            <p>No events organized by you yet.</p>
+            {% endfor %}
+        </div>
+    </section>
+
+    <!-- Events Participated Section -->
+    <section>
+        <h3 class="text-3xl font-semibold mb-4 text-[#6A9C89]">Events Participated</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {% for event in participated_events %}
+            <div class="card bg-white shadow-lg rounded-lg overflow-hidden">
+                <!-- Event image or placeholder -->
+                <figure class="h-48">
+                    {% if event.image %}
+                        <img src="{{ event.image.url }}" alt="{{ event.title }}" class="w-full h-full object-cover">
+                    {% else %}
+                        <div class="h-full bg-gradient-to-br from-[#E9EFEC] to-[#C4DAD2]"></div>
+                    {% endif %}
+                </figure>
+                <div class="p-4">
+                    <h3 class="text-xl font-semibold text-black">{{ event.title }}</h3>
+                    <p class="text-gray-600">By {{ event.organizer.first_name }} {{ event.organizer.last_name }}</p>
+                    <div class="flex items-center gap-2 my-2">
+                        <div class="avatar"><div class="w-8 rounded-full bg-gray-300"></div></div>
+                        <div class="avatar"><div class="w-8 rounded-full bg-gray-400"></div></div>
+                    </div>
+                    <p class="text-sm text-black">{{ event.start_date|date:"F j, Y" }} at {{ event.event_time|time:"H:i" }}</p>
+                    <a href="{% url 'event:view_event' event.id %}" class="btn bg-[#16423C] text-white mt-4 inline-block px-4 py-2 rounded">View Event</a>
+                </div>
+            </div>
+            {% empty %}
+            <p>No events participated in yet.</p>
+            {% endfor %}
+        </div>
+    </section>
+</div>
+
+</body>
+</html>
