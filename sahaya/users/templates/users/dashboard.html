@@ -92,8 +92,8 @@
     </div>
 </section>
 
- <!-- Trending Events Section -->
- <section>
+  <!-- Trending Events Section -->
+  <section>
     <h2 class="text-3xl font-bold mb-6 text-black">Trending Events</h2>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {% for event in trending_events %}
@@ -117,9 +117,9 @@
 
                     <!-- Conditional Button -->
                     {% if event.organizer == request.user %}
-                        <a href="#" class="btn bg-[#16423C] text-white">Edit Event</a>
+                        <a href="{% url 'event:edit_event' event.id %}" class="btn bg-[#16423C] text-white">Edit Event</a>
                     {% else %}
-                        <button onclick="showRegisterPopup()" class="btn bg-[#16423C] text-white">Register</button>
+                        <a href="{% url 'event:view_event' event.id %}" class="btn bg-[#16423C] text-white">Register</a>
                     {% endif %}
                 </div>
             </div>

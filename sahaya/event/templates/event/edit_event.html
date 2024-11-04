@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Event</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 font-sans leading-normal tracking-normal">
+
+<div class="container mx-auto px-4 py-8">
+    <!-- Go Back to Dashboard Button -->
+    <div class="mb-4">
+        <a href="{% url 'users:dashboard' %}" class="bg-gray-500 text-white px-4 py-2 rounded">Go Back to Dashboard</a>
+    </div>
+
+    <!-- Event Details Section -->
+    <h2 class="text-4xl font-bold mb-6 text-[#16423C]">{{ event.title }}</h2>
+    
+    <div class="bg-white p-6 rounded-lg shadow-lg mb-8">
+        <h3 class="text-2xl font-semibold mb-4 text-[#6A9C89]">Event Details</h3>
+        
+        <!-- Display event image if available -->
+        {% if event.image %}
+            <img src="{{ event.image.url }}" alt="Event Image" class="w-full h-64 object-cover rounded mb-4">
+        {% endif %}
+
+        <div class="text-gray-700 space-y-2">
+            <p><span class="font-semibold">Description:</span> {{ event.description }}</p>
+            <p><span class="font-semibold">Location:</span> {{ event.location }}</p>
+            <p><span class="font-semibold">Start Date:</span> {{ event.start_date|date:"F j, Y" }}</p>
+            <p><span class="font-semibold">End Date:</span> {{ event.end_date|date:"F j, Y" }}</p>
+            <p><span class="font-semibold">Event Time:</span> {{ event.event_time }}</p>
+        </div>
+        <button onclick="openUpdateModal()" class="bg-blue-500 text-white px-4 py-2 rounded mt-4">Update Event Details</button>
+    </div>
+
+    <!-- Participants Section -->
+    <h3 class="text-2xl font-semibold mb-4 text-[#6A9C89]">List of Participants</h3>
+    <table class="min-w-full bg-white mb-8">
+        <thead>
+            <tr>
+                <th class="py-2 text-left">First Name</th>
+                <th class="py-2 text-left">Last Name</th>
+                <th class="py-2 text-left">Status</th>
+                <th class="py-2 text-left">Registration Date</th>
+                <th class="py-2">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for registration in participants %}
+                <tr>
+                    <td class="border px-4 py-2">{{ registration.participant.first_name }}</td>
+                    <td class="border px-4 py-2">{{ registration.participant.last_name }}</td>
+                    <td class="border px-4 py-2">{{ registration.status }}</td>
+                    <td class="border px-4 py-2">{{ registration.registration_date|date:"F j, Y" }}</td>
+                    <td class="border px-4 py-2">
+                        <button onclick="removeParticipant('{{ registration.participant.id }}')" class="bg-red-500 text-white px-2 py-1 rounded">Remove</button>
+                    </td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="5" class="text-center py-4">No participants registered.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<!-- Update Event Modal -->
+<div id="updateModal" class="fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center hidden z-50">
+    <div class="bg-white p-8 rounded-lg shadow-lg max-w-md w-full">
+        <h3 class="text-2xl font-semibold mb-4 text-[#6A9C89]">Update Event</h3>
+        <form id="updateEventForm" enctype="multipart/form-data">
+            {% csrf_token %}
+            
+            <label class="block mb-2 font-semibold">Title</label>
+            <input type="text" name="title" class="w-full border px-3 py-2 rounded mb-4" value="{{ event.title }}">
+
+            <label class="block mb-2 font-semibold">Description</label>
+            <textarea name="description" class="w-full border px-3 py-2 rounded mb-4">{{ event.description }}</textarea>
+
+            <label class="block mb-2 font-semibold">Location</label>
+            <input type="text" name="location" class="w-full border px-3 py-2 rounded mb-4" value="{{ event.location }}">
+
+            <label class="block mb-2 font-semibold">Start Date</label>
+            <input type="date" name="start_date" class="w-full border px-3 py-2 rounded mb-4" value="{{ event.start_date|date:"Y-m-d" }}">
+
+            <label class="block mb-2 font-semibold">End Date</label>
+            <input type="date" name="end_date" class="w-full border px-3 py-2 rounded mb-4" value="{{ event.end_date|date:"Y-m-d" }}">
+
+            <label class="block mb-2 font-semibold">Event Time</label>
+            <input type="time" name="event_time" class="w-full border px-3 py-2 rounded mb-4" value="{{ event.event_time|time:"H:i" }}">
+
+            <label class="block mb-2 font-semibold">Event Image</label>
+            <input type="file" name="image" class="w-full border px-3 py-2 rounded mb-4">
+
+            <div class="flex justify-end mt-4">
+                <button type="button" onclick="closeUpdateModal()" class="bg-gray-400 text-white px-4 py-2 rounded mr-2">Cancel</button>
+                <button type="button" onclick="submitUpdateForm()" class="bg-blue-500 text-white px-4 py-2 rounded">Save</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    function openUpdateModal() {
+        document.getElementById("updateModal").classList.remove("hidden");
+    }
+
+    function closeUpdateModal() {
+        document.getElementById("updateModal").classList.add("hidden");
+    }
+
+    function submitUpdateForm() {
+        const form = document.getElementById("updateEventForm");
+        const formData = new FormData(form);
+
+        fetch("{% url 'event:edit_event' event.id %}", {
+            method: "POST",
+            headers: {
+                "X-CSRFToken": "{{ csrf_token }}",
+            },
+            body: formData
+        })
+        .then(response => {
+            if (!response.ok) {
+                return response.json().then(data => { throw new Error(data.error || "An error occurred"); });
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.success) {
+                alert("Event updated successfully!");
+                closeUpdateModal();
+                location.reload();  // Reload the page to reflect changes
+            } else {
+                alert("Failed to update event: " + JSON.stringify(data.errors));  // Display form errors if any
+            }
+        })
+        .catch(error => {
+            console.error("Error:", error);
+            alert("An error occurred. Please try again.");
+        });
+    }
+</script>
+
+</body>
+</html>

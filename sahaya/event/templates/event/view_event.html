@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ event.title }} - Event Details</title>
+    <link href="{% static 'css/styles.css' %}" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=ABeeZee&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@latest/dist/full.css" rel="stylesheet">
+</head>
+<body class="bg-[#E9EFEC] font-ABeeZee min-h-screen flex items-center justify-center p-4">
+    <div class="bg-white shadow-lg rounded-lg max-w-2xl w-full p-6">
+        <!-- Event Image -->
+        {% if event.image %}
+            <img src="{{ event.image.url }}" alt="{{ event.title }}" class="w-full h-64 object-cover rounded-lg mb-4">
+        {% else %}
+            <div class="w-full h-64 bg-gray-200 rounded-lg mb-4 flex items-center justify-center">
+                <span class="text-gray-500">No Image Available</span>
+            </div>
+        {% endif %}
+
+        <!-- Event Details -->
+        <h1 class="text-3xl font-bold text-[#16423C] mb-2">{{ event.title }}</h1>
+        <p class="text-gray-600 mb-4">By {{ event.organizer.first_name }} {{ event.organizer.last_name }}</p>
+
+        <p class="text-gray-700 mb-4">{{ event.description }}</p>
+
+        <div class="mb-4">
+            <p><strong>Location:</strong> {{ event.location }}</p>
+            <p><strong>Start Date:</strong> {{ event.start_date|date:"F j, Y" }}</p>
+            <p><strong>End Date:</strong> {{ event.end_date|date:"F j, Y" }}</p>
+            <p><strong>Time:</strong> {{ event.event_time|time:"H:i" }}</p>
+        </div>
+
+        <!-- Register Button -->
+        <a href="{% url 'registration:register' event.id %}" class="btn w-full bg-[#16423C] text-white py-3 rounded-lg text-center hover:bg-[#13382e]">
+            Register Now
+        </a>
+    </div>
+</body>
+</html>

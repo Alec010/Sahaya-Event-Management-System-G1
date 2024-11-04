@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'users',
     'tailwind',
     'event',
+    'registration',
 ]
 
 import os

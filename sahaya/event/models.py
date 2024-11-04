@@ -1,3 +1,4 @@
+# event/models.py
 from django.db import models
 from django.conf import settings
 
@@ -18,4 +19,5 @@ class Event(models.Model):
         return f"Organizer_{self.organizer.username}"
 
     def get_participants(self):
-        return [registration.participant for registration in self.registrations.all()]
+        # Access related Registration objects without directly importing the Registration model
+        return [registration.participant for registration in self.registration_set.all()]
