@@ -18,7 +18,7 @@
     <h2 class="text-2xl font-bold mb-10">Sahaya</h2>
     <ul class="menu items-start"> <!-- Added items-start here -->
         <li><a href="#" class="btn btn-ghost w-full">Dashboard</a></li>
-        <li><a href="#" class="btn btn-ghost w-full">Events</a></li>
+        <li><a href="{% url 'event:list_of_events' %}" class="btn btn-ghost w-full">Events</a></li>
         <li><a href="#" class="btn btn-ghost w-full">Messages</a></li>
         <li><a href="{% url 'users:account' %}" class="btn btn-ghost w-full">Profile</a></li>
     </ul>
