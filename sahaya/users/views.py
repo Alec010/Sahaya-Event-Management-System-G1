@@ -77,8 +77,14 @@ def edit_account(request):
 
 @login_required
 def delete_account(request):
-    # Logic for deleting user account will go here
-    return redirect('users:home')
+    if request.method == 'POST':
+        # Confirm the user wants to delete their account
+        user = request.user
+        user.delete()
+        messages.success(request, "Your account has been successfully deleted.")
+        return redirect('users:home')  # Redirect to the home page after deletion
+
+    return render(request, 'users/confirm_delete_account.html')  # Show confirmation page
 
 def logout_view(request):
     logout(request)

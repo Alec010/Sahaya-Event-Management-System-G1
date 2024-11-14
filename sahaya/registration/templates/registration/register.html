@@ -11,15 +11,16 @@
         <h2 class="text-3xl font-semibold mb-6">Registration Confirmation</h2>
 
         <div class="bg-white p-6 rounded-lg shadow-lg">
-            <h3 class="text-xl font-semibold mb-4">{{ registration.event.title }}</h3>
+            <h3 class="text-xl font-semibold mb-4">{{ event.title }}</h3>
 
-            <p><strong>Registration ID:</strong> {{ registration.formatted_registration_id }}</p>
-            <p><strong>Participant:</strong> {{ registration.participant.username }}</p>
+            <p><strong>Registration ID:</strong> {{ registration.id }}</p>
+            <p><strong>Participant:</strong> {{ participant.username }}</p>
             <p><strong>Status:</strong> {{ registration.status }}</p>
             <p><strong>Registration Date:</strong> {{ registration.registration_date|date:"F j, Y, g:i a" }}</p>
 
-            <button onclick="confirmRegistration()" class="btn bg-[#16423C] text-white py-3 px-6 rounded-lg mt-6">
-                Confirm Registration
+            <!-- This button confirms registration directly via 'register_for_event' URL -->
+            <button onclick="registerForEvent()" class="btn bg-[#16423C] text-white py-3 px-6 rounded-lg mt-6">
+                Register for Event
             </button>
         </div>
     </div>
@@ -34,35 +35,33 @@
     </div>
 
     <script>
-        function confirmRegistration() {
-            const registrationId = "{{ registration.id }}";
-            
-            fetch("{% url 'registration:confirm_registration' registration.id %}", {
-                method: "POST",
-                headers: {
-                    "X-CSRFToken": "{{ csrf_token }}",
-                    "Content-Type": "application/json"
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    // Show the success modal with the custom message
-                    document.getElementById("successModal").classList.remove("hidden");
-                } else {
-                    alert("Failed to confirm registration.");
-                }
-            })
-            .catch(error => {
-                console.error("Error:", error);
-                alert("An error occurred. Please try again.");
-            });
-        }
+    function registerForEvent() {
+        fetch("{% url 'registration:register_for_event' event.id %}", {
+            method: "POST",
+            headers: {
+                "X-CSRFToken": "{{ csrf_token }}",
+                "Content-Type": "application/json"
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Show success modal
+                document.getElementById("successModal").classList.remove("hidden");
+            } else {
+                alert(data.error || "Failed to register for event.");
+            }
+        })
+        .catch(error => {
+            console.error("Error:", error);
+            alert("An error occurred. Please try again.");
+        });
+    }
 
-        function closeModalAndRedirect() {
-            document.getElementById("successModal").classList.add("hidden");
-            window.location.href = "{% url 'users:dashboard' %}";  // Redirect to dashboard
-        }
+    function closeModalAndRedirect() {
+        document.getElementById("successModal").classList.add("hidden");
+        window.location.href = "{% url 'users:dashboard' %}";
+    }
     </script>
 </body>
 </html>

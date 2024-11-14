@@ -27,9 +27,10 @@
 
         <!-- Buttons for Edit, Delete, and Dashboard -->
         <div class="flex justify-center gap-4 mt-8">
-            <!-- Trigger to open modal -->
+            <!-- Trigger to open edit modal -->
             <label for="editModal" class="btn btn-primary w-32">Edit</label>
-            <button onclick="confirmDelete()" class="btn btn-error w-32">Delete</button>
+            <!-- Trigger to open delete confirmation modal -->
+            <label for="deleteModal" class="btn btn-error w-32">Delete</label>
             <a href="{% url 'users:dashboard' %}" class="btn btn-secondary w-32">Return to Dashboard</a>
         </div>
     </div>
@@ -74,6 +75,22 @@
         </div>
     </div>
 
+    <!-- Delete Account Confirmation Modal -->
+    <input type="checkbox" id="deleteModal" class="modal-toggle">
+    <div class="modal">
+        <div class="modal-box bg-white max-w-md text-center">
+            <h3 class="font-bold text-lg">Delete Account</h3>
+            <p>Are you sure you want to delete your account? This action cannot be undone.</p>
+            <form method="post" action="{% url 'users:delete_account' %}">
+                {% csrf_token %}
+                <div class="modal-action justify-center">
+                    <label for="deleteModal" class="btn btn-secondary">Cancel</label>
+                    <button type="submit" class="btn btn-error">Delete</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- Success Message Modal -->
     {% if messages %}
         {% for message in messages %}
@@ -91,14 +108,5 @@
             {% endif %}
         {% endfor %}
     {% endif %}
-
-    <!-- JavaScript for Delete Confirmation -->
-    <script>
-        function confirmDelete() {
-            if (confirm("Are you sure you want to delete your account? This action cannot be undone.")) {
-                window.location.href = "{% url 'users:delete_account' %}";
-            }
-        }
-    </script>
 </body>
 </html>
