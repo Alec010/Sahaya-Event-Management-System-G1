@@ -30,13 +30,15 @@
             <p><span class="font-semibold">Location:</span> {{ event.location }}</p>
             <p><span class="font-semibold">Start Date:</span> {{ event.start_date|date:"F j, Y" }}</p>
             <p><span class="font-semibold">End Date:</span> {{ event.end_date|date:"F j, Y" }}</p>
-            <p><span class="font-semibold">Event Time:</span> {{ event.event_time }}</p>
- <!-- Update and Delete Event Buttons -->
- <div class="flex mt-4 space-x-4">
-    <button onclick="openUpdateModal()" class="bg-blue-500 text-white px-4 py-2 rounded">Update Event Details</button>
-    <button onclick="deleteEvent()" class="bg-red-500 text-white px-4 py-2 rounded">Delete Event </button>
-</div>
-</div>
+            <p><span class="font-semibold">Event Time:</span> From {{ event.start_time|time:"H:i A" }} to {{ event.end_time|time:"H:i A" }}</p>
+        </div>
+
+        <!-- Update and Delete Event Buttons -->
+        <div class="flex mt-4 space-x-4">
+            <button onclick="openUpdateModal()" class="bg-blue-500 text-white px-4 py-2 rounded">Update Event Details</button>
+            <button onclick="deleteEvent()" class="bg-red-500 text-white px-4 py-2 rounded">Delete Event</button>
+        </div>
+    </div>
 
     <!-- Participants Section -->
     <h3 class="text-2xl font-semibold mb-4 text-[#6A9C89]">List of Participants</h3>
@@ -92,8 +94,11 @@
             <label class="block mb-2 font-semibold">End Date</label>
             <input type="date" name="end_date" class="w-full border px-3 py-2 rounded mb-4" value="{{ event.end_date|date:"Y-m-d" }}">
 
-            <label class="block mb-2 font-semibold">Event Time</label>
-            <input type="time" name="event_time" class="w-full border px-3 py-2 rounded mb-4" value="{{ event.event_time|time:"H:i" }}">
+            <label class="block mb-2 font-semibold">Start Time</label>
+            <input type="time" name="start_time" class="w-full border px-3 py-2 rounded mb-4" value="{{ event.start_time|time:"H:i" }}">
+
+            <label class="block mb-2 font-semibold">End Time</label>
+            <input type="time" name="end_time" class="w-full border px-3 py-2 rounded mb-4" value="{{ event.end_time|time:"H:i" }}">
 
             <label class="block mb-2 font-semibold">Event Image</label>
             <input type="file" name="image" class="w-full border px-3 py-2 rounded mb-4">
@@ -146,41 +151,40 @@
             alert("An error occurred. Please try again.");
         });
     }
+
     function removeParticipant(participantId) {
-    fetch("{% url 'event:remove_participant' event.id %}", {
-        method: "POST",
-        headers: {
-            "X-CSRFToken": "{{ csrf_token }}",
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ participant_id: participantId })
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error("Network response was not OK");
-        }
-        return response.json();
-    })
-    .then(data => {
-        if (data.success) {
-            const row = document.getElementById(`participant-${participantId}`);
-            console.log(`Trying to remove row with ID: participant-${participantId}`);
-            if (row) {
-                row.remove();  // Immediately remove the row from the DOM
-                alert("Participant removed successfully.");
-            } else {
-                console.warn(`Row with ID participant-${participantId} not found in the DOM.`);
+        fetch("{% url 'event:remove_participant' event.id %}", {
+            method: "POST",
+            headers: {
+                "X-CSRFToken": "{{ csrf_token }}",
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ participant_id: participantId })
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Network response was not OK");
             }
-        } else {
-            alert(data.error || "Failed to remove participant.");
-        }
-    })
-    .catch(error => {
-        console.error("Error:", error);
-        alert("An error occurred. Please try again.");
-    });
-}
-function deleteEvent() {
+            return response.json();
+        })
+        .then(data => {
+            if (data.success) {
+                const row = document.getElementById(`participant-${participantId}`);
+                if (row) {
+                    row.remove();  // Immediately remove the row from the DOM
+                    alert("Participant removed successfully.");
+                }
+            } else {
+                alert(data.error || "Failed to remove participant.");
+            }
+        })
+        .catch(error => {
+            console.error("Error:", error);
+            alert("An error occurred. Please try again.");
+        });
+    }
+
+    function deleteEvent() {
         if (!confirm("Are you sure you want to delete this event? This action cannot be undone.")) {
             return;
         }
@@ -210,8 +214,6 @@ function deleteEvent() {
             alert("An error occurred. Please try again.");
         });
     }
-
-
 </script>
 
 </body>

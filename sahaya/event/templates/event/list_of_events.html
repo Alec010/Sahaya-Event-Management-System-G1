@@ -32,7 +32,11 @@
                         <div class="avatar"><div class="w-8 rounded-full bg-gray-300"></div></div>
                         <div class="avatar"><div class="w-8 rounded-full bg-gray-400"></div></div>
                     </div>
-                    <p class="text-sm text-black">{{ event.start_date|date:"F j, Y" }} at {{ event.event_time|time:"H:i" }}</p>
+                    <p class="text-sm text-black">
+                        {{ event.start_date|date:"F j, Y" }} 
+                        from {{ event.start_time|time:"H:i A" }} 
+                        to {{ event.end_time|time:"H:i A" }}
+                    </p>
                     <a href="{% url 'event:edit_event' event.id %}" class="btn bg-[#16423C] text-white mt-4 inline-block px-4 py-2 rounded">Edit Event</a>
                 </div>
             </div>
@@ -63,7 +67,11 @@
                         <div class="avatar"><div class="w-8 rounded-full bg-gray-300"></div></div>
                         <div class="avatar"><div class="w-8 rounded-full bg-gray-400"></div></div>
                     </div>
-                    <p class="text-sm text-black">{{ event.start_date|date:"F j, Y" }} at {{ event.event_time|time:"H:i" }}</p>
+                    <p class="text-sm text-black">
+                        {{ event.start_date|date:"F j, Y" }} 
+                        from {{ event.start_time|time:"H:i A" }} 
+                        to {{ event.end_time|time:"H:i A" }}
+                    </p>
                     <a href="{% url 'event:view_event' event.id %}" class="btn bg-[#16423C] text-white mt-4 inline-block px-4 py-2 rounded">View Event</a>
                 </div>
             </div>

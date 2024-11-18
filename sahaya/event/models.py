@@ -1,4 +1,3 @@
-# event/models.py
 from django.db import models
 from django.conf import settings
 
@@ -8,7 +7,8 @@ class Event(models.Model):
     location = models.CharField(max_length=100)
     start_date = models.DateField()
     end_date = models.DateField()
-    event_time = models.TimeField()
+    start_time = models.TimeField()  # Changed from event_time
+    end_time = models.TimeField()    # Added end_time
     organizer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="organized_events")
     image = models.ImageField(upload_to='event_images/', blank=True, null=True)
 
