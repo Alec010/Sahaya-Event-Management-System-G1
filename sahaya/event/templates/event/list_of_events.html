@@ -5,74 +5,170 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>List of Events</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@latest/dist/full.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --color-dark-green: #16423C;
+            --color-green: #6A9C89;
+            --color-light-green: #C4DAD2;
+            --color-lightest-green: #E9EFEC;
+        }
+
+        .sidebar-hidden {
+            transform: translateX(-100%);
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .sidebar-visible {
+            transform: translateX(0);
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .menu-hidden {
+            display: none;
+        }
+    </style>
 </head>
-<body class="bg-gray-100 font-sans leading-normal tracking-normal">
+<body class="bg-gradient-to-tr from-[var(--color-lightest-green)] to-[var(--color-light-green)] font-sans relative min-h-screen">
 
-<div class="container mx-auto px-4 py-8">
-    <h2 class="text-4xl font-bold mb-6 text-[#16423C]">Events</h2>
-    
-    <!-- Organized Events Section -->
-    <section class="mb-16">
-        <h3 class="text-3xl font-semibold mb-4 text-[#6A9C89]">Organized Events</h3>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {% for event in organized_events %}
-            <div class="card bg-white shadow-lg rounded-lg overflow-hidden">
-                <!-- Event image or placeholder -->
-                <figure class="h-48">
-                    {% if event.image %}
-                        <img src="{{ event.image.url }}" alt="{{ event.title }}" class="w-full h-full object-cover">
-                    {% else %}
-                        <div class="h-full bg-gradient-to-br from-[#E9EFEC] to-[#C4DAD2]"></div>
-                    {% endif %}
-                </figure>
-                <div class="p-4">
-                    <h3 class="text-xl font-semibold text-black">{{ event.title }}</h3>
-                    <p class="text-gray-600">By {{ event.organizer.first_name }} {{ event.organizer.last_name }}</p>
-                    <div class="flex items-center gap-2 my-2">
-                        <div class="avatar"><div class="w-8 rounded-full bg-gray-300"></div></div>
-                        <div class="avatar"><div class="w-8 rounded-full bg-gray-400"></div></div>
-                    </div>
-                    <p class="text-sm text-black">{{ event.start_date|date:"F j, Y" }} at {{ event.event_time|time:"H:i" }}</p>
-                    <a href="{% url 'event:edit_event' event.id %}" class="btn bg-[#16423C] text-white mt-4 inline-block px-4 py-2 rounded">Edit Event</a>
-                </div>
-            </div>
-            {% empty %}
-            <p>No events organized by you yet.</p>
-            {% endfor %}
+    <!-- Sidebar -->
+    <div id="sidebar" class="w-64 bg-[var(--color-light-green)] text-black p-6 flex flex-col fixed top-0 left-0 h-full sidebar-hidden z-50 shadow-lg">
+        <div class="flex items-center justify-between mb-8">
+            <h2 class="text-2xl font-bold text-[var(--color-dark-green)]">Sahaya</h2>
+            <button id="closeSidebar" class="text-gray-700 hover:text-red-500">
+                <i class="fas fa-times text-xl"></i>
+            </button>
         </div>
-    </section>
+        <ul class="menu">
+            <li class="mb-4">
+                <a href="{% url 'users:dashboard' %}" class="flex items-center gap-3 btn btn-ghost justify-start w-full">
+                    <i class="fas fa-th-large"></i>
+                    <span>Dashboard</span>
+                </a>
+            </li>
+            <li class="mb-4">
+                <a href="{% url 'event:list_of_events' %}" class="flex items-center gap-3 btn btn-ghost justify-start w-full">
+                    <i class="fas fa-tv"></i>
+                    <span>Events</span>
+                </a>
+            </li>
+            <li class="mb-4">
+                <a href="#" class="flex items-center gap-3 btn btn-ghost justify-start w-full">
+                    <i class="fas fa-envelope"></i>
+                    <span>Messages</span>
+                </a>
+            </li>
+            <li class="mb-4">
+                <a href="{% url 'users:account' %}" class="flex items-center gap-3 btn btn-ghost justify-start w-full">
+                    <i class="fas fa-user"></i>
+                    <span>Profile</span>
+                </a>
+            </li>
+        </ul>
+        <div class="mt-auto">
+            <a href="{% url 'home' %}" class="flex items-center gap-3 btn btn-outline w-full text-left">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Logout</span>
+            </a>
+        </div>
+    </div>
 
-    <!-- Events Participated Section -->
-    <section>
-        <h3 class="text-3xl font-semibold mb-4 text-[#6A9C89]">Events Participated</h3>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {% for event in participated_events %}
-            <div class="card bg-white shadow-lg rounded-lg overflow-hidden">
-                <!-- Event image or placeholder -->
-                <figure class="h-48">
-                    {% if event.image %}
-                        <img src="{{ event.image.url }}" alt="{{ event.title }}" class="w-full h-full object-cover">
-                    {% else %}
-                        <div class="h-full bg-gradient-to-br from-[#E9EFEC] to-[#C4DAD2]"></div>
-                    {% endif %}
-                </figure>
-                <div class="p-4">
-                    <h3 class="text-xl font-semibold text-black">{{ event.title }}</h3>
-                    <p class="text-gray-600">By {{ event.organizer.first_name }} {{ event.organizer.last_name }}</p>
-                    <div class="flex items-center gap-2 my-2">
-                        <div class="avatar"><div class="w-8 rounded-full bg-gray-300"></div></div>
-                        <div class="avatar"><div class="w-8 rounded-full bg-gray-400"></div></div>
+    <!-- Menu Button -->
+    <button id="menuButton" class="fixed top-4 left-4 z-50 bg-[var(--color-dark-green)] text-white p-3 rounded-md shadow-md hover:bg-[var(--color-green)]">
+        <i class="fas fa-bars text-lg"></i>
+    </button>
+
+    <!-- Main Content -->
+    <div class="container mx-auto px-4 py-8">
+        <h2 class="text-4xl font-bold mb-8 text-[#16423C] text-center">Events</h2>
+        
+        <!-- Organized Events Section -->
+        <section class="mb-16">
+            <h3 class="text-3xl font-semibold mb-6 text-[#6A9C89]">Organized Events</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {% for event in organized_events %}
+                <div class="card bg-white shadow-lg rounded-lg overflow-hidden transition-transform hover:scale-105">
+                    <figure class="h-48">
+                        {% if event.image %}
+                            <img src="{{ event.image.url }}" alt="{{ event.title }}" class="w-full h-full object-cover">
+                        {% else %}
+                            <div class="h-full bg-gradient-to-br from-[#E9EFEC] to-[#C4DAD2] flex items-center justify-center text-gray-400 text-xl">
+                                <i class="fas fa-image"></i>
+                            </div>
+                        {% endif %}
+                    </figure>
+                    <div class="p-4">
+                        <h3 class="text-xl font-semibold text-[#16423C]">{{ event.title }}</h3>
+                        <p class="text-sm text-gray-600">By {{ event.organizer.first_name }} {{ event.organizer.last_name }}</p>
+                        <p class="text-sm text-gray-700 my-2">
+                            {{ event.start_date|date:"F j, Y" }} 
+                            from {{ event.start_time|time:"h:i A" }} 
+                            to {{ event.end_time|time:"h:i A" }}
+                        </p>
+                        <a href="{% url 'event:edit_event' event.id %}" class="btn w-full mt-4 bg-[#16423C] hover:bg-[#0E2C23] text-white">Edit Event</a>
+
                     </div>
-                    <p class="text-sm text-black">{{ event.start_date|date:"F j, Y" }} at {{ event.event_time|time:"H:i" }}</p>
-                    <a href="{% url 'event:view_event' event.id %}" class="btn bg-[#16423C] text-white mt-4 inline-block px-4 py-2 rounded">View Event</a>
                 </div>
+                {% empty %}
+                <p class="text-gray-600 text-center">No events organized by you yet.</p>
+                {% endfor %}
             </div>
-            {% empty %}
-            <p>No events participated in yet.</p>
-            {% endfor %}
-        </div>
-    </section>
-</div>
+        </section>
+
+        <!-- Events Participated Section -->
+        <section>
+            <h3 class="text-3xl font-semibold mb-6 text-[#6A9C89]">Events Participated</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {% for event in participated_events %}
+                <div class="card bg-white shadow-lg rounded-lg overflow-hidden transition-transform hover:scale-105">
+                    <figure class="h-48">
+                        {% if event.image %}
+                            <img src="{{ event.image.url }}" alt="{{ event.title }}" class="w-full h-full object-cover">
+                        {% else %}
+                            <div class="h-full bg-gradient-to-br from-[#E9EFEC] to-[#C4DAD2] flex items-center justify-center text-gray-400 text-xl">
+                                <i class="fas fa-image"></i>
+                            </div>
+                        {% endif %}
+                    </figure>
+                    <div class="p-4">
+                        <h3 class="text-xl font-semibold text-[#16423C]">{{ event.title }}</h3>
+                        <p class="text-sm text-gray-600">By {{ event.organizer.first_name }} {{ event.organizer.last_name }}</p>
+                        <p class="text-sm text-gray-700 my-2">
+                            {{ event.start_date|date:"F j, Y" }} 
+                            from {{ event.start_time|time:"h:i A" }} 
+                            to {{ event.end_time|time:"h:i A" }}
+                        </p>
+                        <a href="{% url 'event:view_event' event.id %}" class="btn w-full mt-4 bg-[#16423C] hover:bg-[#0E2C23] text-white">View Event</a>
+
+                    </div>
+                </div>
+                {% empty %}
+                <p class="text-gray-600 text-center">No events participated in yet.</p>
+                {% endfor %}
+            </div>
+        </section>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        const menuButton = document.getElementById('menuButton');
+        const closeSidebar = document.getElementById('closeSidebar');
+        const sidebar = document.getElementById('sidebar');
+
+        // Toggle Sidebar
+        menuButton.addEventListener('click', () => {
+            sidebar.classList.toggle('sidebar-hidden');
+            sidebar.classList.toggle('sidebar-visible');
+            menuButton.classList.add('menu-hidden');
+        });
+
+        closeSidebar.addEventListener('click', () => {
+            sidebar.classList.toggle('sidebar-hidden');
+            sidebar.classList.toggle('sidebar-visible');
+            menuButton.classList.remove('menu-hidden');
+        });
+    </script>
 
 </body>
 </html>

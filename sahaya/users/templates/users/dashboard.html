@@ -10,130 +10,154 @@
     <link href="https://fonts.googleapis.com/css2?family=ABeeZee&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/npm/daisyui@latest/dist/full.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+
 </head>
 
 <body class="bg-[#E9EFEC] font-ABeeZee flex h-screen">
     <!-- Sidebar -->
-<div class="w-64 bg-[#C4DAD2] p-6 flex-shrink-0 flex flex-col fixed h-full text-black">
-    <h2 class="text-2xl font-bold mb-10">Sahaya</h2>
-    <ul class="menu items-start"> <!-- Added items-start here -->
-        <li><a href="#" class="btn btn-ghost w-full">Dashboard</a></li>
-        <li><a href="{% url 'event:list_of_events' %}" class="btn btn-ghost w-full">Events</a></li>
-        <li><a href="#" class="btn btn-ghost w-full">Messages</a></li>
-        <li><a href="{% url 'users:account' %}" class="btn btn-ghost w-full">Profile</a></li>
-    </ul>
-    <div class="mt-auto">
-        <a href="{% url 'home' %}" class="btn btn-outline w-full mt-10 text-black text-left">Logout</a>
+    <div class="w-64 bg-[#C4DAD2] p-6 flex-shrink-0 flex flex-col fixed h-full text-black">
+        <h2 class="text-2xl font-bold mb-10">Sahaya</h2>
+        <ul class="menu items-start">
+            <li class="mb-4">
+                <a href="{% url 'users:dashboard' %}" class="flex items-center gap-3 btn btn-ghost w-full">
+                    <i class="fas fa-th-large"></i>
+                    <span>Dashboard</span>
+                </a>
+            </li>
+            <li class="mb-4">
+                <a href="{% url 'event:list_of_events' %}" class="flex items-center gap-3 btn btn-ghost w-full">
+                    <i class="fas fa-tv"></i>
+                    <span>Events</span>
+                </a>
+            </li>
+            <li class="mb-4">
+                <a href="#" class="flex items-center gap-3 btn btn-ghost w-full">
+                    <i class="fas fa-envelope"></i>
+                    <span>Messages</span>
+                </a>
+            </li>
+            <li class="mb-4">
+                <a href="{% url 'users:account' %}" class="flex items-center gap-3 btn btn-ghost w-full">
+                    <i class="fas fa-user"></i>
+                    <span>Profile</span>
+                </a>
+            </li>
+        </ul>
+        <div class="mt-auto">
+            <a href="{% url 'home' %}" class="flex items-center gap-3 btn btn-outline w-full mt-10 text-black text-left">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Logout</span>
+            </a>
+        </div>
     </div>
-</div>
-
 
     <!-- Main Content Area -->
     <div class="flex-grow p-10 ml-64 overflow-y-auto">
         <!-- Banner Section -->
         <div class="bg-gradient-to-br from-[#C4DAD2] to-[#6A9C89] text-white p-10 rounded-lg shadow-lg mb-10">
             <h1 class="text-4xl font-bold mb-4">Discover and experience extraordinary Events</h1>
-            <p class="text-lg mb-6">Enter in the world of events. Discover now the latest Events or start creating your own!</p>
+            <p class="text-lg mb-6">Enter the world of events. Discover the latest events or start creating your own!</p>
             <div class="flex gap-4">
                 <a href="{% url 'event:create_event' %}" class="btn mb-6" style="background-color: #16423C; color: white;">
                     Create Event
                 </a>
-                
                 <button class="btn btn-outline border-white text-white">Discover Now</button>
             </div>
         </div>
 
         <!-- Events Participated Section -->
-<section class="mb-16 text-black">
-    <h2 class="text-3xl font-bold mb-6">Events Participated</h2>
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <!-- Card 1 -->
-        <div class="card bg-white shadow-lg">
-            <figure class="h-48 bg-gradient-to-br from-[#E9EFEC] to-[#C4DAD2] rounded-t-lg"></figure>
-            <div class="card-body">
-                <h3 class="card-title">Abstract Colors</h3>
-                <p>By Esther Jackson</p>
-                <div class="flex items-center gap-2">
-                    <div class="avatar"><div class="w-8 rounded-full bg-gray-300"></div></div>
-                    <div class="avatar"><div class="w-8 rounded-full bg-gray-400"></div></div>
-                </div>
-                <p class="text-sm mt-4">Current Data</p>
-                <button class="btn bg-[#16423C] text-white">Registered</button>
-            </div>
-        </div>
-        <!-- Card 2 -->
-        <div class="card bg-white shadow-lg">
-            <figure class="h-48 bg-gradient-to-br from-[#E9EFEC] to-[#C4DAD2] rounded-t-lg"></figure>
-            <div class="card-body">
-                <h3 class="card-title">Digital Dreams</h3>
-                <p>By John Doe</p>
-                <div class="flex items-center gap-2">
-                    <div class="avatar"><div class="w-8 rounded-full bg-gray-300"></div></div>
-                    <div class="avatar"><div class="w-8 rounded-full bg-gray-400"></div></div>
-                </div>
-                <p class="text-sm mt-4">Current Data</p>
-                <button class="btn bg-[#16423C] text-white">Registered</button>
-            </div>
-        </div>
-        <!-- Card 3 -->
-        <div class="card bg-white shadow-lg">
-            <figure class="h-48 bg-gradient-to-br from-[#E9EFEC] to-[#C4DAD2] rounded-t-lg"></figure>
-            <div class="card-body">
-                <h3 class="card-title">Creative Vibes</h3>
-                <p>By Jane Smith</p>
-                <div class="flex items-center gap-2">
-                    <div class="avatar"><div class="w-8 rounded-full bg-gray-300"></div></div>
-                    <div class="avatar"><div class="w-8 rounded-full bg-gray-400"></div></div>
-                </div>
-                <p class="text-sm mt-4">Current Data</p>
-                <button class="btn bg-[#16423C] text-white">Registered</button>
-            </div>
-        </div>
-    </div>
-</section>
+        <section class="mb-16 text-black">
+            <h2 class="text-3xl font-bold mb-6">Events Participated</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                {% for event in user_registered_events %}
+                <!-- Card for registered event -->
+                <div class="card bg-white shadow-lg" id="registered-event-{{ event.id }}">
+                    <figure class="h-48">
+                        {% if event.image %}
+                            <img src="{{ event.image.url }}" alt="{{ event.title }}" class="w-full h-full object-cover rounded-t-lg">
+                        {% else %}
+                            <div class="h-full bg-gradient-to-br from-[#E9EFEC] to-[#C4DAD2] rounded-t-lg"></div>
+                        {% endif %}
+                    </figure>
+                    <div class="card-body">
+                        <h3 class="card-title">{{ event.title }}</h3>
+                        <p>By {{ event.organizer.first_name }} {{ event.organizer.last_name }}</p>
+                        <div class="flex items-center gap-2">
+                            <div class="avatar"><div class="w-8 rounded-full bg-gray-300"></div></div>
+                            <div class="avatar"><div class="w-8 rounded-full bg-gray-400"></div></div>
+                        </div>
+                        <p class="text-sm mt-4 text-black">
+                            {{ event.start_date|date:"F j, Y" }}
+                            {% if event.start_time and event.end_time %}
+                                from {{ event.start_time|time:"H:i A" }} to {{ event.end_time|time:"H:i A" }}
+                            {% else %}
+                                - Time not set
+                            {% endif %}
+                        </p>
 
-  <!-- Trending Events Section -->
-  <section>
-    <h2 class="text-3xl font-bold mb-6 text-black">Trending Events</h2>
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {% for event in trending_events %}
-            <div class="card bg-white shadow-lg">
-                <!-- Display event image if available; use a placeholder if not -->
-                <figure class="h-48">
-                    {% if event.image %}
-                        <img src="{{ event.image.url }}" alt="{{ event.title }}" class="w-full h-full object-cover rounded-t-lg">
-                    {% else %}
-                        <div class="h-full bg-gradient-to-br from-[#E9EFEC] to-[#C4DAD2] rounded-t-lg"></div>
-                    {% endif %}
-                </figure>
-                <div class="card-body">
-                    <h3 class="card-title text-black">{{ event.title }}</h3>
-                    <p class="text-black">By {{ event.organizer.first_name }} {{ event.organizer.last_name }}</p>
-                    <div class="flex items-center gap-2">
-                        <div class="avatar"><div class="w-8 rounded-full bg-gray-300"></div></div>
-                        <div class="avatar"><div class="w-8 rounded-full bg-gray-400"></div></div>
+<!-- Conditional Button -->
+{% if event.organizer == user %}
+    <a href="{% url 'event:edit_event' event.id %}" class="btn bg-[#16423C] text-white w-full">Edit Event</a>
+{% elif event in user_registered_events %}
+    <a href="{% url 'event:view_event' event.id %}" class="btn bg-[#16423C] text-white w-full">Registered</a>
+{% else %}
+    <!-- Redirect to the view event page -->
+    <a href="{% url 'event:view_event' event.id %}" class="btn bg-[#16423C] text-white w-full">Register Now</a>
+{% endif %}
                     </div>
-                    <p class="text-sm mt-4 text-black">{{ event.start_date|date:"F j, Y" }} at {{ event.event_time|time:"H:i" }}</p>
-
-                    <!-- Conditional Button based on registration status -->
-                    {% if event in user_registered_events %}
-                        <!-- If user is registered, show "Registered" button -->
-                        <a href="{% url 'event:view_event' event.id %}" class="btn bg-[#16423C] text-white">Registered</a>
-                    {% elif event.organizer == request.user %}
-                        <!-- If user is the organizer, show "Edit Event" button -->
-                        <a href="{% url 'event:edit_event' event.id %}" class="btn bg-[#16423C] text-white">Edit Event</a>
-                    {% else %}
-                        <!-- If user is not registered and not the organizer, show "Register" button -->
-                        <a href="{% url 'event:view_event' event.id %}" class="btn bg-[#16423C] text-white">Register</a>
-                    {% endif %}
                 </div>
+                {% endfor %}
             </div>
-        {% empty %}
-            <p>No trending events available at the moment.</p>
-        {% endfor %}
+        </section>
+
+        <!-- Trending Events Section -->
+        <section>
+            <h2 class="text-3xl font-bold mb-6 text-black">Trending Events</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                {% for event in trending_events %}
+                <div class="card bg-white shadow-lg">
+                    <figure class="h-48">
+                        {% if event.image %}
+                            <img src="{{ event.image.url }}" alt="{{ event.title }}" class="w-full h-full object-cover rounded-t-lg">
+                        {% else %}
+                            <div class="h-full bg-gradient-to-br from-[#E9EFEC] to-[#C4DAD2] rounded-t-lg"></div>
+                        {% endif %}
+                    </figure>
+                    <div class="card-body">
+                        <h3 class="card-title text-black">{{ event.title }}</h3>
+                        <p class="text-black">By {{ event.organizer.first_name }} {{ event.organizer.last_name }}</p>
+                        <div class="flex items-center gap-2">
+                            <div class="avatar"><div class="w-8 rounded-full bg-gray-300"></div></div>
+                            <div class="avatar"><div class="w-8 rounded-full bg-gray-400"></div></div>
+                        </div>
+                        <p class="text-sm mt-4 text-black">
+                            {{ event.start_date|date:"F j, Y" }}
+                            {% if event.start_time and event.end_time %}
+                                from {{ event.start_time|time:"H:i A" }} to {{ event.end_time|time:"H:i A" }}
+                            {% else %}
+                                - Time not set
+                            {% endif %}
+                        </p>
+
+                        <!-- Conditional Button -->
+                        {% if event.organizer == user %}
+                        <a href="{% url 'event:edit_event' event.id %}" class="btn bg-[#16423C] text-white w-full">Edit Event</a>
+                    {% elif event in user_registered_events %}
+                        <a href="{% url 'event:view_event' event.id %}" class="btn bg-[#16423C] text-white w-full">Registered</a>
+                    {% else %}
+                        <!-- Redirect to the view event page -->
+                        <a href="{% url 'event:view_event' event.id %}" class="btn bg-[#16423C] text-white w-full">Register Event</a>
+                    {% endif %}
+                    
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </section>
     </div>
-</section>
-</div>
+
+
 </body>
 
 </html>

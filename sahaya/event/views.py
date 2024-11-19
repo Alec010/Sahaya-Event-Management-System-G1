@@ -78,7 +78,8 @@ def edit_event(request, event_id):
             form.save()
             return JsonResponse({"success": True})  # Return JSON response on success
         else:
-            # Send form errors if the form is not valid
+            # Log errors to debug invalid form
+            print("Form errors:", form.errors)
             return JsonResponse({"success": False, "errors": form.errors}, status=400)
 
     # If not a POST request, render the edit page (for when the user opens the modal)

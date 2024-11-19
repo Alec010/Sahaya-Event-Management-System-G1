@@ -5,6 +5,10 @@ from .forms import CustomUserCreationForm
 from django.contrib.auth.forms import AuthenticationForm
 from event.models import Event
 from registration.models import Registration 
+from django.contrib import messages
+from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth import update_session_auth_hash
 
 
 def signup_view(request):
@@ -45,11 +49,6 @@ def dashboard_view(request):
 def account_view(request):
     return render(request, 'users/account.html')
 
-from django.contrib import messages
-from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth import update_session_auth_hash
-
 def edit_account(request):
     if request.method == 'POST':
         user = request.user
@@ -77,14 +76,13 @@ def edit_account(request):
 
 @login_required
 def delete_account(request):
-    if request.method == 'POST':
-        # Confirm the user wants to delete their account
+    if request.method == 'POST' and request.POST.get('delete_account'):
         user = request.user
-        user.delete()
+        logout(request)  # Log out the user
+        user.delete()  # Delete the account
         messages.success(request, "Your account has been successfully deleted.")
-        return redirect('users:home')  # Redirect to the home page after deletion
-
-    return render(request, 'users/confirm_delete_account.html')  # Show confirmation page
+        return redirect('users:home')  # Redirect to the home page
+    return render(request, 'users/profile.html')  # Render the profile page
 
 def logout_view(request):
     logout(request)

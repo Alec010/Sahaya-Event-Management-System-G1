@@ -5,8 +5,80 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Update Event</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@latest/dist/full.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        :root {
+            --color-dark-green: #16423C;
+            --color-green: #6A9C89;
+            --color-light-green: #C4DAD2;
+            --color-lightest-green: #E9EFEC;
+        }
+
+        .sidebar-hidden {
+            transform: translateX(-100%);
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .sidebar-visible {
+            transform: translateX(0);
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .menu-hidden {
+            display: none;
+        }
+    </style>
 </head>
 <body class="bg-gray-100 font-sans leading-normal tracking-normal">
+
+<!-- Sidebar -->
+<div id="sidebar" class="w-64 bg-[var(--color-light-green)] text-black p-6 flex flex-col fixed top-0 left-0 h-full sidebar-hidden z-50">
+    <div class="flex items-center justify-between mb-8">
+        <h2 class="text-2xl font-bold text-[var(--color-dark-green)]">Sahaya</h2>
+        <button id="closeSidebar" class="text-gray-700 hover:text-red-500">
+            <i class="fas fa-times text-xl"></i>
+        </button>
+    </div>
+    <ul class="menu">
+        <li class="mb-4">
+            <a href="{% url 'users:dashboard' %}" class="flex items-center gap-3 btn btn-ghost justify-start w-full">
+                <i class="fas fa-th-large"></i>
+                <span>Dashboard</span>
+            </a>
+        </li>
+        <li class="mb-4">
+            <a href="{% url 'event:list_of_events' %}" class="flex items-center gap-3 btn btn-ghost justify-start w-full">
+                <i class="fas fa-tv"></i>
+                <span>Events</span>
+            </a>
+        </li>
+        <li class="mb-4">
+            <a href="#" class="flex items-center gap-3 btn btn-ghost justify-start w-full">
+                <i class="fas fa-envelope"></i>
+                <span>Messages</span>
+            </a>
+        </li>
+        <li class="mb-4">
+            <a href="{% url 'users:account' %}" class="flex items-center gap-3 btn btn-ghost justify-start w-full">
+                <i class="fas fa-user"></i>
+                <span>Profile</span>
+            </a>
+        </li>
+    </ul>
+    <div class="mt-auto">
+        <a href="{% url 'home' %}" class="flex items-center gap-3 btn btn-outline w-full text-left">
+            <i class="fas fa-sign-out-alt"></i>
+            <span>Logout</span>
+        </a>
+    </div>
+</div>
+
+<!-- Menu Button -->
+<button id="menuButton" class="fixed top-4 left-4 z-50 bg-[var(--color-dark-green)] text-white p-3 rounded-md shadow-md hover:bg-[var(--color-green)]">
+    <i class="fas fa-bars text-lg"></i>
+</button>
 
 <div class="container mx-auto px-4 py-8">
     <!-- Go Back to Dashboard Button -->
@@ -30,13 +102,15 @@
             <p><span class="font-semibold">Location:</span> {{ event.location }}</p>
             <p><span class="font-semibold">Start Date:</span> {{ event.start_date|date:"F j, Y" }}</p>
             <p><span class="font-semibold">End Date:</span> {{ event.end_date|date:"F j, Y" }}</p>
-            <p><span class="font-semibold">Event Time:</span> {{ event.event_time }}</p>
- <!-- Update and Delete Event Buttons -->
- <div class="flex mt-4 space-x-4">
-    <button onclick="openUpdateModal()" class="bg-blue-500 text-white px-4 py-2 rounded">Update Event Details</button>
-    <button onclick="deleteEvent()" class="bg-red-500 text-white px-4 py-2 rounded">Delete Event </button>
-</div>
-</div>
+            <p><span class="font-semibold">Event Time:</span> From {{ event.start_time|time:"H:i A" }} to {{ event.end_time|time:"H:i A" }}</p>
+        </div>
+
+        <!-- Update and Delete Event Buttons -->
+        <div class="flex mt-4 space-x-4">
+            <button onclick="openUpdateModal()" class="bg-blue-500 text-white px-4 py-2 rounded">Update Event Details</button>
+            <button onclick="deleteEvent()" class="bg-red-500 text-white px-4 py-2 rounded">Delete Event</button>
+        </div>
+    </div>
 
     <!-- Participants Section -->
     <h3 class="text-2xl font-semibold mb-4 text-[#6A9C89]">List of Participants</h3>
@@ -84,7 +158,16 @@
             <textarea name="description" class="w-full border px-3 py-2 rounded mb-4">{{ event.description }}</textarea>
 
             <label class="block mb-2 font-semibold">Location</label>
-            <input type="text" name="location" class="w-full border px-3 py-2 rounded mb-4" value="{{ event.location }}">
+            <select name="location" id="venueSelect" class="select select-bordered w-full bg-white text-black border border-gray-300 rounded-md focus:ring focus:ring-green-500 focus:outline-none">
+                <option disabled selected>Select venue</option>
+                <option>Case room</option>
+                <option>GYM</option>
+                <option>Jurani Hall</option>
+                <option>LRAC</option>
+                <option>JHS Grandstand</option>
+                <option value="Others">Others</option>
+            </select>
+            <input type="text" name="custom_venue" id="customVenueInput" placeholder="Specify venue" class="mt-4 input input-bordered w-full bg-white text-black border border-gray-300 rounded-md focus:ring focus:ring-green-500 focus:outline-none" style="display: none;">
 
             <label class="block mb-2 font-semibold">Start Date</label>
             <input type="date" name="start_date" class="w-full border px-3 py-2 rounded mb-4" value="{{ event.start_date|date:"Y-m-d" }}">
@@ -92,8 +175,11 @@
             <label class="block mb-2 font-semibold">End Date</label>
             <input type="date" name="end_date" class="w-full border px-3 py-2 rounded mb-4" value="{{ event.end_date|date:"Y-m-d" }}">
 
-            <label class="block mb-2 font-semibold">Event Time</label>
-            <input type="time" name="event_time" class="w-full border px-3 py-2 rounded mb-4" value="{{ event.event_time|time:"H:i" }}">
+            <label class="block mb-2 font-semibold">Start Time</label>
+            <input type="time" name="start_time" class="w-full border px-3 py-2 rounded mb-4" value="{{ event.start_time|time:"H:i" }}">
+
+            <label class="block mb-2 font-semibold">End Time</label>
+            <input type="time" name="end_time" class="w-full border px-3 py-2 rounded mb-4" value="{{ event.end_time|time:"H:i" }}">
 
             <label class="block mb-2 font-semibold">Event Image</label>
             <input type="file" name="image" class="w-full border px-3 py-2 rounded mb-4">
@@ -107,6 +193,25 @@
 </div>
 
 <script>
+    // Sidebar Functionality
+    const menuButton = document.getElementById('menuButton');
+    const closeSidebar = document.getElementById('closeSidebar');
+    const sidebar = document.getElementById('sidebar');
+
+    // Toggle Sidebar
+    menuButton.addEventListener('click', () => {
+        sidebar.classList.toggle('sidebar-hidden');
+        sidebar.classList.toggle('sidebar-visible');
+        menuButton.classList.add('menu-hidden');
+    });
+
+    closeSidebar.addEventListener('click', () => {
+        sidebar.classList.toggle('sidebar-hidden');
+        sidebar.classList.toggle('sidebar-visible');
+        menuButton.classList.remove('menu-hidden');
+    });
+
+    // Update Event Modal
     function openUpdateModal() {
         document.getElementById("updateModal").classList.remove("hidden");
     }
@@ -122,23 +227,54 @@
         fetch("{% url 'event:edit_event' event.id %}", {
             method: "POST",
             headers: {
-                "X-CSRFToken": "{{ csrf_token }}",
+                "X-CSRFToken": "{{ csrf_token }}"
             },
             body: formData
         })
         .then(response => {
             if (!response.ok) {
-                return response.json().then(data => { throw new Error(data.error || "An error occurred"); });
+                return response.json().then(data => {
+                    throw new Error(data.errors ? JSON.stringify(data.errors) : "Unknown error");
+                });
             }
             return response.json();
         })
         .then(data => {
             if (data.success) {
                 alert("Event updated successfully!");
-                closeUpdateModal();
-                location.reload();  // Reload the page to reflect changes
+                location.reload();
+            }
+        })
+        .catch(error => {
+            console.error("Error:", error);
+            alert("An error occurred: " + error.message);
+        });
+    }
+
+    function removeParticipant(participantId) {
+        fetch("{% url 'event:remove_participant' event.id %}", {
+            method: "POST",
+            headers: {
+                "X-CSRFToken": "{{ csrf_token }}",
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ participant_id: participantId })
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Network response was not OK");
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.success) {
+                const row = document.getElementById(`participant-${participantId}`);
+                if (row) {
+                    row.remove();  // Immediately remove the row from the DOM
+                    alert("Participant removed successfully.");
+                }
             } else {
-                alert("Failed to update event: " + JSON.stringify(data.errors));  // Display form errors if any
+                alert(data.error || "Failed to remove participant.");
             }
         })
         .catch(error => {
@@ -146,41 +282,8 @@
             alert("An error occurred. Please try again.");
         });
     }
-    function removeParticipant(participantId) {
-    fetch("{% url 'event:remove_participant' event.id %}", {
-        method: "POST",
-        headers: {
-            "X-CSRFToken": "{{ csrf_token }}",
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ participant_id: participantId })
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error("Network response was not OK");
-        }
-        return response.json();
-    })
-    .then(data => {
-        if (data.success) {
-            const row = document.getElementById(`participant-${participantId}`);
-            console.log(`Trying to remove row with ID: participant-${participantId}`);
-            if (row) {
-                row.remove();  // Immediately remove the row from the DOM
-                alert("Participant removed successfully.");
-            } else {
-                console.warn(`Row with ID participant-${participantId} not found in the DOM.`);
-            }
-        } else {
-            alert(data.error || "Failed to remove participant.");
-        }
-    })
-    .catch(error => {
-        console.error("Error:", error);
-        alert("An error occurred. Please try again.");
-    });
-}
-function deleteEvent() {
+
+    function deleteEvent() {
         if (!confirm("Are you sure you want to delete this event? This action cannot be undone.")) {
             return;
         }
@@ -211,7 +314,14 @@ function deleteEvent() {
         });
     }
 
-
+    document.getElementById("venueSelect").addEventListener("change", function() {
+        const customVenueInput = document.getElementById("customVenueInput");
+        if (this.value === "Others") {
+            customVenueInput.style.display = "block";
+        } else {
+            customVenueInput.style.display = "none";
+        }
+    });
 </script>
 
 </body>

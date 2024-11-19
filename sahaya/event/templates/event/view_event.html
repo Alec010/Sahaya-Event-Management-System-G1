@@ -5,78 +5,175 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ event.title }} - Event Details</title>
-    <link href="{% static 'css/styles.css' %}" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/npm/daisyui@latest/dist/full.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --color-dark-green: #16423C;
+            --color-green: #6A9C89;
+            --color-light-green: #C4DAD2;
+            --color-lightest-green: #E9EFEC;
+        }
+
+        .sidebar-hidden {
+            transform: translateX(-100%);
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .sidebar-visible {
+            transform: translateX(0);
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .menu-hidden {
+            display: none;
+        }
+    </style>
 </head>
-<body class="bg-[#E9EFEC] font-ABeeZee min-h-screen flex items-center justify-center p-4">
-    <div class="bg-white shadow-lg rounded-lg max-w-2xl w-full p-6">
-        <!-- Event Image -->
-        {% if event.image %}
-            <img src="{{ event.image.url }}" alt="{{ event.title }}" class="w-full h-64 object-cover rounded-lg mb-4">
-        {% else %}
-            <div class="w-full h-64 bg-gray-200 rounded-lg mb-4 flex items-center justify-center">
-                <span class="text-gray-500">No Image Available</span>
-            </div>
-        {% endif %}
+<body class="bg-gradient-to-r from-[var(--color-lightest-green)] to-[var(--color-light-green)] font-ABeeZee min-h-screen relative">
 
-        <!-- Event Details -->
-        <h1 class="text-3xl font-bold text-[#16423C] mb-2">{{ event.title }}</h1>
-        <p class="text-gray-600 mb-4">By {{ event.organizer.first_name }} {{ event.organizer.last_name }}</p>
-        <p class="text-gray-700 mb-4">{{ event.description }}</p>
-        <div class="mb-4">
-            <p><strong>Location:</strong> {{ event.location }}</p>
-            <p><strong>Start Date:</strong> {{ event.start_date|date:"F j, Y" }}</p>
-            <p><strong>End Date:</strong> {{ event.end_date|date:"F j, Y" }}</p>
-            <p><strong>Time:</strong> {{ event.event_time|time:"H:i" }}</p>
+    <!-- Sidebar -->
+    <div id="sidebar" class="w-64 bg-[var(--color-light-green)] text-black p-6 flex flex-col fixed top-0 left-0 h-full sidebar-hidden z-50">
+        <div class="flex items-center justify-between mb-8">
+            <h2 class="text-2xl font-bold text-[var(--color-dark-green)]">Sahaya</h2>
+            <button id="closeSidebar" class="text-gray-700 hover:text-red-500">
+                <i class="fas fa-times text-xl"></i>
+            </button>
         </div>
+        <ul class="menu">
+            <li class="mb-4">
+                <a href="{% url 'users:dashboard' %}" class="flex items-center gap-3 btn btn-ghost justify-start w-full">
+                    <i class="fas fa-th-large"></i>
+                    <span>Dashboard</span>
+                </a>
+            </li>
+            <li class="mb-4">
+                <a href="{% url 'event:list_of_events' %}" class="flex items-center gap-3 btn btn-ghost justify-start w-full">
+                    <i class="fas fa-tv"></i>
+                    <span>Events</span>
+                </a>
+            </li>
+            <li class="mb-4">
+                <a href="#" class="flex items-center gap-3 btn btn-ghost justify-start w-full">
+                    <i class="fas fa-envelope"></i>
+                    <span>Messages</span>
+                </a>
+            </li>
+            <li class="mb-4">
+                <a href="{% url 'users:account' %}" class="flex items-center gap-3 btn btn-ghost justify-start w-full">
+                    <i class="fas fa-user"></i>
+                    <span>Profile</span>
+                </a>
+            </li>
+        </ul>
+        <div class="mt-auto">
+            <a href="{% url 'home' %}" class="flex items-center gap-3 btn btn-outline w-full text-left">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Logout</span>
+            </a>
+        </div>
+    </div>
 
-        <!-- Conditional Register/Cancel Button -->
-        {% if user_registered %}
-            <button onclick="cancelRegistration()" class="btn w-full bg-red-500 text-white py-3 rounded-lg text-center hover:bg-red-700">
-                Cancel Registration
-            </button>
-        {% else %}
-            <button onclick="registerForEvent()" class="btn w-full bg-[#16423C] text-white py-3 rounded-lg text-center hover:bg-[#13382e]">
-                Register Now
-            </button>
-        {% endif %}
+    <!-- Menu Button -->
+    <button id="menuButton" class="fixed top-4 left-4 z-50 bg-[var(--color-dark-green)] text-white p-3 rounded-md shadow-md hover:bg-[var(--color-green)]">
+        <i class="fas fa-bars text-lg"></i>
+    </button>
+
+    <!-- Main Content -->
+    <div class="container mx-auto px-4 py-8">
+        <!-- Event Card -->
+        <div class="bg-white shadow-lg rounded-lg overflow-hidden max-w-4xl mx-auto mt-30">
+            <!-- Event Header -->
+            <div class="relative">
+                {% if event.image %}
+                    <img src="{{ event.image.url }}" alt="{{ event.title }}" class="w-full h-64 object-cover">
+                {% else %}
+                    <div class="w-full h-64 bg-gradient-to-br from-[#E9EFEC] to-[#C4DAD2] flex items-center justify-center">
+                        <span class="text-gray-500">No Image Available</span>
+                    </div>
+                {% endif %}
+                <div class="absolute bottom-0 left-0 bg-gradient-to-t from-black to-transparent text-white p-4 w-full">
+                    <h1 class="text-3xl font-bold">{{ event.title }}</h1>
+                    <p class="text-sm">Organized by {{ event.organizer.first_name }} {{ event.organizer.last_name }}</p>
+                </div>
+            </div>
+
+            <!-- Event Details -->
+            <div class="p-6">
+                <h2 class="text-2xl font-semibold text-[var(--color-dark-green)] mb-4">Event Details</h2>
+                <div class="grid grid-cols-1 gap-4 text-gray-700">
+                    <p><strong>Location:</strong> {{ event.location }}</p>
+                    <p><strong>Start Date:</strong> {{ event.start_date|date:"F j, Y" }}</p>
+                    <p><strong>End Date:</strong> {{ event.end_date|date:"F j, Y" }}</p>
+                    <p><strong>Time:</strong> From {{ event.start_time|time:"h:i A" }} to {{ event.end_time|time:"h:i A" }}</p>
+                    <p><strong>Description:</strong> {{ event.description }}</p>
+                </div>
+            </div>
+
+            <!-- Register/Cancel Button -->
+            <div class="flex items-center gap-4 p-6">
+                {% if user_registered %}
+                    <button onclick="cancelRegistration()" class="btn btn-error w-full">Cancel Registration</button>
+                {% else %}
+                    <button onclick="registerForEvent()" class="btn btn-success w-full">Register Now</button>
+                {% endif %}
+            </div>
+        </div>
     </div>
 
     <!-- Success Modal -->
     <div id="successModal" class="fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center hidden z-50">
         <div class="bg-white p-6 rounded-lg shadow-lg max-w-md w-full text-center">
-            <h3 class="text-xl font-semibold mb-4">Successfully Registered</h3>
-            <p>You have successfully registered for the event check your email for details!</p>
-            <button onclick="closeModalAndRedirect()" class="bg-green-500 text-white py-2 px-4 rounded mt-4">Go Back to Dashboard</button>
+            <h3 class="text-xl font-semibold mb-4 text-green-500">Success</h3>
+            <p id="successMessage" class="text-gray-700"></p>
+            <button onclick="closeModalAndRedirect()" class="btn btn-primary mt-4">Go Back to Dashboard</button>
         </div>
     </div>
 
+    <!-- JavaScript -->
     <script>
-            function registerForEvent() {
-    fetch("{% url 'event:register_for_event' event.id %}", {
-        method: "POST",
-        headers: {
-            "X-CSRFToken": "{{ csrf_token }}",
-            "Content-Type": "application/json"
+        const menuButton = document.getElementById('menuButton');
+        const closeSidebar = document.getElementById('closeSidebar');
+        const sidebar = document.getElementById('sidebar');
+
+        // Toggle Sidebar
+        menuButton.addEventListener('click', () => {
+            sidebar.classList.toggle('sidebar-hidden');
+            sidebar.classList.toggle('sidebar-visible');
+            menuButton.classList.add('menu-hidden');
+        });
+
+        closeSidebar.addEventListener('click', () => {
+            sidebar.classList.toggle('sidebar-hidden');
+            sidebar.classList.toggle('sidebar-visible');
+            menuButton.classList.remove('menu-hidden');
+        });
+
+        function registerForEvent() {
+            fetch("{% url 'event:register_for_event' event.id %}", {
+                method: "POST",
+                headers: {
+                    "X-CSRFToken": "{{ csrf_token }}",
+                    "Content-Type": "application/json"
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    document.getElementById("successMessage").innerText = "You have successfully registered for the event.";
+                    document.getElementById("successModal").classList.remove("hidden");
+                } else {
+                    alert(data.error || "Failed to register for the event.");
+                }
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                alert("An error occurred. Please try again.");
+            });
         }
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            document.getElementById("successModal").classList.remove("hidden");
-        } else {
-            alert(data.error || "Failed to register for event.");
-        }
-    })
-    .catch(error => {
-        console.error("Error:", error);
-        alert("An error occurred. Please try again.");
-    });
-}
+
         function cancelRegistration() {
-            const eventId = "{{ event.id }}";
-            
             fetch("{% url 'event:cancel_registration' event.id %}", {
                 method: "POST",
                 headers: {
@@ -87,10 +184,8 @@
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    // Show the success modal with cancelation message
+                    document.getElementById("successMessage").innerText = "You have successfully canceled your registration.";
                     document.getElementById("successModal").classList.remove("hidden");
-                    document.getElementById("successModal").querySelector("h3").innerText = "Successfully Canceled Registration";
-                    document.getElementById("successModal").querySelector("p").innerText = "You have successfully canceled joining the event.";
                 } else {
                     alert(data.error || "Failed to cancel registration.");
                 }
@@ -103,7 +198,7 @@
 
         function closeModalAndRedirect() {
             document.getElementById("successModal").classList.add("hidden");
-            window.location.href = "{% url 'users:dashboard' %}";  // Redirect to dashboard
+            window.location.href = "{% url 'users:dashboard' %}";
         }
     </script>
 </body>
