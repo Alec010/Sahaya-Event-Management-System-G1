@@ -1,7 +1,7 @@
 from django import forms
 from .models import Event
 
-class EventForm(forms.ModelForm):    
+class EventForm(forms.ModelForm):
     class Meta:
         model = Event
         fields = ['title', 'description', 'location', 'start_date', 'end_date', 'start_time', 'end_time', 'image']
@@ -19,10 +19,13 @@ class EventForm(forms.ModelForm):
             overlapping_events = Event.objects.filter(
                 location=location,
                 start_date=start_date,
-                end_date=end_date,
                 start_time__lt=end_time,  # Starts before the new event's end time
                 end_time__gt=start_time,  # Ends after the new event's start time
             )
+
+            # If updating an event, exclude the current event from validation
+            if self.instance and self.instance.pk:
+                overlapping_events = overlapping_events.exclude(pk=self.instance.pk)
 
             if overlapping_events.exists():
                 raise forms.ValidationError(

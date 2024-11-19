@@ -96,12 +96,15 @@
                             {% endif %}
                         </p>
 
-                        <!-- Conditional Button -->
-                        {% if event in user_registered_events %}
-                            <a href="{% url 'event:view_event' event.id %}" class="btn bg-[#16423C] text-white w-full">Registered</a>
-                        {% else %}
-                            <button onclick="registerForEvent('{{ event.id }}')" class="btn bg-[#16423C] text-white w-full">Register Now</button>
-                        {% endif %}
+<!-- Conditional Button -->
+{% if event.organizer == user %}
+    <a href="{% url 'event:edit_event' event.id %}" class="btn bg-[#16423C] text-white w-full">Edit Event</a>
+{% elif event in user_registered_events %}
+    <a href="{% url 'event:view_event' event.id %}" class="btn bg-[#16423C] text-white w-full">Registered</a>
+{% else %}
+    <!-- Redirect to the view event page -->
+    <a href="{% url 'event:view_event' event.id %}" class="btn bg-[#16423C] text-white w-full">Register Now</a>
+{% endif %}
                     </div>
                 </div>
                 {% endfor %}
@@ -138,11 +141,15 @@
                         </p>
 
                         <!-- Conditional Button -->
-                        {% if event in user_registered_events %}
-                            <a href="{% url 'event:view_event' event.id %}" class="btn bg-[#16423C] text-white w-full">Registered</a>
-                        {% else %}
-                            <button onclick="registerForEvent('{{ event.id }}')" class="btn bg-[#16423C] text-white w-full">Register Now</button>
-                        {% endif %}
+                        {% if event.organizer == user %}
+                        <a href="{% url 'event:edit_event' event.id %}" class="btn bg-[#16423C] text-white w-full">Edit Event</a>
+                    {% elif event in user_registered_events %}
+                        <a href="{% url 'event:view_event' event.id %}" class="btn bg-[#16423C] text-white w-full">Registered</a>
+                    {% else %}
+                        <!-- Redirect to the view event page -->
+                        <a href="{% url 'event:view_event' event.id %}" class="btn bg-[#16423C] text-white w-full">Register Event</a>
+                    {% endif %}
+                    
                     </div>
                 </div>
                 {% endfor %}
@@ -150,30 +157,7 @@
         </section>
     </div>
 
-    <script>
-        function registerForEvent(eventId) {
-            fetch(`/event/register/${eventId}/`, {
-                method: "POST",
-                headers: {
-                    "X-CSRFToken": "{{ csrf_token }}",
-                    "Content-Type": "application/json"
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    alert("Successfully registered for the event!");
-                    location.reload();
-                } else {
-                    alert(data.error || "Failed to register for the event.");
-                }
-            })
-            .catch(error => {
-                console.error("Error:", error);
-                alert("An error occurred. Please try again.");
-            });
-        }
-    </script>
+
 </body>
 
 </html>
