@@ -9,6 +9,10 @@ from django.views.decorators.http import require_POST
 from django.http import JsonResponse
 import json
 import logging
+from .models import Event
+from registration.models import Registration
+from notification.utils import send_registration_email
+
 
 logger = logging.getLogger(__name__)
 
@@ -27,11 +31,16 @@ def register_for_event(request, event_id):
 
     # Register the user for the event
     try:
-        Registration.objects.create(
+        registration = Registration.objects.create(
             event=event,
             participant=request.user,
             status="Registered"
         )
+
+        # If registration was successful, send an email
+        send_registration_email(event, request.user)
+        
+
         return JsonResponse({"success": True, "message": "Successfully registered for the event."})
     except Exception as e:
         # Catch unexpected errors and ensure a JSON response
@@ -44,16 +53,14 @@ def create_event(request):
             event = form.save(commit=False)
             event.organizer = request.user  # Automatically set the organizer as the logged-in user
             event.save()
-            form.save_m2m()  # Save any ManyToMany relationships if needed
+            form.save_m2m()  
 
             # Check if the request is an AJAX request
             if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
                 return JsonResponse({'success': True})
             else:
-                # If it's not an AJAX request, you might want to redirect as a fallback
                 return redirect('event:success')
         else:
-            # Return validation errors in case of form issues
             if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
                 return JsonResponse({'success': False, 'errors': form.errors}, status=400)
     else:
@@ -146,8 +153,8 @@ def view_event(request, event_id):
     
     context = {
         'event': event,
-        'user_registered': bool(user_registration),  # Pass whether the user is registered
-        'registration': user_registration  # Pass the registration if it exists
+        'user_registered': bool(user_registration), 
+        'registration': user_registration 
     }
     return render(request, 'event/view_event.html', context)
 
@@ -172,3 +179,45 @@ def delete_event(request, event_id):
         return JsonResponse({"success": True, "message": "Event deleted successfully."})
     except Exception as e:
         return JsonResponse({"success": False, "error": "Failed to delete event."}, status=500)
+    
+
+@login_required
+def get_calendar_events(request):
+    organized_events = Event.objects.filter(organizer=request.user)
+    participated_events = Event.objects.filter(registration__participant=request.user).distinct()
+
+    events = []
+
+    # Add organized events
+    for event in organized_events:
+        events.append({
+            'id': event.id,
+            'title': f"{event.title} (Organizer)",
+            'start': f"{event.start_date}T{event.start_time}",
+            'end': f"{event.end_date}T{event.end_time}",
+            'allDay': False,  
+            'extendedProps': {
+                'role': 'organizer',
+                'description': event.description,  
+            }
+        })
+
+    # Add participated events
+    for event in participated_events:
+        events.append({
+            'id': event.id,
+            'title': f"{event.title} (Participant)",
+            'start': f"{event.start_date}T{event.start_time}",
+            'end': f"{event.end_date}T{event.end_time}",
+            'allDay': False,  
+            'extendedProps': {
+                'role': 'participant',
+                'description': event.description, 
+            }
+        })
+
+    return JsonResponse(events, safe=False)
+
+@login_required
+def calendar_view(request):
+    return render(request, 'event/calendar.html')

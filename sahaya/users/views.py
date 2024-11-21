@@ -68,8 +68,8 @@ def edit_account(request):
         user.save()
 
         # Add a unique success message
-        messages.success(request, "Account successfully edited.")  # Set a specific success message
-        return redirect('users:account')  # Redirect to clear POST data and avoid resubmission
+        messages.success(request, "Account successfully edited.")  
+        return redirect('users:account')  
 
     return redirect('users:account')
 
@@ -78,26 +78,26 @@ def edit_account(request):
 def delete_account(request):
     if request.method == 'POST' and request.POST.get('delete_account'):
         user = request.user
-        logout(request)  # Log out the user
-        user.delete()  # Delete the account
+        logout(request)  
+        user.delete()  
         messages.success(request, "Your account has been successfully deleted.")
-        return redirect('users:home')  # Redirect to the home page
-    return render(request, 'users/profile.html')  # Render the profile page
+        return redirect('users:home')  
+    return render(request, 'users/profile.html')  
 
 def logout_view(request):
     logout(request)
-    return redirect('users:home')  # Redirect to the home page after logging out
+    return redirect('users:home')  
 
 @login_required
 def dashboard_view(request):
-    trending_events = Event.objects.all()  # Fetch all events, or apply filters as needed
+    trending_events = Event.objects.all()  
 
     # Fetch events the user is already registered in
     user_registered_events = Event.objects.filter(registration__participant=request.user)
 
     context = {
         'trending_events': trending_events,
-        'user_registered_events': user_registered_events,  # Pass this to template
+        'user_registered_events': user_registered_events,  
     }
     return render(request, 'users/dashboard.html', context)
 
@@ -106,10 +106,10 @@ def upload_profile_picture(request):
     if request.method == 'POST' and request.FILES.get('profile_picture'):
         profile_picture = request.FILES['profile_picture']
         user = request.user
-        user.profile_picture = profile_picture  # Save the uploaded file
-        user.save()  # Save the user instance to the database
+        user.profile_picture = profile_picture  
+        user.save()  
         messages.success(request, 'Profile picture updated successfully!')
-        return redirect('users:account')  # Redirect to the profile page
+        return redirect('users:account')  
     else:
         messages.error(request, 'No file uploaded.')
         return redirect('users:account')

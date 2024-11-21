@@ -104,9 +104,9 @@
                         </a>
                     </li>
                     <li>
-                        <a href="#" class="flex items-center space-x-3 p-2 rounded-lg hover:bg-[var(--color-secondary)] transition-all duration-300 transform hover:scale-105">
+                        <a href="{% url 'event:calendar' %}" class="flex items-center space-x-3 p-2 rounded-lg hover:bg-[var(--color-secondary)] transition-all duration-300 transform hover:scale-105">
                             <i class="fas fa-envelope w-5"></i>
-                            <span>Messages</span>
+                            <span>Calendar</span>
                         </a>
                     </li>
                     <li>
@@ -200,9 +200,8 @@
             <div class="modal-content bg-[#E9EFEC] p-8 max-w-md w-full rounded-2xl shadow-2xl text-center transform scale-90 opacity-0 relative z-10">
                 <!-- Logo -->
                 <div class="mb-8">
-                    <img src="{% static 'users/sahayanew.png' %}" alt="Sahaya Logo" class="h-8 mx-auto"> <!-- Increased height -->
+                    <img src="{% static 'users/sahayanew.png' %}" alt="Sahaya Logo" class="h-8 mx-auto">
                 </div>
-                
                 
                 <!-- User Icon -->
                 <div class="mb-6">
@@ -248,6 +247,37 @@
                 </button>
             </div>
         </div>
+
+        <!-- Cancel Registration Modal -->
+        <div id="cancelModal" class="fixed inset-0 flex items-center justify-center hidden z-[100]">
+            <div class="modal-backdrop absolute inset-0 opacity-0"></div>
+            <div class="modal-content bg-[#E9EFEC] p-8 max-w-md w-full rounded-2xl shadow-2xl text-center transform scale-90 opacity-0 relative z-10">
+                <!-- Logo -->
+                <div class="mb-8">
+                    <img src="{% static 'users/sahayanew.png' %}" alt="Sahaya Logo" class="h-8 mx-auto">
+                </div>
+                
+                <!-- Sad Icon -->
+                <div class="mb-6">
+                    <div class="w-16 h-16 bg-[#6A9C89] rounded-full flex items-center justify-center mx-auto">
+                        <i class="fas fa-frown text-2xl text-white"></i>
+                    </div>
+                </div>
+
+                <!-- Confirmation Message -->
+                <h3 class="text-xl font-semibold mb-8 text-[#16423C]">Are you sure you want to cancel your registration?</h3>
+
+                <!-- Buttons -->
+                <div class="flex justify-center gap-4">
+                    <button onclick="confirmCancelRegistration()" class="bg-[#16423C] text-white px-6 py-2 rounded-md hover:bg-[#0D2E2A] transition-colors duration-300">
+                        Yes, Cancel
+                    </button>
+                    <button onclick="closeCancelModal()" class="bg-gray-300 text-gray-700 px-6 py-2 rounded-md hover:bg-gray-400 transition-colors duration-300">
+                        No, Keep
+                    </button>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- JavaScript -->
@@ -290,27 +320,8 @@
         }
 
         function cancelRegistration() {
-        fetch("{% url 'event:cancel_registration' event.id %}", {
-            method: "POST",
-            headers: {
-                "X-CSRFToken": "{{ csrf_token }}",
-                "Content-Type": "application/json"
-            }
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                alert("You have successfully canceled your registration.");
-                window.location.href = "{% url 'users:dashboard' %}"; // Redirect to the dashboard
-            } else {
-                alert(data.error || "Failed to cancel registration.");
-            }
-        })
-        .catch(error => {
-            console.error("Error:", error);
-            alert("An error occurred. Please try again.");
-        });
-    }
+            showCancelModal();
+        }
 
         function showModal() {
             const modal = document.getElementById("successModal");
@@ -338,6 +349,59 @@
                 modal.classList.add("hidden");
                 window.location.href = "{% url 'users:dashboard' %}";
             }, 300);
+        }
+
+        function showCancelModal() {
+            const modal = document.getElementById("cancelModal");
+            const backdrop = modal.querySelector(".modal-backdrop");
+            const content = modal.querySelector(".modal-content");
+
+            modal.classList.remove("hidden");
+            setTimeout(() => {
+                backdrop.classList.add("opacity-100");
+                content.classList.remove("scale-90", "opacity-0");
+                content.classList.add("scale-100", "opacity-100");
+            }, 10);
+        }
+
+        function closeCancelModal() {
+            const modal = document.getElementById("cancelModal");
+            const backdrop = modal.querySelector(".modal-backdrop");
+            const content = modal.querySelector(".modal-content");
+
+            backdrop.classList.remove("opacity-100");
+            content.classList.remove("scale-100", "opacity-100");
+            content.classList.add("scale-90", "opacity-0");
+
+            setTimeout(() => {
+                modal.classList.add("hidden");
+            }, 300);
+        }
+
+        function confirmCancelRegistration() {
+            fetch("{% url 'event:cancel_registration' event.id %}", {
+                method: "POST",
+                headers: {
+                    "X-CSRFToken": "{{ csrf_token }}",
+                    "Content-Type": "application/json"
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    closeCancelModal();
+                    setTimeout(() => {
+                        alert("You have successfully canceled your registration.");
+                        window.location.href = "{% url 'users:dashboard' %}";
+                    }, 300);
+                } else {
+                    alert(data.error || "Failed to cancel registration.");
+                }
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                alert("An error occurred. Please try again.");
+            });
         }
     </script>
 </body>
