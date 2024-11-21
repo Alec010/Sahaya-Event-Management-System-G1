@@ -19,8 +19,8 @@ class EventForm(forms.ModelForm):
             overlapping_events = Event.objects.filter(
                 location=location,
                 start_date=start_date,
-                start_time__lt=end_time,  # Starts before the new event's end time
-                end_time__gt=start_time,  # Ends after the new event's start time
+                start_time__lt=end_time,  
+                end_time__gt=start_time,  
             )
 
             # If updating an event, exclude the current event from validation

@@ -7,8 +7,8 @@ class Event(models.Model):
     location = models.CharField(max_length=100)
     start_date = models.DateField()
     end_date = models.DateField()
-    start_time = models.TimeField()  # Changed from event_time
-    end_time = models.TimeField()    # Added end_time
+    start_time = models.TimeField()  
+    end_time = models.TimeField()   
     organizer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="organized_events")
     image = models.ImageField(upload_to='event_images/', blank=True, null=True)
 
@@ -19,5 +19,4 @@ class Event(models.Model):
         return f"Organizer_{self.organizer.username}"
 
     def get_participants(self):
-        # Access related Registration objects without directly importing the Registration model
         return [registration.participant for registration in self.registration_set.all()]
