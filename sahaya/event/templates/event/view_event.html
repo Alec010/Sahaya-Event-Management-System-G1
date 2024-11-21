@@ -10,144 +10,261 @@
     <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet">
     <style>
         :root {
-            --color-dark-green: #16423C;
-            --color-green: #6A9C89;
-            --color-light-green: #C4DAD2;
-            --color-lightest-green: #E9EFEC;
+            --color-primary: #16423C;
+            --color-secondary: #6A9C89;
+            --color-accent: #C4DAD2;
+            --color-background: #E9EFEC;
         }
-
-        .sidebar-hidden {
-            transform: translateX(-100%);
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            min-height: 100vh;
+            position: relative;
+            background-color: #1a1a1a;
+        }
+        .sidebar-transition {
             transition: transform 0.3s ease-in-out;
         }
-
-        .sidebar-visible {
-            transform: translateX(0);
-            transition: transform 0.3s ease-in-out;
+        .glassmorphism {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
         }
-
-        .menu-hidden {
-            display: none;
+        .background-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            overflow: hidden;
+        }
+        .background-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('{% if event.image %}{{ event.image.url }}{% else %}{% static "path/to/default-image.jpg" %}{% endif %}');
+            background-size: cover;
+            background-position: center;
+            filter: blur(15px);
+            transform: scale(1.1);
+        }
+        .background-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+        }
+        .content-wrapper {
+            position: relative;
+            z-index: 1;
+            min-height: 100vh;
+        }
+        .modal-backdrop {
+            background-color: rgba(0, 0, 0, 0.5);
+            transition: opacity 0.3s ease-in-out;
+        }
+        .modal-content {
+            transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
         }
     </style>
 </head>
-<body class="bg-gradient-to-r from-[var(--color-lightest-green)] to-[var(--color-light-green)] font-ABeeZee min-h-screen relative">
-
-    <!-- Sidebar -->
-    <div id="sidebar" class="w-64 bg-[var(--color-light-green)] text-black p-6 flex flex-col fixed top-0 left-0 h-full sidebar-hidden z-50">
-        <div class="flex items-center justify-between mb-8">
-            <h2 class="text-2xl font-bold text-[var(--color-dark-green)]">Sahaya</h2>
-            <button id="closeSidebar" class="text-gray-700 hover:text-red-500">
-                <i class="fas fa-times text-xl"></i>
-            </button>
-        </div>
-        <ul class="menu">
-            <li class="mb-4">
-                <a href="{% url 'users:dashboard' %}" class="flex items-center gap-3 btn btn-ghost justify-start w-full">
-                    <i class="fas fa-th-large"></i>
-                    <span>Dashboard</span>
-                </a>
-            </li>
-            <li class="mb-4">
-                <a href="{% url 'event:list_of_events' %}" class="flex items-center gap-3 btn btn-ghost justify-start w-full">
-                    <i class="fas fa-tv"></i>
-                    <span>Events</span>
-                </a>
-            </li>
-            <li class="mb-4">
-                <a href="#" class="flex items-center gap-3 btn btn-ghost justify-start w-full">
-                    <i class="fas fa-envelope"></i>
-                    <span>Messages</span>
-                </a>
-            </li>
-            <li class="mb-4">
-                <a href="{% url 'users:account' %}" class="flex items-center gap-3 btn btn-ghost justify-start w-full">
-                    <i class="fas fa-user"></i>
-                    <span>Profile</span>
-                </a>
-            </li>
-        </ul>
-        <div class="mt-auto">
-            <a href="{% url 'home' %}" class="flex items-center gap-3 btn btn-outline w-full text-left">
-                <i class="fas fa-sign-out-alt"></i>
-                <span>Logout</span>
-            </a>
-        </div>
+<body>
+    <!-- Background Container -->
+    <div class="background-container">
+        <div class="background-image"></div>
+        <div class="background-overlay"></div>
     </div>
 
-    <!-- Menu Button -->
-    <button id="menuButton" class="fixed top-4 left-4 z-50 bg-[var(--color-dark-green)] text-white p-3 rounded-md shadow-md hover:bg-[var(--color-green)]">
-        <i class="fas fa-bars text-lg"></i>
-    </button>
+    <!-- Content Wrapper -->
+    <div class="content-wrapper">
+        <!-- Sidebar -->
+        <div id="sidebar" class="fixed top-0 left-0 h-full w-64 bg-[var(--color-primary)] text-white p-6 transform -translate-x-full sidebar-transition z-50 glassmorphism">
+            <div class="flex items-center justify-between mb-8">
+                <h2 class="text-2xl font-bold">Sahaya</h2>
+                <button id="closeSidebar" class="text-white hover:text-[var(--color-accent)] transition-colors">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+            <nav>
+                <ul class="space-y-4">
+                    <li>
+                        <a href="{% url 'users:dashboard' %}" class="flex items-center space-x-3 p-2 rounded-lg hover:bg-[var(--color-secondary)] transition-all duration-300 transform hover:scale-105">
+                            <i class="fas fa-th-large w-5"></i>
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'event:list_of_events' %}" class="flex items-center space-x-3 p-2 rounded-lg hover:bg-[var(--color-secondary)] transition-all duration-300 transform hover:scale-105">
+                            <i class="fas fa-tv w-5"></i>
+                            <span>Events</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="flex items-center space-x-3 p-2 rounded-lg hover:bg-[var(--color-secondary)] transition-all duration-300 transform hover:scale-105">
+                            <i class="fas fa-envelope w-5"></i>
+                            <span>Messages</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'users:account' %}" class="flex items-center space-x-3 p-2 rounded-lg hover:bg-[var(--color-secondary)] transition-all duration-300 transform hover:scale-105">
+                            <i class="fas fa-user w-5"></i>
+                            <span>Profile</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+            <div class="mt-auto">
+                <a href="{% url 'home' %}" class="flex items-center space-x-3 p-2 rounded-lg hover:bg-red-600 transition-all duration-300 transform hover:scale-105">
+                    <i class="fas fa-sign-out-alt w-5"></i>
+                    <span>Logout</span>
+                </a>
+            </div>
+        </div>
 
-    <!-- Main Content -->
-    <div class="container mx-auto px-4 py-8">
-        <!-- Event Card -->
-        <div class="bg-white shadow-lg rounded-lg overflow-hidden max-w-4xl mx-auto mt-30">
-            <!-- Event Header -->
-            <div class="relative">
-                {% if event.image %}
-                    <img src="{{ event.image.url }}" alt="{{ event.title }}" class="w-full h-64 object-cover">
-                {% else %}
-                    <div class="w-full h-64 bg-gradient-to-br from-[#E9EFEC] to-[#C4DAD2] flex items-center justify-center">
-                        <span class="text-gray-500">No Image Available</span>
+        <!-- Menu Button -->
+        <button id="menuButton" class="fixed top-4 left-4 z-50 bg-[var(--color-primary)] text-white p-3 rounded-full shadow-lg hover:bg-[var(--color-secondary)] transition-all duration-300 transform hover:scale-110">
+            <i class="fas fa-bars text-lg"></i>
+        </button>
+
+        <!-- Main Wrapper with Background Image -->
+        <div class="min-h-screen flex items-center justify-center bg-cover bg-center" style="background-image: url('/path-to-your-image.jpg');">
+            <!-- Main Content -->
+            <div class="flex-grow flex items-center justify-center p-4">
+                <!-- Event Card -->
+                <div class="bg-white/10 shadow-2xl rounded-2xl overflow-hidden w-full max-w-6xl mx-auto glassmorphism transform hover:scale-[1.01] transition-all duration-300">
+                    <div class="grid grid-cols-1 md:grid-cols-2">
+                        <!-- Left Column: Image and Title -->
+                        <div class="relative">
+                            {% if event.image %}
+                                <img src="{{ event.image.url }}" alt="{{ event.title }}" class="w-full h-full object-cover">
+                            {% else %}
+                                <div class="w-full h-full bg-gradient-to-br from-[#E9EFEC] to-[#C4DAD2] flex items-center justify-center">
+                                    <span class="text-gray-500 text-2xl font-semibold">No Image Available</span>
+                                </div>
+                            {% endif %}
+                            <div class="absolute bottom-0 left-0 bg-gradient-to-t from-black to-transparent text-white p-6 w-full">
+                                <h1 class="text-4xl font-bold mb-2">{{ event.title }}</h1>
+                                <p class="text-lg">Organized by {{ event.organizer.first_name }} {{ event.organizer.last_name }}</p>
+                            </div>
+                        </div>
+
+                        <!-- Right Column: Event Details -->
+                        <div class="p-8 flex flex-col justify-between bg-white rounded-r-2xl">
+                            <div>
+                                <h2 class="text-3xl font-semibold text-gray-800 mb-6">Event Details</h2>
+                                <div class="grid grid-cols-1 gap-4 text-gray-700">
+                                    <div class="flex items-center space-x-3">
+                                        <i class="fas fa-map-marker-alt text-2xl text-[var(--color-secondary)]"></i>
+                                        <p><strong>Location:</strong> {{ event.location }}</p>
+                                    </div>
+                                    <div class="flex items-center space-x-3">
+                                        <i class="fas fa-calendar-alt text-2xl text-[var(--color-secondary)]"></i>
+                                        <p><strong>Start Date:</strong> {{ event.start_date|date:"F j, Y" }}</p>
+                                    </div>
+                                    <div class="flex items-center space-x-3">
+                                        <i class="fas fa-calendar-check text-2xl text-[var(--color-secondary)]"></i>
+                                        <p><strong>End Date:</strong> {{ event.end_date|date:"F j, Y" }}</p>
+                                    </div>
+                                    <div class="flex items-center space-x-3">
+                                        <i class="fas fa-clock text-2xl text-[var(--color-secondary)]"></i>
+                                        <p><strong>Time:</strong> {{ event.start_time|time:"h:i A" }} to {{ event.end_time|time:"h:i A" }}</p>
+                                    </div>
+                                </div>
+                                <div class="mt-6">
+                                    <h3 class="text-xl font-semibold text-gray-800 mb-2">Description</h3>
+                                    <p class="text-gray-700">{{ event.description }}</p>
+                                </div>
+                            </div>
+
+                            <!-- Register/Cancel Button -->
+                            <div class="mt-8">
+                                {% if user_registered %}
+                                    <button onclick="cancelRegistration()" class="btn btn-error w-full py-3 text-lg font-semibold rounded-full transition-all duration-300 transform hover:scale-105">Cancel Registration</button>
+                                {% else %}
+                                    <button onclick="registerForEvent()" class="btn btn-success w-full py-3 text-lg font-semibold rounded-full transition-all duration-300 transform hover:scale-105">Register Now</button>
+                                {% endif %}
+                            </div>
+                        </div>
                     </div>
-                {% endif %}
-                <div class="absolute bottom-0 left-0 bg-gradient-to-t from-black to-transparent text-white p-4 w-full">
-                    <h1 class="text-3xl font-bold">{{ event.title }}</h1>
-                    <p class="text-sm">Organized by {{ event.organizer.first_name }} {{ event.organizer.last_name }}</p>
                 </div>
-            </div>
-
-            <!-- Event Details -->
-            <div class="p-6">
-                <h2 class="text-2xl font-semibold text-[var(--color-dark-green)] mb-4">Event Details</h2>
-                <div class="grid grid-cols-1 gap-4 text-gray-700">
-                    <p><strong>Location:</strong> {{ event.location }}</p>
-                    <p><strong>Start Date:</strong> {{ event.start_date|date:"F j, Y" }}</p>
-                    <p><strong>End Date:</strong> {{ event.end_date|date:"F j, Y" }}</p>
-                    <p><strong>Time:</strong> From {{ event.start_time|time:"h:i A" }} to {{ event.end_time|time:"h:i A" }}</p>
-                    <p><strong>Description:</strong> {{ event.description }}</p>
-                </div>
-            </div>
-
-            <!-- Register/Cancel Button -->
-            <div class="flex items-center gap-4 p-6">
-                {% if user_registered %}
-                    <button onclick="cancelRegistration()" class="btn btn-error w-full">Cancel Registration</button>
-                {% else %}
-                    <button onclick="registerForEvent()" class="btn btn-success w-full">Register Now</button>
-                {% endif %}
             </div>
         </div>
-    </div>
 
-    <!-- Success Modal -->
-    <div id="successModal" class="fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center hidden z-50">
-        <div class="bg-white p-6 rounded-lg shadow-lg max-w-md w-full text-center">
-            <h3 class="text-xl font-semibold mb-4 text-green-500">Success</h3>
-            <p id="successMessage" class="text-gray-700"></p>
-            <button onclick="closeModalAndRedirect()" class="btn btn-primary mt-4">Go Back to Dashboard</button>
+        <!-- Success Modal -->
+        <div id="successModal" class="fixed inset-0 flex items-center justify-center hidden z-[100]">
+            <div class="modal-backdrop absolute inset-0 opacity-0"></div>
+            <div class="modal-content bg-[#E9EFEC] p-8 max-w-md w-full rounded-2xl shadow-2xl text-center transform scale-90 opacity-0 relative z-10">
+                <!-- Logo -->
+                <div class="mb-8">
+                    <img src="{% static 'users/sahayanew.png' %}" alt="Sahaya Logo" class="h-8 mx-auto"> <!-- Increased height -->
+                </div>
+                
+                
+                <!-- User Icon -->
+                <div class="mb-6">
+                    <div class="w-16 h-16 bg-[#6A9C89] rounded-full flex items-center justify-center mx-auto">
+                        <i class="fas fa-user text-2xl text-white"></i>
+                    </div>
+                </div>
+
+                <!-- Success Message -->
+                <h3 class="text-xl font-semibold mb-8 text-[#16423C]">You have successfully joined the event!</h3>
+
+                <!-- Support Links -->
+                <div class="text-sm text-gray-600 mb-6">
+                    <p class="mb-2">
+                        Need help? <a href="#" class="text-[#6A9C89] hover:underline">Contact our support team</a> or no longer interested in our newsletters? 
+                        <a href="#" class="text-[#6A9C89] hover:underline">Unsubscribe here</a>
+                    </p>
+                    <p>
+                        Want to give us feedback? Let us know what you think on our 
+                        <a href="#" class="text-[#6A9C89] hover:underline">feedback site</a>
+                    </p>
+                </div>
+
+                <!-- Social Media Links -->
+                <div class="flex justify-center gap-4 mb-8">
+                    <a href="#" class="text-gray-600 hover:text-[#6A9C89]">
+                        <i class="fab fa-facebook"></i>
+                    </a>
+                    <a href="#" class="text-gray-600 hover:text-[#6A9C89]">
+                        <i class="fab fa-linkedin"></i>
+                    </a>
+                    <a href="#" class="text-gray-600 hover:text-[#6A9C89]">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                    <a href="#" class="text-gray-600 hover:text-[#6A9C89]">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                </div>
+
+                <!-- Back to Dashboard Button -->
+                <button onclick="closeModalAndRedirect()" class="bg-[#16423C] text-white px-6 py-2 rounded-md hover:bg-[#0D2E2A] transition-colors duration-300">
+                    Back to Dashboard
+                </button>
+            </div>
         </div>
     </div>
 
     <!-- JavaScript -->
     <script>
+        // Sidebar Functionality
         const menuButton = document.getElementById('menuButton');
         const closeSidebar = document.getElementById('closeSidebar');
         const sidebar = document.getElementById('sidebar');
 
-        // Toggle Sidebar
         menuButton.addEventListener('click', () => {
-            sidebar.classList.toggle('sidebar-hidden');
-            sidebar.classList.toggle('sidebar-visible');
-            menuButton.classList.add('menu-hidden');
+            sidebar.classList.toggle('-translate-x-full');
+            menuButton.classList.toggle('hidden');
         });
 
         closeSidebar.addEventListener('click', () => {
-            sidebar.classList.toggle('sidebar-hidden');
-            sidebar.classList.toggle('sidebar-visible');
-            menuButton.classList.remove('menu-hidden');
+            sidebar.classList.add('-translate-x-full');
+            menuButton.classList.remove('hidden');
         });
 
         function registerForEvent() {
@@ -161,8 +278,7 @@
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    document.getElementById("successMessage").innerText = "You have successfully registered for the event.";
-                    document.getElementById("successModal").classList.remove("hidden");
+                    showModal(); // Show modal on successful registration
                 } else {
                     alert(data.error || "Failed to register for the event.");
                 }
@@ -174,31 +290,54 @@
         }
 
         function cancelRegistration() {
-            fetch("{% url 'event:cancel_registration' event.id %}", {
-                method: "POST",
-                headers: {
-                    "X-CSRFToken": "{{ csrf_token }}",
-                    "Content-Type": "application/json"
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    document.getElementById("successMessage").innerText = "You have successfully canceled your registration.";
-                    document.getElementById("successModal").classList.remove("hidden");
-                } else {
-                    alert(data.error || "Failed to cancel registration.");
-                }
-            })
-            .catch(error => {
-                console.error("Error:", error);
-                alert("An error occurred. Please try again.");
-            });
+        fetch("{% url 'event:cancel_registration' event.id %}", {
+            method: "POST",
+            headers: {
+                "X-CSRFToken": "{{ csrf_token }}",
+                "Content-Type": "application/json"
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert("You have successfully canceled your registration.");
+                window.location.href = "{% url 'users:dashboard' %}"; // Redirect to the dashboard
+            } else {
+                alert(data.error || "Failed to cancel registration.");
+            }
+        })
+        .catch(error => {
+            console.error("Error:", error);
+            alert("An error occurred. Please try again.");
+        });
+    }
+
+        function showModal() {
+            const modal = document.getElementById("successModal");
+            const backdrop = modal.querySelector(".modal-backdrop");
+            const content = modal.querySelector(".modal-content");
+
+            modal.classList.remove("hidden");
+            setTimeout(() => {
+                backdrop.classList.add("opacity-100");
+                content.classList.remove("scale-90", "opacity-0");
+                content.classList.add("scale-100", "opacity-100");
+            }, 10);
         }
 
         function closeModalAndRedirect() {
-            document.getElementById("successModal").classList.add("hidden");
-            window.location.href = "{% url 'users:dashboard' %}";
+            const modal = document.getElementById("successModal");
+            const backdrop = modal.querySelector(".modal-backdrop");
+            const content = modal.querySelector(".modal-content");
+
+            backdrop.classList.remove("opacity-100");
+            content.classList.remove("scale-100", "opacity-100");
+            content.classList.add("scale-90", "opacity-0");
+
+            setTimeout(() => {
+                modal.classList.add("hidden");
+                window.location.href = "{% url 'users:dashboard' %}";
+            }, 300);
         }
     </script>
 </body>

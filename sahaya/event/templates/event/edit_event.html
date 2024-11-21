@@ -1,328 +1,365 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    {% load static %}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Update Event</title>
+    <title>Update Event | Sahaya</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/npm/daisyui@latest/dist/full.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet">
-    
     <style>
         :root {
-            --color-dark-green: #16423C;
-            --color-green: #6A9C89;
-            --color-light-green: #C4DAD2;
-            --color-lightest-green: #E9EFEC;
+            --color-primary: #16423C;
+            --color-secondary: #6A9C89;
+            --color-accent: #C4DAD2;
+            --color-background: #E9EFEC;
         }
-
-        .sidebar-hidden {
-            transform: translateX(-100%);
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+        }
+        .sidebar-transition {
             transition: transform 0.3s ease-in-out;
         }
-
-        .sidebar-visible {
-            transform: translateX(0);
-            transition: transform 0.3s ease-in-out;
-        }
-
-        .menu-hidden {
-            display: none;
+        .glassmorphism {
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
         }
     </style>
 </head>
-<body class="bg-gray-100 font-sans leading-normal tracking-normal">
+<body class="bg-gradient-to-br from-[var(--color-background)] to-[var(--color-accent)] min-h-screen">
 
-<!-- Sidebar -->
-<div id="sidebar" class="w-64 bg-[var(--color-light-green)] text-black p-6 flex flex-col fixed top-0 left-0 h-full sidebar-hidden z-50">
-    <div class="flex items-center justify-between mb-8">
-        <h2 class="text-2xl font-bold text-[var(--color-dark-green)]">Sahaya</h2>
-        <button id="closeSidebar" class="text-gray-700 hover:text-red-500">
-            <i class="fas fa-times text-xl"></i>
-        </button>
-    </div>
-    <ul class="menu">
-        <li class="mb-4">
-            <a href="{% url 'users:dashboard' %}" class="flex items-center gap-3 btn btn-ghost justify-start w-full">
-                <i class="fas fa-th-large"></i>
-                <span>Dashboard</span>
+    <!-- Sidebar -->
+    <div id="sidebar" class="fixed top-0 left-0 h-full w-64 bg-[var(--color-primary)] text-white p-6 transform -translate-x-full sidebar-transition z-50 glassmorphism">
+        <div class="flex items-center justify-between mb-8">
+            <h2 class="text-2xl font-bold">Sahaya</h2>
+            <button id="closeSidebar" class="text-white hover:text-[var(--color-accent)] transition-colors">
+                <i class="fas fa-times text-xl"></i>
+            </button>
+        </div>
+        <nav>
+            <ul class="space-y-4">
+                <li>
+                    <a href="{% url 'users:dashboard' %}" class="flex items-center space-x-3 p-2 rounded-lg hover:bg-[var(--color-secondary)] transition-all duration-300 transform hover:scale-105">
+                        <i class="fas fa-th-large w-5"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'event:list_of_events' %}" class="flex items-center space-x-3 p-2 rounded-lg hover:bg-[var(--color-secondary)] transition-all duration-300 transform hover:scale-105">
+                        <i class="fas fa-tv w-5"></i>
+                        <span>Events</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="flex items-center space-x-3 p-2 rounded-lg hover:bg-[var(--color-secondary)] transition-all duration-300 transform hover:scale-105">
+                        <i class="fas fa-envelope w-5"></i>
+                        <span>Messages</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'users:account' %}" class="flex items-center space-x-3 p-2 rounded-lg hover:bg-[var(--color-secondary)] transition-all duration-300 transform hover:scale-105">
+                        <i class="fas fa-user w-5"></i>
+                        <span>Profile</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+        <div class="mt-auto">
+            <a href="{% url 'home' %}" class="flex items-center space-x-3 p-2 rounded-lg hover:bg-red-600 transition-all duration-300 transform hover:scale-105">
+                <i class="fas fa-sign-out-alt w-5"></i>
+                <span>Logout</span>
             </a>
-        </li>
-        <li class="mb-4">
-            <a href="{% url 'event:list_of_events' %}" class="flex items-center gap-3 btn btn-ghost justify-start w-full">
-                <i class="fas fa-tv"></i>
-                <span>Events</span>
-            </a>
-        </li>
-        <li class="mb-4">
-            <a href="#" class="flex items-center gap-3 btn btn-ghost justify-start w-full">
-                <i class="fas fa-envelope"></i>
-                <span>Messages</span>
-            </a>
-        </li>
-        <li class="mb-4">
-            <a href="{% url 'users:account' %}" class="flex items-center gap-3 btn btn-ghost justify-start w-full">
-                <i class="fas fa-user"></i>
-                <span>Profile</span>
-            </a>
-        </li>
-    </ul>
-    <div class="mt-auto">
-        <a href="{% url 'home' %}" class="flex items-center gap-3 btn btn-outline w-full text-left">
-            <i class="fas fa-sign-out-alt"></i>
-            <span>Logout</span>
-        </a>
-    </div>
-</div>
-
-<!-- Menu Button -->
-<button id="menuButton" class="fixed top-4 left-4 z-50 bg-[var(--color-dark-green)] text-white p-3 rounded-md shadow-md hover:bg-[var(--color-green)]">
-    <i class="fas fa-bars text-lg"></i>
-</button>
-
-<div class="container mx-auto px-4 py-8">
-    <!-- Go Back to Dashboard Button -->
-    <div class="mb-4">
-        <a href="{% url 'users:dashboard' %}" class="bg-gray-500 text-white px-4 py-2 rounded">Go Back to Dashboard</a>
+        </div>
     </div>
 
-    <!-- Event Details Section -->
-    <h2 class="text-4xl font-bold mb-6 text-[#16423C]">{{ event.title }}</h2>
-    
-    <div class="bg-white p-6 rounded-lg shadow-lg mb-8">
-        <h3 class="text-2xl font-semibold mb-4 text-[#6A9C89]">Event Details</h3>
+    <!-- Menu Button -->
+    <button id="menuButton" class="fixed top-4 left-4 z-50 bg-[var(--color-primary)] text-white p-3 rounded-full shadow-lg hover:bg-[var(--color-secondary)] transition-all duration-300 transform hover:scale-110">
+        <i class="fas fa-bars text-lg"></i>
+    </button>
+
+    <!-- Main Content -->
+    <div class="container mx-auto px-4 py-8 ml-0 md:ml-64">
+        <!-- Go Back to Dashboard Button -->
+        <div class="mb-6">
+            <a href="{% url 'users:dashboard' %}" class="bg-[var(--color-primary)] text-white px-6 py-2 rounded-full hover:bg-[var(--color-secondary)] transition-all duration-300 inline-flex items-center space-x-2 transform hover:scale-105">
+                <i class="fas fa-arrow-left"></i>
+                <span>Back to Dashboard</span>
+            </a>
+        </div>
+
+        <!-- Event Details Section -->
+        <h2 class="text-4xl font-bold mb-6 text-[var(--color-primary)]">{{ event.title }}</h2>
         
-        <!-- Display event image if available -->
-        {% if event.image %}
-            <img src="{{ event.image.url }}" alt="Event Image" class="w-full h-64 object-cover rounded mb-4">
-        {% endif %}
+        <div class="bg-white p-8 rounded-2xl shadow-2xl mb-8 glassmorphism">
+            <h3 class="text-2xl font-semibold mb-6 text-[var(--color-secondary)] border-b pb-2">Event Details</h3>
+            
+            {% if event.image %}
+                <img src="{{ event.image.url }}" alt="Event Image" class="w-full h-80 object-cover rounded-xl mb-6 shadow-lg">
+            {% endif %}
 
-        <div class="text-gray-700 space-y-2">
-            <p><span class="font-semibold">Description:</span> {{ event.description }}</p>
-            <p><span class="font-semibold">Location:</span> {{ event.location }}</p>
-            <p><span class="font-semibold">Start Date:</span> {{ event.start_date|date:"F j, Y" }}</p>
-            <p><span class="font-semibold">End Date:</span> {{ event.end_date|date:"F j, Y" }}</p>
-            <p><span class="font-semibold">Event Time:</span> From {{ event.start_time|time:"H:i A" }} to {{ event.end_time|time:"H:i A" }}</p>
+            <div class="text-gray-700 space-y-4">
+                <p class="flex items-center"><i class="fas fa-align-left w-6 text-[var(--color-secondary)]"></i> <span class="font-semibold mr-2">Description:</span> {{ event.description }}</p>
+                <p class="flex items-center"><i class="fas fa-map-marker-alt w-6 text-[var(--color-secondary)]"></i> <span class="font-semibold mr-2">Location:</span> {{ event.location }}</p>
+                <p class="flex items-center"><i class="fas fa-calendar-alt w-6 text-[var(--color-secondary)]"></i> <span class="font-semibold mr-2">Start Date:</span> {{ event.start_date|date:"F j, Y" }}</p>
+                <p class="flex items-center"><i class="fas fa-calendar-check w-6 text-[var(--color-secondary)]"></i> <span class="font-semibold mr-2">End Date:</span> {{ event.end_date|date:"F j, Y" }}</p>
+                <p class="flex items-center"><i class="fas fa-clock w-6 text-[var(--color-secondary)]"></i> <span class="font-semibold mr-2">Event Time:</span> From {{ event.start_time|time:"H:i A" }} to {{ event.end_time|time:"H:i A" }}</p>
+            </div>
+
+            <!-- Update and Delete Event Buttons -->
+            <div class="flex mt-8 space-x-4">
+                <button onclick="openUpdateModal()" class="bg-blue-500 text-white px-6 py-2 rounded-full hover:bg-blue-600 transition-all duration-300 transform hover:scale-105 flex items-center">
+                    <i class="fas fa-edit mr-2"></i> Update Event
+                </button>
+                <button onclick="deleteEvent()" class="bg-red-500 text-white px-6 py-2 rounded-full hover:bg-red-600 transition-all duration-300 transform hover:scale-105 flex items-center">
+                    <i class="fas fa-trash-alt mr-2"></i> Delete Event
+                </button>
+            </div>
         </div>
 
-        <!-- Update and Delete Event Buttons -->
-        <div class="flex mt-4 space-x-4">
-            <button onclick="openUpdateModal()" class="bg-blue-500 text-white px-4 py-2 rounded">Update Event Details</button>
-            <button onclick="deleteEvent()" class="bg-red-500 text-white px-4 py-2 rounded">Delete Event</button>
+        <!-- Participants Section -->
+        <h3 class="text-2xl font-semibold mb-6 text-[var(--color-secondary)]">List of Participants</h3>
+        <div class="bg-white rounded-2xl shadow-2xl overflow-hidden glassmorphism">
+            <table class="min-w-full">
+                <thead class="bg-[var(--color-primary)] text-white">
+                    <tr>
+                        <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">First Name</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Last Name</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Status</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Registration Date</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                    {% for registration in participants %}
+                        <tr id="participant-{{ registration.participant.id }}">
+                            <td class="px-6 py-4 whitespace-nowrap">{{ registration.participant.first_name }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap">{{ registration.participant.last_name }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
+                                    {% if registration.status == 'Confirmed' %}bg-green-100 text-green-800
+                                    {% elif registration.status == 'Pending' %}bg-yellow-100 text-yellow-800
+                                    {% else %}bg-red-100 text-red-800{% endif %}">
+                                    {{ registration.status }}
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">{{ registration.registration_date|date:"F j, Y" }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <button onclick="removeParticipant('{{ registration.participant.id }}')" class="bg-red-500 text-white px-3 py-1 rounded-full hover:bg-red-600 transition-all duration-300 transform hover:scale-105">
+                                    <i class="fas fa-user-minus mr-1"></i> Remove
+                                </button>
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="5" class="px-6 py-4 text-center text-gray-500">No participants registered.</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
     </div>
-
-    <!-- Participants Section -->
-    <h3 class="text-2xl font-semibold mb-4 text-[#6A9C89]">List of Participants</h3>
-    <table class="min-w-full bg-white mb-8">
-        <thead>
-            <tr>
-                <th class="py-2 text-left">First Name</th>
-                <th class="py-2 text-left">Last Name</th>
-                <th class="py-2 text-left">Status</th>
-                <th class="py-2 text-left">Registration Date</th>
-                <th class="py-2">Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for registration in participants %}
-                <tr id="participant-{{ registration.participant.id }}">
-                    <td class="border px-4 py-2">{{ registration.participant.first_name }}</td>
-                    <td class="border px-4 py-2">{{ registration.participant.last_name }}</td>
-                    <td class="border px-4 py-2">{{ registration.status }}</td>
-                    <td class="border px-4 py-2">{{ registration.registration_date|date:"F j, Y" }}</td>
-                    <td class="border px-4 py-2">
-                        <button onclick="removeParticipant('{{ registration.participant.id }}')" class="bg-red-500 text-white px-2 py-1 rounded">Remove</button>
-                    </td>
-                </tr>
-            {% empty %}
-                <tr>
-                    <td colspan="5" class="text-center py-4">No participants registered.</td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-</div>
 
 <!-- Update Event Modal -->
 <div id="updateModal" class="fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center hidden z-50">
-    <div class="bg-white p-8 rounded-lg shadow-lg max-w-md w-full">
-        <h3 class="text-2xl font-semibold mb-4 text-[#6A9C89]">Update Event</h3>
-        <form id="updateEventForm" enctype="multipart/form-data">
+    <div class="bg-white p-8 rounded-2xl shadow-2xl max-w-md w-full glassmorphism">
+        <h3 class="text-2xl font-semibold mb-6 text-[var(--color-secondary)] border-b pb-2">Update Event</h3>
+        <form id="updateEventForm" enctype="multipart/form-data" class="space-y-4">
             {% csrf_token %}
             
-            <label class="block mb-2 font-semibold">Title</label>
-            <input type="text" name="title" class="w-full border px-3 py-2 rounded mb-4" value="{{ event.title }}">
+            <div>
+                <label class="block mb-2 font-semibold text-gray-700">Title</label>
+                <input type="text" name="title" class="w-full bg-white border px-3 py-2 rounded-lg focus:ring-2 focus:ring-[var(--color-secondary)] transition-all duration-300" value="{{ event.title }}">
+            </div>
 
-            <label class="block mb-2 font-semibold">Description</label>
-            <textarea name="description" class="w-full border px-3 py-2 rounded mb-4">{{ event.description }}</textarea>
+            <div>
+                <label class="block mb-2 font-semibold text-gray-700">Description</label>
+                <textarea name="description" class="w-full bg-white border px-3 py-2 rounded-lg focus:ring-2 focus:ring-[var(--color-secondary)] transition-all duration-300" rows="4">{{ event.description }}</textarea>
+            </div>
 
-            <label class="block mb-2 font-semibold">Location</label>
-            <select name="location" id="venueSelect" class="select select-bordered w-full bg-white text-black border border-gray-300 rounded-md focus:ring focus:ring-green-500 focus:outline-none">
-                <option disabled selected>Select venue</option>
-                <option>Case room</option>
-                <option>GYM</option>
-                <option>Jurani Hall</option>
-                <option>LRAC</option>
-                <option>JHS Grandstand</option>
-                <option value="Others">Others</option>
-            </select>
-            <input type="text" name="custom_venue" id="customVenueInput" placeholder="Specify venue" class="mt-4 input input-bordered w-full bg-white text-black border border-gray-300 rounded-md focus:ring focus:ring-green-500 focus:outline-none" style="display: none;">
+            <div>
+                <label class="block mb-2 font-semibold text-gray-700">Location</label>
+                <select name="location" id="venueSelect" class="w-full bg-white border px-3 py-2 rounded-lg focus:ring-2 focus:ring-[var(--color-secondary)] transition-all duration-300">
+                    <option disabled selected>Select venue</option>
+                    <option>Case room</option>
+                    <option>GYM</option>
+                    <option>Jurani Hall</option>
+                    <option>LRAC</option>
+                    <option>JHS Grandstand</option>
+                    <option value="Others">Others</option>
+                </select>
+                <input type="text" name="custom_venue" id="customVenueInput" placeholder="Specify venue" class="w-full bg-white border px-3 py-2 rounded-lg mt-2 focus:ring-2 focus:ring-[var(--color-secondary)] transition-all duration-300" style="display: none;">
+            </div>
 
-            <label class="block mb-2 font-semibold">Start Date</label>
-            <input type="date" name="start_date" class="w-full border px-3 py-2 rounded mb-4" value="{{ event.start_date|date:"Y-m-d" }}">
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="block mb-2 font-semibold text-gray-700">Start Date</label>
+                    <input type="date" name="start_date" class="w-full bg-white border px-3 py-2 rounded-lg focus:ring-2 focus:ring-[var(--color-secondary)] transition-all duration-300" value="{{ event.start_date|date:"Y-m-d" }}">
+                </div>
+                <div>
+                    <label class="block mb-2 font-semibold text-gray-700">End Date</label>
+                    <input type="date" name="end_date" class="w-full bg-white border px-3 py-2 rounded-lg focus:ring-2 focus:ring-[var(--color-secondary)] transition-all duration-300" value="{{ event.end_date|date:"Y-m-d" }}">
+                </div>
+            </div>
 
-            <label class="block mb-2 font-semibold">End Date</label>
-            <input type="date" name="end_date" class="w-full border px-3 py-2 rounded mb-4" value="{{ event.end_date|date:"Y-m-d" }}">
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="block mb-2 font-semibold text-gray-700">Start Time</label>
+                    <input type="time" name="start_time" class="w-full bg-white border px-3 py-2 rounded-lg focus:ring-2 focus:ring-[var(--color-secondary)] transition-all duration-300" value="{{ event.start_time|time:"H:i" }}">
+                </div>
+                <div>
+                    <label class="block mb-2 font-semibold text-gray-700">End Time</label>
+                    <input type="time" name="end_time" class="w-full bg-white border px-3 py-2 rounded-lg focus:ring-2 focus:ring-[var(--color-secondary)] transition-all duration-300" value="{{ event.end_time|time:"H:i" }}">
+                </div>
+            </div>
 
-            <label class="block mb-2 font-semibold">Start Time</label>
-            <input type="time" name="start_time" class="w-full border px-3 py-2 rounded mb-4" value="{{ event.start_time|time:"H:i" }}">
+            <div>
+                <label class="block mb-2 font-semibold text-gray-700">Event Image</label>
+                <input type="file" name="image" class="w-full bg-white border px-3 py-2 rounded-lg focus:ring-2 focus:ring-[var(--color-secondary)] transition-all duration-300">
+            </div>
 
-            <label class="block mb-2 font-semibold">End Time</label>
-            <input type="time" name="end_time" class="w-full border px-3 py-2 rounded mb-4" value="{{ event.end_time|time:"H:i" }}">
-
-            <label class="block mb-2 font-semibold">Event Image</label>
-            <input type="file" name="image" class="w-full border px-3 py-2 rounded mb-4">
-
-            <div class="flex justify-end mt-4">
-                <button type="button" onclick="closeUpdateModal()" class="bg-gray-400 text-white px-4 py-2 rounded mr-2">Cancel</button>
-                <button type="button" onclick="submitUpdateForm()" class="bg-blue-500 text-white px-4 py-2 rounded">Save</button>
+            <div class="flex justify-end mt-6 space-x-4">
+                <button type="button" onclick="closeUpdateModal()" class="bg-gray-400 text-white px-6 py-2 rounded-full hover:bg-gray-500 transition-all duration-300 transform hover:scale-105">Cancel</button>
+                <button type="button" onclick="submitUpdateForm()" class="bg-blue-500 text-white px-6 py-2 rounded-full hover:bg-blue-600 transition-all duration-300 transform hover:scale-105">Save Changes</button>
             </div>
         </form>
     </div>
 </div>
 
-<script>
-    // Sidebar Functionality
-    const menuButton = document.getElementById('menuButton');
-    const closeSidebar = document.getElementById('closeSidebar');
-    const sidebar = document.getElementById('sidebar');
 
-    // Toggle Sidebar
-    menuButton.addEventListener('click', () => {
-        sidebar.classList.toggle('sidebar-hidden');
-        sidebar.classList.toggle('sidebar-visible');
-        menuButton.classList.add('menu-hidden');
-    });
+    <script>
+        // Sidebar Functionality
+        const menuButton = document.getElementById('menuButton');
+        const closeSidebar = document.getElementById('closeSidebar');
+        const sidebar = document.getElementById('sidebar');
 
-    closeSidebar.addEventListener('click', () => {
-        sidebar.classList.toggle('sidebar-hidden');
-        sidebar.classList.toggle('sidebar-visible');
-        menuButton.classList.remove('menu-hidden');
-    });
-
-    // Update Event Modal
-    function openUpdateModal() {
-        document.getElementById("updateModal").classList.remove("hidden");
-    }
-
-    function closeUpdateModal() {
-        document.getElementById("updateModal").classList.add("hidden");
-    }
-
-    function submitUpdateForm() {
-        const form = document.getElementById("updateEventForm");
-        const formData = new FormData(form);
-
-        fetch("{% url 'event:edit_event' event.id %}", {
-            method: "POST",
-            headers: {
-                "X-CSRFToken": "{{ csrf_token }}"
-            },
-            body: formData
-        })
-        .then(response => {
-            if (!response.ok) {
-                return response.json().then(data => {
-                    throw new Error(data.errors ? JSON.stringify(data.errors) : "Unknown error");
-                });
-            }
-            return response.json();
-        })
-        .then(data => {
-            if (data.success) {
-                alert("Event updated successfully!");
-                location.reload();
-            }
-        })
-        .catch(error => {
-            console.error("Error:", error);
-            alert("An error occurred: " + error.message);
+        menuButton.addEventListener('click', () => {
+            sidebar.classList.toggle('-translate-x-full');
+            menuButton.classList.toggle('hidden');
         });
-    }
 
-    function removeParticipant(participantId) {
-        fetch("{% url 'event:remove_participant' event.id %}", {
-            method: "POST",
-            headers: {
-                "X-CSRFToken": "{{ csrf_token }}",
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({ participant_id: participantId })
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error("Network response was not OK");
-            }
-            return response.json();
-        })
-        .then(data => {
-            if (data.success) {
-                const row = document.getElementById(`participant-${participantId}`);
-                if (row) {
-                    row.remove();  // Immediately remove the row from the DOM
-                    alert("Participant removed successfully.");
+        closeSidebar.addEventListener('click', () => {
+            sidebar.classList.add('-translate-x-full');
+            menuButton.classList.remove('hidden');
+        });
+
+        // Update Event Modal
+        function openUpdateModal() {
+            document.getElementById("updateModal").classList.remove("hidden");
+        }
+
+        function closeUpdateModal() {
+            document.getElementById("updateModal").classList.add("hidden");
+        }
+
+        function submitUpdateForm() {
+            const form = document.getElementById("updateEventForm");
+            const formData = new FormData(form);
+
+            fetch("{% url 'event:edit_event' event.id %}", {
+                method: "POST",
+                headers: {
+                    "X-CSRFToken": "{{ csrf_token }}"
+                },
+                body: formData
+            })
+            .then(response => {
+                if (!response.ok) {
+                    return response.json().then(data => {
+                        throw new Error(data.errors ? JSON.stringify(data.errors) : "Unknown error");
+                    });
                 }
-            } else {
-                alert(data.error || "Failed to remove participant.");
-            }
-        })
-        .catch(error => {
-            console.error("Error:", error);
-            alert("An error occurred. Please try again.");
-        });
-    }
-
-    function deleteEvent() {
-        if (!confirm("Are you sure you want to delete this event? This action cannot be undone.")) {
-            return;
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    alert("Event updated successfully!");
+                    location.reload();
+                }
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                alert("An error occurred: " + error.message);
+            });
         }
 
-        fetch("{% url 'event:delete_event' event.id %}", {
-            method: "POST",
-            headers: {
-                "X-CSRFToken": "{{ csrf_token }}",
+        function removeParticipant(participantId) {
+            if (!confirm("Are you sure you want to remove this participant?")) {
+                return;
             }
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error("Network response was not OK");
-            }
-            return response.json();
-        })
-        .then(data => {
-            if (data.success) {
-                alert("Event deleted successfully.");
-                window.location.href = "{% url 'users:dashboard' %}";
-            } else {
-                alert(data.error || "Failed to delete event.");
-            }
-        })
-        .catch(error => {
-            console.error("Error:", error);
-            alert("An error occurred. Please try again.");
-        });
-    }
 
-    document.getElementById("venueSelect").addEventListener("change", function() {
-        const customVenueInput = document.getElementById("customVenueInput");
-        if (this.value === "Others") {
-            customVenueInput.style.display = "block";
-        } else {
-            customVenueInput.style.display = "none";
+            fetch("{% url 'event:remove_participant' event.id %}", {
+                method: "POST",
+                headers: {
+                    "X-CSRFToken": "{{ csrf_token }}",
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ participant_id: participantId })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("Network response was not OK");
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    const row = document.getElementById(`participant-${participantId}`);
+                    if (row) {
+                        row.remove();
+                        alert("Participant removed successfully.");
+                    }
+                } else {
+                    alert(data.error || "Failed to remove participant.");
+                }
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                alert("An error occurred. Please try again.");
+            });
         }
-    });
-</script>
+
+        function deleteEvent() {
+            if (!confirm("Are you sure you want to delete this event? This action cannot be undone.")) {
+                return;
+            }
+
+            fetch("{% url 'event:delete_event' event.id %}", {
+                method: "POST",
+                headers: {
+                    "X-CSRFToken": "{{ csrf_token }}",
+                }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("Network response was not OK");
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    alert("Event deleted successfully.");
+                    window.location.href = "{% url 'users:dashboard' %}";
+                } else {
+                    alert(data.error || "Failed to delete event.");
+                }
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                alert("An error occurred. Please try again.");
+            });
+        }
+
+        document.getElementById("venueSelect").addEventListener("change", function() {
+            const customVenueInput = document.getElementById("customVenueInput");
+            if (this.value === "Others") {
+                customVenueInput.style.display = "block";
+            } else {
+                customVenueInput.style.display = "none";
+            }
+        });
+    </script>
 
 </body>
 </html>

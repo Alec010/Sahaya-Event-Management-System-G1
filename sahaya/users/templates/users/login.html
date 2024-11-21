@@ -1,81 +1,115 @@
 {% load custom_filters %}
-
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
     {% load static %}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
+    <title>Login - Sahaya</title>
     <link href="{% static 'css/styles.css' %}" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=ABeeZee&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=ABeeZee&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'abeezee': ['ABeeZee', 'sans-serif'],
+                        'poppins': ['Poppins', 'sans-serif'],
+                    },
+                    colors: {
+                        'sahaya-green': '#16423C',
+                        'sahaya-light-green': '#6A9C89',
+                        'sahaya-bg': '#E9EFEC',
+                    },
+                }
+            }
+        }
+    </script>
 </head>
-<!-- Updated logo positioning -->
-<div class="absolute top-3 left-10">
-    <img src="{% static 'users/sahayalogo.png' %}" alt="Sahaya Logo" class="w-60 h-auto">
-</div>
 
-<body class="font-ABeeZee bg-[#E9EFEC]">
-    
-    <div class="min-h-screen flex items-center justify-center relative">
-        <div class="w-full max-w-5xl flex flex-col md:flex-row shadow-lg rounded-3xl overflow-hidden bg-white relative z-10">
+<body class="font-poppins bg-sahaya-bg">
+    <div class="absolute top-6 left-10 z-20">
+        <img src="{% static 'users/sahayanew.png' %}" alt="Sahaya Logo" class="w-48 h-auto">
+    </div>
 
+    <div class="min-h-screen flex items-center justify-center p-4 relative">
+        <div class="w-full max-w-6xl flex flex-col md:flex-row shadow-2xl rounded-3xl overflow-hidden bg-white relative z-10">
             <!-- Left Section (Form) -->
-            <div class="flex flex-col p-10 bg-white md:w-1/2">
-                <nav class="tabs mb-5 flex gap-4">
-                    <a href="{% url 'users:signup' %}" class="tab tab-bordered font-bold text-gray-500">Sign Up</a>
-                    <button class="tab tab-bordered font-bold tab-active text-[#16423C]">Login</button>
+            <div class="flex flex-col p-8 md:p-12 bg-white md:w-1/2">
+                <nav class="tabs mb-8 flex gap-6">
+                    <a href="{% url 'users:signup' %}" class="tab tab-bordered font-semibold text-xl text-gray-400 hover:text-sahaya-green transition duration-300">Sign Up</a>
+                    <button class="tab tab-bordered font-semibold text-xl tab-active text-sahaya-green border-b-2 border-sahaya-green pb-2">Login</button>
                 </nav>
-                <form method="post" action="{% url 'users:login' %}">
+
+                <form method="post" action="{% url 'users:login' %}" class="space-y-6">
                     {% csrf_token %}
                     {{ form.non_field_errors }}
-                    <div class="mb-4">
-                        {{ form.username|add_class:"input input-bordered w-full rounded-full p-5 focus:outline-none focus:ring-2 ring-offset-2 ring-[#16423C] shadow-md" }}
+                    
+                    <div class="space-y-4">
+                        {{ form.username|add_class:"input w-full rounded-full p-4 bg-gray-100 focus:outline-none focus:ring-2 focus:ring-sahaya-green focus:bg-white transition duration-300" }}
                     </div>
-                    <div class="mb-4">
-                        {{ form.password|add_class:"input input-bordered w-full rounded-full p-5 focus:outline-none focus:ring-2 ring-offset-2 ring-[#16423C] shadow-md" }}
+                    
+                    <div class="space-y-4">
+                        {{ form.password|add_class:"input w-full rounded-full p-4 bg-gray-100 focus:outline-none focus:ring-2 focus:ring-sahaya-green focus:bg-white transition duration-300" }}
                     </div>
+                    
                     <button type="submit"
-                        class="btn bg-gradient-to-r from-[#6A9C89] to-[#16423C] text-white w-full rounded-full py-4 mt-2 shadow-md hover:bg-gradient-to-r hover:from-[#6A9C89] hover:to-[#16423C] mb-6">
+                        class="btn bg-gradient-to-r from-sahaya-light-green to-sahaya-green text-white w-full rounded-full py-4 text-lg font-semibold shadow-lg hover:shadow-xl transition duration-300 transform hover:scale-105"
+                        style="line-height: 0.5;">
                         Login Now
                     </button>
                 </form>
-                <p class="text-center mt-4 text-sm">Don't have an account yet? <b>Sign up now</b></p>
-                <hr class="my-8">
-                <p class="text-center font-bold mb-4">Login with Others</p>
-                <button
-                    class="btn w-full py-4 mb-3 shadow-md flex items-center justify-center space-x-2 border border-gray-300 text-black">
-                    <img
-                        src="{% static 'users/googlelogo.png' %}"
-                        alt="Google" class="w-6">
-                    <span>Login with Google</span>
-                </button>
-                <button
-                    class="btn w-full py-4 shadow-md flex items-center justify-center space-x-2 border border-gray-300 text-blue-600">
-                    <img src="{% static 'users/fblogo.png' %}"
-                        alt="Facebook" class="w-6">
-                    <span>Login with Facebook</span>
-                </button>
+                
+                <p class="text-center mt-6 text-sm">Don't have an account yet? <a href="{% url 'users:signup' %}" class="font-bold text-sahaya-green hover:underline">Sign up now</a></p>
+                
+                <div class="mt-10">
+                    <div class="relative">
+                        <div class="absolute inset-0 flex items-center">
+                            <div class="w-full border-t border-gray-300"></div>
+                        </div>
+                        <div class="relative flex justify-center text-sm">
+                            <span class="px-2 bg-white text-gray-500">Or continue with</span>
+                        </div>
+                    </div>
+
+                    <div class="mt-6 grid grid-cols-2 gap-3">
+                        <button class="w-full inline-flex justify-center py-3 px-4 border border-gray-300 rounded-full shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 transition duration-300">
+                            <img src="{% static 'users/googlelogo.png' %}" alt="Google" class="w-5 h-5 mr-2">
+                            <span>Google</span>
+                        </button>
+                        <button class="w-full inline-flex justify-center py-3 px-4 border border-gray-300 rounded-full shadow-sm bg-white text-sm font-medium text-blue-600 hover:bg-gray-50 transition duration-300">
+                            <img src="{% static 'users/fblogo.png' %}" alt="Facebook" class="w-5 h-5 mr-2">
+                            <span>Facebook</span>
+                        </button>
+                    </div>
+                </div>
             </div>
 
             <!-- Right Section (Image and Text) -->
             <div class="relative md:w-1/2 overflow-hidden">
-                <div class="absolute top-0 left-0 right-0 bottom-0 bg-cover bg-center"
-                style="background-image: url('{% static 'users/rect.png' %}')"
-                >
-                </div>
+                <div class="absolute top-0 left-0 right-0 bottom-0 bg-cover bg-center" style="background-image: url('{% static 'users/rect.png' %}')"></div>
                 <div class="relative z-10 flex flex-col items-center justify-center p-10 bg-[#E9EFEC] bg-opacity-50 rounded-3xl w-[80%] h-[70%] mt-20 ml-10">
-                    <h4 class="text-2xl font-bold mb-8 text-[#E9EFEC]">Very good events are waiting for you Login Now!!!</h4>
+                    <h4 class="text-2xl font-bold mb-6 text-[#16423C]">Very good events are waiting for you Login Now!!!</h4>
                 </div>
-                <div class="relative z-20 flex justify-center items-center" style="transform: translateY(-220px);">
-
-                    <img src="{% static 'users/women.png' %}" alt="Happy Woman" >
+                <div class="relative z-20 flex justify-center items-center mt-[-14rem]">
+                    <img src="{% static 'users/women.png' %}" alt="Happy Woman">
                 </div>
             </div>
         </div>
     </div>
-</body>
 
+    <script>
+        // Add some interactivity
+        document.querySelectorAll('input').forEach(input => {
+            input.addEventListener('focus', function() {
+                this.parentElement.classList.add('scale-105');
+            });
+            input.addEventListener('blur', function() {
+                this.parentElement.classList.remove('scale-105');
+            });
+        });
+    </script>
+</body>
 </html>

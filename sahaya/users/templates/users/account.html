@@ -4,205 +4,220 @@
     {% load static %}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Account</title>
+    <title>User Account | Sahaya</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/npm/daisyui@latest/dist/full.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet">
     <style>
         :root {
-            --color-dark-green: #16423C;
-            --color-green: #6A9C89;
-            --color-light-green: #C4DAD2;
-            --color-lightest-green: #E9EFEC;
+            --color-primary: #16423C;
+            --color-secondary: #6A9C89;
+            --color-accent: #C4DAD2;
+            --color-background: #E9EFEC;
         }
 
-        .sidebar-hidden {
-            transform: translateX(-100%);
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .sidebar-transition {
             transition: transform 0.3s ease-in-out;
         }
 
-        .sidebar-visible {
-            transform: translateX(0);
-            transition: transform 0.3s ease-in-out;
-        }
-
-        .menu-hidden {
-            display: none;
+        .avatar-upload:hover .avatar-upload-icon {
+            opacity: 1;
         }
     </style>
 </head>
-<body class="bg-gradient-to-tr from-[var(--color-lightest-green)] to-[var(--color-light-green)] font-sans min-h-screen relative">
+<body class="bg-gradient-to-br from-[var(--color-background)] to-[var(--color-accent)] min-h-screen">
 
     <!-- Sidebar -->
-    <div id="sidebar" class="w-64 bg-[var(--color-light-green)] text-black p-6 flex flex-col fixed top-0 left-0 h-full sidebar-hidden z-50">
+    <div id="sidebar" class="fixed top-0 left-0 h-full w-64 bg-[var(--color-primary)] text-white p-6 transform -translate-x-full sidebar-transition z-50">
         <div class="flex items-center justify-between mb-8">
-            <h2 class="text-2xl font-bold text-[var(--color-dark-green)]">Sahaya</h2>
-            <button id="closeSidebar" class="text-gray-700 hover:text-red-500">
+            <h2 class="text-2xl font-bold">Sahaya</h2>
+            <button id="closeSidebar" class="text-white hover:text-[var(--color-accent)]">
                 <i class="fas fa-times text-xl"></i>
             </button>
         </div>
-        <ul class="menu">
-            <li class="mb-4">
-                <a href="{% url 'users:dashboard' %}" class="flex items-center gap-3 btn btn-ghost justify-start w-full">
-                    <i class="fas fa-th-large"></i>
-                    <span>Dashboard</span>
-                </a>
-            </li>
-            <li class="mb-4">
-                <a href="{% url 'event:list_of_events' %}" class="flex items-center gap-3 btn btn-ghost justify-start w-full">
-                    <i class="fas fa-tv"></i>
-                    <span>Events</span>
-                </a>
-            </li>
-            <li class="mb-4">
-                <a href="#" class="flex items-center gap-3 btn btn-ghost justify-start w-full">
-                    <i class="fas fa-envelope"></i>
-                    <span>Messages</span>
-                </a>
-            </li>
-            <li class="mb-4">
-                <a href="{% url 'users:account' %}" class="flex items-center gap-3 btn btn-ghost justify-start w-full">
-                    <i class="fas fa-user"></i>
-                    <span>Profile</span>
-                </a>
-            </li>
-        </ul>
+        <nav>
+            <ul class="space-y-4">
+                <li>
+                    <a href="{% url 'users:dashboard' %}" class="flex items-center space-x-3 p-2 rounded-lg hover:bg-[var(--color-secondary)] transition-colors">
+                        <i class="fas fa-th-large w-5"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'event:list_of_events' %}" class="flex items-center space-x-3 p-2 rounded-lg hover:bg-[var(--color-secondary)] transition-colors">
+                        <i class="fas fa-tv w-5"></i>
+                        <span>Events</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="flex items-center space-x-3 p-2 rounded-lg hover:bg-[var(--color-secondary)] transition-colors">
+                        <i class="fas fa-envelope w-5"></i>
+                        <span>Messages</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'users:account' %}" class="flex items-center space-x-3 p-2 rounded-lg hover:bg-[var(--color-secondary)] transition-colors">
+                        <i class="fas fa-user w-5"></i>
+                        <span>Profile</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
         <div class="mt-auto">
-            <a href="{% url 'home' %}" class="flex items-center gap-3 btn btn-outline w-full text-left">
-                <i class="fas fa-sign-out-alt"></i>
+            <a href="{% url 'home' %}" class="flex items-center space-x-3 p-2 rounded-lg hover:bg-red-600 transition-colors">
+                <i class="fas fa-sign-out-alt w-5"></i>
                 <span>Logout</span>
             </a>
         </div>
     </div>
 
     <!-- Menu Button -->
-    <button id="menuButton" class="fixed top-4 left-4 z-50 bg-[var(--color-dark-green)] text-white p-3 rounded-md shadow-md hover:bg-[var(--color-green)]">
+    <button id="menuButton" class="fixed top-4 left-4 z-50 bg-[var(--color-primary)] text-white p-3 rounded-full shadow-lg hover:bg-[var(--color-secondary)] transition-colors">
         <i class="fas fa-bars text-lg"></i>
     </button>
 
+ <!-- Main Wrapper -->
+<div class="min-h-screen flex items-center justify-center bg-gray-100">
     <!-- Main Content -->
-    <div class="flex-grow flex items-center justify-center min-h-screen">
-        <!-- Account Details Card -->
-        <div class="bg-white shadow-xl rounded-2xl w-full max-w-3xl p-8 relative">
-            <div class="absolute top-4 right-4 text-gray-500 text-sm">
-                Joined: {{ user.date_joined|date:"F j, Y" }}
-            </div>
-            <div class="flex flex-col items-center justify-center mb-6">
-                <div class="avatar w-28 h-28 rounded-full shadow-md bg-gradient-to-br from-[var(--color-green)] to-[var(--color-dark-green)] flex items-center justify-center text-white text-3xl font-bold">
-                    {{ user.first_name|slice:":1" }}{{ user.last_name|slice:":1" }}
-                </div>
-                <h2 class="text-4xl font-semibold mt-4 text-[var(--color-dark-green)]">{{ user.first_name }} {{ user.last_name }}</h2>
-                <p class="text-gray-500">{{ user.username }}</p>
-            </div>
-
-            <!-- User Information -->
-            <div class="bg-[var(--color-lightest-green)] p-4 rounded-lg shadow-sm mb-6">
-                <div class="grid grid-cols-2 gap-4 text-[var(--color-dark-green)]">
-                    <div>
-                        <p><strong>Username:</strong> {{ user.username }}</p>
-                    </div>
-                    <div>
-                        <p><strong>Email:</strong> {{ user.email }}</p>
-                    </div>
-                    <div>
-                        <p><strong>First Name:</strong> {{ user.first_name }}</p>
-                    </div>
-                    <div>
-                        <p><strong>Last Name:</strong> {{ user.last_name }}</p>
-                    </div>
-                    <div>
-                        <p><strong>Contact Number:</strong> {{ user.contact_number|default:"Not Provided" }}</p>
-                    </div>
-                    <div>
-                        <p><strong>Date Joined:</strong> {{ user.date_joined|date:"F j, Y" }}</p>
+    <div class="container mx-auto px-4 py-8">
+        <div class="bg-white shadow-2xl rounded-3xl overflow-hidden max-w-4xl mx-auto">
+            <div class="relative h-48 bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-secondary)]">
+                <div class="absolute -bottom-20 left-1/2 transform -translate-x-1/2">
+                    <div class="relative">
+                        <div class="w-40 h-40 rounded-full overflow-hidden border-4 border-white shadow-lg">
+                            {% if user.profile_picture %}
+                                <img src="{{ user.profile_picture.url }}" alt="Profile Picture" class="w-full h-full object-cover">
+                            {% else %}
+                                <div class="w-full h-full bg-[var(--color-accent)] flex items-center justify-center text-[var(--color-primary)] text-4xl font-bold">
+                                    {{ user.first_name|slice:":1" }}{{ user.last_name|slice:":1" }}
+                                </div>
+                            {% endif %}
+                        </div>
+                        <label for="uploadProfilePicture" class="absolute bottom-0 right-0 bg-[var(--color-secondary)] text-white p-2 rounded-full cursor-pointer shadow-md hover:bg-[var(--color-primary)] transition-colors">
+                            <i class="fas fa-camera"></i>
+                        </label>
                     </div>
                 </div>
             </div>
 
-            <!-- Action Buttons -->
-            <div class="flex justify-center gap-6 mt-6">
-                <label for="editModal" class="btn bg-[var(--color-green)] hover:bg-[var(--color-dark-green)] border-none text-white w-36">Edit</label>
-                <label for="deleteModal" class="btn bg-red-500 hover:bg-red-600 border-none text-white w-36">Delete</label>
-                <a href="{% url 'users:dashboard' %}" class="btn bg-gray-200 hover:bg-gray-300 text-gray-700 w-36">Dashboard</a>
+            <div class="pt-24 px-8 pb-8">
+                <div class="text-center mb-8">
+                    <h2 class="text-3xl font-bold text-[var(--color-primary)]">{{ user.first_name }} {{ user.last_name }}</h2>
+                    <p class="text-gray-600">@{{ user.username }}</p>
+                </div>
+
+                <div class="bg-[var(--color-background)] p-6 rounded-xl shadow-inner mb-8">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <p class="text-gray-600">Username</p>
+                            <p class="font-semibold">{{ user.username }}</p>
+                        </div>
+                        <div>
+                            <p class="text-gray-600">Email</p>
+                            <p class="font-semibold">{{ user.email }}</p>
+                        </div>
+                        <div>
+                            <p class="text-gray-600">Contact Number</p>
+                            <p class="font-semibold">{{ user.contact_number|default:"Not Provided" }}</p>
+                        </div>
+                        <div>
+                            <p class="text-gray-600">Joined</p>
+                            <p class="font-semibold">{{ user.date_joined|date:"F j, Y" }}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex justify-center space-x-4">
+                    <label for="editModal" class="btn bg-[var(--color-secondary)] hover:bg-[var(--color-primary)] text-white border-none">Edit Profile</label>
+                    <label for="deleteModal" class="btn bg-red-500 hover:bg-red-600 text-white border-none">Delete Account</label>
+                </div>
             </div>
         </div>
     </div>
+</div>
 
 
-<!-- Edit Modal -->
+    <!-- Edit Modal -->
 <input type="checkbox" id="editModal" class="modal-toggle">
 <div class="modal">
     <div class="modal-box max-w-lg bg-white rounded-xl shadow-lg">
-        <h3 style="font-size: 1.5rem; font-weight: 600; margin-bottom: 1rem; color: var(--color-dark-green);">Edit Account Details</h3>
+        <h3 class="text-2xl font-bold mb-6 text-[var(--color-primary)]">Edit Account Details</h3>
         <form method="post" action="{% url 'users:edit_account' %}">
             {% csrf_token %}
-            <div style="margin-bottom: 1rem;">
-                <label style="display: block; font-size: 0.875rem; font-weight: 500; color: #4B5563; margin-bottom: 0.25rem;">First Name</label>
-                <input type="text" name="first_name" value="{{ user.first_name }}" 
-                    style="width: 100%; padding: 0.5rem; border: 1px solid #D1D5DB; border-radius: 0.375rem; background-color: white !important; color: #1F2937 !important;" 
-                    required>
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">First Name</label>
+                    <input type="text" name="first_name" value="{{ user.first_name }}" class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[var(--color-secondary)] focus:border-transparent bg-white" required>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Last Name</label>
+                    <input type="text" name="last_name" value="{{ user.last_name }}" class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[var(--color-secondary)] focus:border-transparent bg-white" required>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                    <input type="email" name="email" value="{{ user.email }}" class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[var(--color-secondary)] focus:border-transparent bg-white" required>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Contact Number</label>
+                    <input type="text" name="contact_number" value="{{ user.contact_number }}" class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[var(--color-secondary)] focus:border-transparent bg-white">
+                </div>
             </div>
-            <div style="margin-bottom: 1rem;">
-                <label style="display: block; font-size: 0.875rem; font-weight: 500; color: #4B5563; margin-bottom: 0.25rem;">Last Name</label>
-                <input type="text" name="last_name" value="{{ user.last_name }}" 
-                    style="width: 100%; padding: 0.5rem; border: 1px solid #D1D5DB; border-radius: 0.375rem; background-color: white !important; color: #1F2937 !important;" 
-                    required>
-            </div>
-            <div style="margin-bottom: 1rem;">
-                <label style="display: block; font-size: 0.875rem; font-weight: 500; color: #4B5563; margin-bottom: 0.25rem;">Email</label>
-                <input type="email" name="email" value="{{ user.email }}" 
-                    style="width: 100%; padding: 0.5rem; border: 1px solid #D1D5DB; border-radius: 0.375rem; background-color: white !important; color: #1F2937 !important;" 
-                    required>
-            </div>
-            <div style="margin-bottom: 1rem;">
-                <label style="display: block; font-size: 0.875rem; font-weight: 500; color: #4B5563; margin-bottom: 0.25rem;">Contact Number</label>
-                <input type="text" name="contact_number" value="{{ user.contact_number }}" 
-                    style="width: 100%; padding: 0.5rem; border: 1px solid #D1D5DB; border-radius: 0.375rem; background-color: white !important; color: #1F2937 !important;">
-            </div>
-            <div class="modal-action" style="display: flex; justify-content: flex-end; gap: 1rem;">
-                <label for="editModal" style="padding: 0.5rem 1rem; background-color: #E5E7EB; color: #374151; border-radius: 0.375rem; cursor: pointer; text-align: center;">Cancel</label>
-                <button type="submit" style="padding: 0.5rem 1rem; background-color: var(--color-green); color: white; border-radius: 0.375rem; border: none; cursor: pointer;">Save Changes</button>
-            </div>
-        </form>
-    </div>
-</div>
-<!-- Delete Modal -->
-<!-- Delete Modal -->
-<input type="checkbox" id="deleteModal" class="modal-toggle">
-<div class="modal">
-    <div class="modal-box max-w-md bg-white rounded-xl shadow-lg text-center">
-        <h3 class="text-xl font-semibold mb-4 text-gray-800">Delete Account</h3>
-        <p class="text-gray-600 mb-6">Are you sure you want to delete your account? This action cannot be undone.</p>
-        <form method="post" action="{% url 'users:delete_account' %}">
-            {% csrf_token %}
-            <div class="modal-action justify-center gap-4">
-                <!-- Close Modal -->
-                <label for="deleteModal" class="btn bg-gray-300 hover:bg-gray-400 text-gray-700">Cancel</label>
-                <!-- Submit Form -->
-                <button type="submit" name="delete_account" value="1" class="btn bg-red-500 hover:bg-red-600 text-white">Delete</button>
+            <div class="modal-action mt-6">
+                <label for="editModal" class="btn bg-gray-300 hover:bg-gray-400 text-gray-800">Cancel</label>
+                <button type="submit" class="btn bg-[var(--color-secondary)] hover:bg-[var(--color-primary)] text-white">Save Changes</button>
             </div>
         </form>
     </div>
 </div>
 
+    <!-- Delete Modal -->
+    <input type="checkbox" id="deleteModal" class="modal-toggle">
+    <div class="modal">
+        <div class="modal-box max-w-md bg-white rounded-xl shadow-lg text-center">
+            <h3 class="text-2xl font-bold mb-4 text-red-600">Delete Account</h3>
+            <p class="text-gray-600 mb-6">Are you sure you want to delete your account? This action cannot be undone.</p>
+            <form method="post" action="{% url 'users:delete_account' %}">
+                {% csrf_token %}
+                <div class="modal-action justify-center space-x-4">
+                    <label for="deleteModal" class="btn bg-gray-300 hover:bg-gray-400 text-gray-800">Cancel</label>
+                    <button type="submit" name="delete_account" value="1" class="btn bg-red-500 hover:bg-red-600 text-white">Delete Account</button>
+                </div>
+            </form>
+        </div>
+    </div>
 
-    <!-- JavaScript -->
+    <!-- Hidden file input for profile picture upload -->
+    <input type="file" id="uploadProfilePicture" class="hidden" onchange="uploadProfilePicture()">
+    <form id="profilePictureForm" method="post" action="{% url 'users:upload_profile_picture' %}" enctype="multipart/form-data">
+        {% csrf_token %}
+        <input type="file" name="profile_picture" id="profilePictureInput" class="hidden">
+    </form>
+
     <script>
         const menuButton = document.getElementById('menuButton');
         const closeSidebar = document.getElementById('closeSidebar');
         const sidebar = document.getElementById('sidebar');
+        const uploadProfilePicture = document.getElementById('uploadProfilePicture');
+        const profilePictureInput = document.getElementById('profilePictureInput');
+        const profilePictureForm = document.getElementById('profilePictureForm');
 
-        // Toggle Sidebar
         menuButton.addEventListener('click', () => {
-            sidebar.classList.toggle('sidebar-hidden');
-            sidebar.classList.toggle('sidebar-visible');
-            menuButton.classList.add('menu-hidden');
+            sidebar.classList.toggle('-translate-x-full');
+            menuButton.classList.toggle('hidden');
         });
 
         closeSidebar.addEventListener('click', () => {
-            sidebar.classList.toggle('sidebar-hidden');
-            sidebar.classList.toggle('sidebar-visible');
-            menuButton.classList.remove('menu-hidden');
+            sidebar.classList.add('-translate-x-full');
+            menuButton.classList.remove('hidden');
+        });
+
+        uploadProfilePicture.addEventListener('change', function() {
+            profilePictureInput.files = uploadProfilePicture.files;
+            profilePictureForm.submit();
         });
     </script>
 </body>

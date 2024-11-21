@@ -100,3 +100,16 @@ def dashboard_view(request):
         'user_registered_events': user_registered_events,  # Pass this to template
     }
     return render(request, 'users/dashboard.html', context)
+
+@login_required
+def upload_profile_picture(request):
+    if request.method == 'POST' and request.FILES.get('profile_picture'):
+        profile_picture = request.FILES['profile_picture']
+        user = request.user
+        user.profile_picture = profile_picture  # Save the uploaded file
+        user.save()  # Save the user instance to the database
+        messages.success(request, 'Profile picture updated successfully!')
+        return redirect('users:account')  # Redirect to the profile page
+    else:
+        messages.error(request, 'No file uploaded.')
+        return redirect('users:account')

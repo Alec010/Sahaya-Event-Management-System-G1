@@ -4,35 +4,42 @@
     {% load static %}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create Event</title>
+    <title>Create Event | Sahaya</title>
     <link href="{% static 'css/styles.css' %}" rel="stylesheet">
-    <!-- Flatpickr CSS for date and time picker -->
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+    </style>
 </head>
-<body class="bg-[#E9EFEC] font-sans flex justify-center min-h-screen p-10">
+<body class="bg-gradient-to-br from-green-50 to-green-100 min-h-screen flex items-center justify-center p-4 md:p-8">
     
     <!-- Main Container -->
-    <div class="w-full max-w-3xl bg-white p-8 rounded-lg shadow-lg">
+    <div class="w-full max-w-4xl bg-white p-8 rounded-2xl shadow-2xl transition-all duration-300 ease-in-out hover:shadow-3xl">
         <!-- Logo and Title -->
-        <div class="flex justify-center mb-6">
-            <img src="{% static 'users/sahayalogo2.png' %}" alt="Sahaya Logo" class="w-40">
+        <div class="flex flex-col items-center mb-10">
+            <img src="{% static 'users/sahayalogo2.png' %}" alt="Sahaya Logo" class="w-40 mb-6 transform hover:scale-105 transition-transform duration-300">
+            <h2 class="text-4xl font-bold text-green-800 mb-2">Create Event</h2>
+            <p class="text-gray-600">Fill in the details to create your amazing event</p>
         </div>
-        <h2 class="text-3xl font-bold text-center mb-8 text-black">Create Event</h2>
         
         <!-- Event Form -->
-        <form method="post" enctype="multipart/form-data" id="createEventForm">
+        <form method="post" enctype="multipart/form-data" id="createEventForm" class="space-y-6">
             {% csrf_token %}
             
             <!-- Event Title -->
-            <div class="mb-6">
-                <label class="block text-sm font-medium text-gray-700">Event Title</label>
-                <input type="text" name="title" placeholder="Enter event title" class="input input-bordered w-full bg-white text-black border border-gray-300 rounded-md focus:ring focus:ring-green-500 focus:outline-none">
+            <div>
+                <label for="title" class="block text-sm font-medium text-gray-700 mb-1">Event Title</label>
+                <input type="text" id="title" name="title" placeholder="Enter event title" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition duration-200 ease-in-out">
             </div>
             
             <!-- Event Venue -->
-            <div class="mb-6">
-                <label class="block text-sm font-medium text-gray-700">Event Venue</label>
-                <select name="location" id="venueSelect" class="select select-bordered w-full bg-white text-black border border-gray-300 rounded-md focus:ring focus:ring-green-500 focus:outline-none">
+            <div>
+                <label for="venueSelect" class="block text-sm font-medium text-gray-700 mb-1">Event Venue</label>
+                <select name="location" id="venueSelect" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition duration-200 ease-in-out">
                     <option disabled selected>Select venue</option>
                     <option>Case room</option>
                     <option>GYM</option>
@@ -41,73 +48,73 @@
                     <option>JHS Grandstand</option>
                     <option value="Others">Others</option>
                 </select>
-                <input type="text" name="custom_venue" id="customVenueInput" placeholder="Specify venue" class="mt-4 input input-bordered w-full bg-white text-black border border-gray-300 rounded-md focus:ring focus:ring-green-500 focus:outline-none" style="display: none;">
+                <input type="text" name="custom_venue" id="customVenueInput" placeholder="Specify venue" class="mt-4 w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition duration-200 ease-in-out hidden">
             </div>
             
             <!-- Date and Time Fields -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                    <label class="block text-sm font-medium text-gray-700">Start Date</label>
-                    <input type="text" name="start_date" placeholder="Select start date" class="input input-bordered w-full bg-white text-black border border-gray-300 rounded-md focus:ring focus:ring-green-500 focus:outline-none">
+                    <label for="start_date" class="block text-sm font-medium text-gray-700 mb-1">Start Date</label>
+                    <input type="text" id="start_date" name="start_date" placeholder="Select start date" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition duration-200 ease-in-out">
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-gray-700">End Date</label>
-                    <input type="text" name="end_date" placeholder="Select end date" class="input input-bordered w-full bg-white text-black border border-gray-300 rounded-md focus:ring focus:ring-green-500 focus:outline-none">
+                    <label for="end_date" class="block text-sm font-medium text-gray-700 mb-1">End Date</label>
+                    <input type="text" id="end_date" name="end_date" placeholder="Select end date" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition duration-200 ease-in-out">
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-gray-700">Start Time</label>
-                    <input type="text" name="start_time" placeholder="Select start time" class="input input-bordered w-full bg-white text-black border border-gray-300 rounded-md focus:ring focus:ring-green-500 focus:outline-none">
+                    <label for="start_time" class="block text-sm font-medium text-gray-700 mb-1">Start Time</label>
+                    <input type="text" id="start_time" name="start_time" placeholder="Select start time" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition duration-200 ease-in-out">
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-gray-700">End Time</label>
-                    <input type="text" name="end_time" placeholder="Select end time" class="input input-bordered w-full bg-white text-black border border-gray-300 rounded-md focus:ring focus:ring-green-500 focus:outline-none">
+                    <label for="end_time" class="block text-sm font-medium text-gray-700 mb-1">End Time</label>
+                    <input type="text" id="end_time" name="end_time" placeholder="Select end time" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition duration-200 ease-in-out">
                 </div>
             </div>
 
             <!-- Event Image -->
-            <div class="mb-6">
-                <label class="block text-sm font-medium text-gray-700">Event Image</label>
-                <input type="file" name="image" class="file-input w-full bg-gray-100 text-black border border-gray-300 rounded-md focus:ring focus:ring-green-500 focus:outline-none">
+            <div>
+                <label for="image" class="block text-sm font-medium text-gray-700 mb-1">Event Image</label>
+                <input type="file" id="image" name="image" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition duration-200 ease-in-out file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-green-50 file:text-green-700 hover:file:bg-green-100">
             </div>
 
             <!-- Event Description -->
-            <div class="mb-10">
-                <label class="block text-sm font-medium text-gray-700">Event Description</label>
-                <textarea name="description" placeholder="Type here..." class="textarea w-full h-32 bg-gray-100 text-black border border-gray-300 rounded-md focus:ring focus:ring-green-500 focus:outline-none"></textarea>
+            <div>
+                <label for="description" class="block text-sm font-medium text-gray-700 mb-1">Event Description</label>
+                <textarea id="description" name="description" placeholder="Type here..." class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition duration-200 ease-in-out h-32 resize-none"></textarea>
             </div>
             
             <!-- Action Buttons -->
-            <div class="flex justify-between">
+            <div class="flex justify-between pt-6">
                 <a href="{% url 'users:dashboard' %}" 
-                   style="padding: 10px 50px; background-color: #14532D; color: white; border-radius: 6px; text-decoration: none; margin-right: 10px;">
+                   class="px-6 py-3 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition duration-300 ease-in-out transform hover:-translate-y-1">
                    Back to Dashboard
                 </a>
                 <button type="submit" 
-                        style="padding: 10px 50px; background-color: #14532D; color: white; border-radius: 6px; border: none;">
+                        class="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition duration-300 ease-in-out transform hover:-translate-y-1">
                    Create Event
                 </button>
             </div>
         </form>
     </div>
 
-<!-- Success Modal -->
-<div id="successModal" class="fixed inset-0 flex items-center justify-center" style="background-color: rgba(0, 0, 0, 0.5); display: none;">
-    <div class="bg-white p-6 rounded-lg shadow-lg max-w-md text-center">
-        <h3 style="font-size: 1.25rem; font-weight: bold; margin-bottom: 1rem;">Event Successfully Created!</h3>
-        <p style="margin-bottom: 1.5rem;">Your event has been created successfully.</p>
-        <div class="flex justify-center gap-4">
-            <a href="{% url 'users:dashboard' %}" 
-               style="padding: 10px 20px; background-color: #14532D; color: white; border-radius: 6px; text-decoration: none;">
-               Return to Dashboard
-            </a>
-            <button onclick="resetForm()" 
-                    style="padding: 10px 20px; background-color: #14532D; color: white; border-radius: 6px; border: none;">
-                Create Another Event
-            </button>
+    <!-- Success Modal -->
+    <div id="successModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden">
+        <div class="bg-white p-8 rounded-2xl shadow-2xl max-w-md text-center transform transition-all duration-300 ease-in-out scale-90 opacity-0">
+            <h3 class="text-2xl font-bold text-green-800 mb-4">Event Successfully Created!</h3>
+            <p class="text-gray-600 mb-6">Your event has been created successfully.</p>
+            <div class="flex justify-center gap-4">
+                <a href="{% url 'users:dashboard' %}" 
+                   class="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition duration-300 ease-in-out transform hover:-translate-y-1">
+                   Return to Dashboard
+                </a>
+                <button onclick="resetForm()" 
+                        class="px-6 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition duration-300 ease-in-out transform hover:-translate-y-1">
+                    Create Another Event
+                </button>
+            </div>
         </div>
     </div>
-</div>
-    <!-- Flatpickr JS -->
+
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script>
         // Initialize Flatpickr with date validation
@@ -115,7 +122,7 @@
             altInput: true,
             altFormat: "F j, Y",
             dateFormat: "Y-m-d",
-            minDate: "today", // Prevent selecting dates before today
+            minDate: "today",
         });
 
         flatpickr("input[name='start_time'], input[name='end_time']", {
@@ -130,17 +137,15 @@
         const customVenueInput = document.getElementById("customVenueInput");
 
         venueSelect.addEventListener("change", function () {
-            if (this.value === "Others") {
-                customVenueInput.style.display = "block";
-            } else {
-                customVenueInput.style.display = "none";
-                customVenueInput.value = ""; // Clear the custom venue input
+            customVenueInput.style.display = this.value === "Others" ? "block" : "none";
+            if (this.value !== "Others") {
+                customVenueInput.value = "";
             }
         });
 
         // Show the success modal on form submission
         document.getElementById("createEventForm").addEventListener("submit", async function(event) {
-            event.preventDefault(); // Prevent default form submission
+            event.preventDefault();
             const form = event.target;
             const formData = new FormData(form);
     
@@ -156,15 +161,15 @@
                 const result = await response.json();
     
                 if (response.ok && result.success) {
-                    // Show the success modal if the submission is successful
-                    document.getElementById("successModal").style.display = "flex";
+                    const modal = document.getElementById("successModal");
+                    const modalContent = modal.querySelector('div');
+                    modal.classList.remove('hidden');
+                    setTimeout(() => {
+                        modalContent.classList.remove('scale-90', 'opacity-0');
+                        modalContent.classList.add('scale-100', 'opacity-100');
+                    }, 10);
                 } else {
-                    if (result.errors) {
-                        // Display form errors if available
-                        alert("There was an error creating the event: " + JSON.stringify(result.errors));
-                    } else {
-                        alert("There was an error creating the event.");
-                    }
+                    alert(result.errors ? "Error: " + JSON.stringify(result.errors) : "Error creating the event.");
                 }
             } catch (error) {
                 console.error("Error:", error);
@@ -175,7 +180,13 @@
         // Reset form and close modal
         function resetForm() {
             document.getElementById("createEventForm").reset();
-            document.getElementById("successModal").style.display = "none"; // Hide modal
+            const modal = document.getElementById("successModal");
+            const modalContent = modal.querySelector('div');
+            modalContent.classList.remove('scale-100', 'opacity-100');
+            modalContent.classList.add('scale-90', 'opacity-0');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 300);
         }
     </script>
 </body>

@@ -9,73 +9,67 @@
     <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet">
     <style>
         :root {
-            --color-dark-green: #16423C;
-            --color-green: #6A9C89;
-            --color-light-green: #C4DAD2;
-            --color-lightest-green: #E9EFEC;
+            --color-primary: #16423C;
+            --color-secondary: #6A9C89;
+            --color-accent: #C4DAD2;
+            --color-background: #E9EFEC;
         }
-
-        .sidebar-hidden {
-            transform: translateX(-100%);
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+        }
+        .sidebar-transition {
             transition: transform 0.3s ease-in-out;
-        }
-
-        .sidebar-visible {
-            transform: translateX(0);
-            transition: transform 0.3s ease-in-out;
-        }
-
-        .menu-hidden {
-            display: none;
         }
     </style>
 </head>
-<body class="bg-gradient-to-tr from-[var(--color-lightest-green)] to-[var(--color-light-green)] font-sans relative min-h-screen">
+<body class="bg-[var(--color-background)] min-h-screen">
 
     <!-- Sidebar -->
-    <div id="sidebar" class="w-64 bg-[var(--color-light-green)] text-black p-6 flex flex-col fixed top-0 left-0 h-full sidebar-hidden z-50 shadow-lg">
+    <div id="sidebar" class="fixed top-0 left-0 h-full w-64 bg-[var(--color-primary)] text-white p-6 transform -translate-x-full sidebar-transition z-50">
         <div class="flex items-center justify-between mb-8">
-            <h2 class="text-2xl font-bold text-[var(--color-dark-green)]">Sahaya</h2>
-            <button id="closeSidebar" class="text-gray-700 hover:text-red-500">
+            <h2 class="text-2xl font-bold">Sahaya</h2>
+            <button id="closeSidebar" class="text-white hover:text-[var(--color-accent)]">
                 <i class="fas fa-times text-xl"></i>
             </button>
         </div>
-        <ul class="menu">
-            <li class="mb-4">
-                <a href="{% url 'users:dashboard' %}" class="flex items-center gap-3 btn btn-ghost justify-start w-full">
-                    <i class="fas fa-th-large"></i>
-                    <span>Dashboard</span>
-                </a>
-            </li>
-            <li class="mb-4">
-                <a href="{% url 'event:list_of_events' %}" class="flex items-center gap-3 btn btn-ghost justify-start w-full">
-                    <i class="fas fa-tv"></i>
-                    <span>Events</span>
-                </a>
-            </li>
-            <li class="mb-4">
-                <a href="#" class="flex items-center gap-3 btn btn-ghost justify-start w-full">
-                    <i class="fas fa-envelope"></i>
-                    <span>Messages</span>
-                </a>
-            </li>
-            <li class="mb-4">
-                <a href="{% url 'users:account' %}" class="flex items-center gap-3 btn btn-ghost justify-start w-full">
-                    <i class="fas fa-user"></i>
-                    <span>Profile</span>
-                </a>
-            </li>
-        </ul>
+        <nav>
+            <ul class="space-y-4">
+                <li>
+                    <a href="{% url 'users:dashboard' %}" class="flex items-center space-x-3 p-2 rounded-lg hover:bg-[var(--color-secondary)] transition-colors">
+                        <i class="fas fa-th-large w-5"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'event:list_of_events' %}" class="flex items-center space-x-3 p-2 rounded-lg hover:bg-[var(--color-secondary)] transition-colors">
+                        <i class="fas fa-tv w-5"></i>
+                        <span>Events</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="flex items-center space-x-3 p-2 rounded-lg hover:bg-[var(--color-secondary)] transition-colors">
+                        <i class="fas fa-envelope w-5"></i>
+                        <span>Messages</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'users:account' %}" class="flex items-center space-x-3 p-2 rounded-lg hover:bg-[var(--color-secondary)] transition-colors">
+                        <i class="fas fa-user w-5"></i>
+                        <span>Profile</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
         <div class="mt-auto">
-            <a href="{% url 'home' %}" class="flex items-center gap-3 btn btn-outline w-full text-left">
-                <i class="fas fa-sign-out-alt"></i>
+            <a href="{% url 'home' %}" class="flex items-center space-x-3 p-2 rounded-lg hover:bg-red-600 transition-colors">
+                <i class="fas fa-sign-out-alt w-5"></i>
                 <span>Logout</span>
             </a>
         </div>
     </div>
 
     <!-- Menu Button -->
-    <button id="menuButton" class="fixed top-4 left-4 z-50 bg-[var(--color-dark-green)] text-white p-3 rounded-md shadow-md hover:bg-[var(--color-green)]">
+    <button id="menuButton" class="fixed top-4 left-4 z-50 bg-[var(--color-primary)] text-white p-3 rounded-full shadow-lg hover:bg-[var(--color-secondary)] transition-colors">
         <i class="fas fa-bars text-lg"></i>
     </button>
 
@@ -152,9 +146,20 @@
 
     <!-- JavaScript -->
     <script>
-        const menuButton = document.getElementById('menuButton');
+       // Sidebar Functionality
+       const menuButton = document.getElementById('menuButton');
         const closeSidebar = document.getElementById('closeSidebar');
         const sidebar = document.getElementById('sidebar');
+
+        menuButton.addEventListener('click', () => {
+            sidebar.classList.toggle('-translate-x-full');
+            menuButton.classList.toggle('hidden');
+        });
+
+        closeSidebar.addEventListener('click', () => {
+            sidebar.classList.add('-translate-x-full');
+            menuButton.classList.remove('hidden');
+        });
 
         // Toggle Sidebar
         menuButton.addEventListener('click', () => {

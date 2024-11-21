@@ -5,42 +5,58 @@
     {% load static %}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign Up</title>
+    <title>Sign Up - Sahaya</title>
     <link href="{% static 'css/styles.css' %}" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=ABeeZee&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=ABeeZee&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'abeezee': ['ABeeZee', 'sans-serif'],
+                        'poppins': ['Poppins', 'sans-serif'],
+                    },
+                    colors: {
+                        'sahaya-green': '#16423C',
+                        'sahaya-light-green': '#6A9C89',
+                        'sahaya-bg': '#E9EFEC',
+                    },
+                }
+            }
+        }
+    </script>
 </head>
 
-<body class="font-ABeeZee bg-[#E9EFEC]">
-    <div class="absolute top-3 left-10">
-        <img src="{% static 'users/sahayalogo.png' %}" alt="Sahaya Logo" class="w-60 h-auto">
+<body class="font-poppins bg-sahaya-bg">
+    <div class="absolute top-6 left-10 z-20">
+        <img src="{% static 'users/sahayanew.png' %}" alt="Sahaya Logo" class="w-48 h-auto">
     </div>
 
-    <div class="min-h-screen flex items-center justify-center relative">
-        <div class="w-full max-w-5xl flex flex-col md:flex-row shadow-lg rounded-3xl overflow-hidden bg-white relative z-10">
+    <div class="min-h-screen flex items-center justify-center p-4 relative">
+        <div class="w-full max-w-6xl flex flex-col md:flex-row shadow-2xl rounded-3xl overflow-hidden bg-white relative z-10">
             <!-- Left Section (Form) -->
-            <div class="flex flex-col p-10 bg-white md:w-1/2">
-                <nav class="tabs mb-5 flex gap-4">
-                    <button class="tab tab-bordered font-bold tab-active text-[#16423C]">Sign Up</button>
-                    <a href="{% url 'users:login' %}" class="tab tab-bordered font-bold text-gray-500">Log in</a>
+            <div class="flex flex-col p-8 md:p-12 bg-white md:w-1/2">
+                <nav class="tabs mb-8 flex gap-6">
+                    <button class="tab tab-bordered font-semibold text-xl tab-active text-sahaya-green border-b-2 border-sahaya-green pb-2">Sign Up</button>
+                    <a href="{% url 'users:login' %}" class="tab tab-bordered font-semibold text-xl text-gray-400 hover:text-sahaya-green transition duration-300">Log in</a>
                 </nav>
 
-                <form method="post" action="{% url 'users:signup' %}">
+                <form method="post" action="{% url 'users:signup' %}" class="space-y-6">
                     {% csrf_token %}
 
-                    <!-- Display non-field errors (general form errors) -->
                     {% if form.non_field_errors %}
-                        <div class="text-red-500 mb-4">
+                        <div class="text-red-500 mb-4 bg-red-100 p-3 rounded-lg">
                             {% for error in form.non_field_errors %}
                                 <p>{{ error }}</p>
                             {% endfor %}
                         </div>
                     {% endif %}
 
-                    <!-- Username Field with Error Display -->
-                    <div class="mb-4">
-                        {{ form.username|add_class:"input input-bordered w-full rounded-full p-5 focus:outline-none focus:ring-2 ring-offset-2 ring-[#16423C] shadow-md" }}
+                    <div class="space-y-4">
+                        {{ form.username|add_class:"input w-full rounded-full p-4 bg-gray-100 focus:outline-none focus:ring-2 focus:ring-sahaya-green focus:bg-white transition duration-300" }}
                         {% if form.username.errors %}
-                            <div class="text-red-500">
+                            <div class="text-red-500 text-sm mt-1">
                                 {% for error in form.username.errors %}
                                     <p>{{ error }}</p>
                                 {% endfor %}
@@ -48,32 +64,33 @@
                         {% endif %}
                     </div>
 
-                    <!-- First Name and Last Name Fields with Error Display -->
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
-                        {{ form.first_name|add_class:"input input-bordered w-full rounded-full p-5 focus:outline-none focus:ring-2 ring-offset-2 ring-[#16423C] shadow-md" }}
-                        {% if form.first_name.errors %}
-                            <div class="text-red-500">
-                                {% for error in form.first_name.errors %}
-                                    <p>{{ error }}</p>
-                                {% endfor %}
-                            </div>
-                        {% endif %}
-
-                        {{ form.last_name|add_class:"input input-bordered w-full rounded-full p-5 focus:outline-none focus:ring-2 ring-offset-2 ring-[#16423C] shadow-md" }}
-                        {% if form.last_name.errors %}
-                            <div class="text-red-500">
-                                {% for error in form.last_name.errors %}
-                                    <p>{{ error }}</p>
-                                {% endfor %}
-                            </div>
-                        {% endif %}
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            {{ form.first_name|add_class:"input w-full rounded-full p-4 bg-gray-100 focus:outline-none focus:ring-2 focus:ring-sahaya-green focus:bg-white transition duration-300" }}
+                            {% if form.first_name.errors %}
+                                <div class="text-red-500 text-sm mt-1">
+                                    {% for error in form.first_name.errors %}
+                                        <p>{{ error }}</p>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                        <div>
+                            {{ form.last_name|add_class:"input w-full rounded-full p-4 bg-gray-100 focus:outline-none focus:ring-2 focus:ring-sahaya-green focus:bg-white transition duration-300" }}
+                            {% if form.last_name.errors %}
+                                <div class="text-red-500 text-sm mt-1">
+                                    {% for error in form.last_name.errors %}
+                                        <p>{{ error }}</p>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
                     </div>
 
-                    <!-- Middle Initial Field with Error Display -->
-                    <div class="mb-4">
-                        {{ form.middle_initial|add_class:"input input-bordered w-full rounded-full p-5 focus:outline-none focus:ring-2 ring-offset-2 ring-[#16423C] shadow-md" }}
+                    <div>
+                        {{ form.middle_initial|add_class:"input w-full rounded-full p-4 bg-gray-100 focus:outline-none focus:ring-2 focus:ring-sahaya-green focus:bg-white transition duration-300" }}
                         {% if form.middle_initial.errors %}
-                            <div class="text-red-500">
+                            <div class="text-red-500 text-sm mt-1">
                                 {% for error in form.middle_initial.errors %}
                                     <p>{{ error }}</p>
                                 {% endfor %}
@@ -81,11 +98,10 @@
                         {% endif %}
                     </div>
 
-                    <!-- Contact Number Field with Error Display -->
-                    <div class="mb-4">
-                        {{ form.contact_number|add_class:"input input-bordered w-full rounded-full p-5 focus:outline-none focus:ring-2 ring-offset-2 ring-[#16423C] shadow-md" }}
+                    <div>
+                        {{ form.contact_number|add_class:"input w-full rounded-full p-4 bg-gray-100 focus:outline-none focus:ring-2 focus:ring-sahaya-green focus:bg-white transition duration-300" }}
                         {% if form.contact_number.errors %}
-                            <div class="text-red-500">
+                            <div class="text-red-500 text-sm mt-1">
                                 {% for error in form.contact_number.errors %}
                                     <p>{{ error }}</p>
                                 {% endfor %}
@@ -93,11 +109,10 @@
                         {% endif %}
                     </div>
 
-                    <!-- Email Field with Error Display -->
-                    <div class="mb-4">
-                        {{ form.email|add_class:"input input-bordered w-full rounded-full p-5 focus:outline-none focus:ring-2 ring-offset-2 ring-[#16423C] shadow-md" }}
+                    <div>
+                        {{ form.email|add_class:"input w-full rounded-full p-4 bg-gray-100 focus:outline-none focus:ring-2 focus:ring-sahaya-green focus:bg-white transition duration-300" }}
                         {% if form.email.errors %}
-                            <div class="text-red-500">
+                            <div class="text-red-500 text-sm mt-1">
                                 {% for error in form.email.errors %}
                                     <p>{{ error }}</p>
                                 {% endfor %}
@@ -105,11 +120,10 @@
                         {% endif %}
                     </div>
 
-                    <!-- Password1 Field with Error Display -->
-                    <div class="mb-4">
-                        {{ form.password1|add_class:"input input-bordered w-full rounded-full p-5 focus:outline-none focus:ring-2 ring-offset-2 ring-[#16423C] shadow-md" }}
+                    <div>
+                        {{ form.password1|add_class:"input w-full rounded-full p-4 bg-gray-100 focus:outline-none focus:ring-2 focus:ring-sahaya-green focus:bg-white transition duration-300" }}
                         {% if form.password1.errors %}
-                            <div class="text-red-500">
+                            <div class="text-red-500 text-sm mt-1">
                                 {% for error in form.password1.errors %}
                                     <p>{{ error }}</p>
                                 {% endfor %}
@@ -117,11 +131,10 @@
                         {% endif %}
                     </div>
 
-                    <!-- Password2 Field with Error Display -->
-                    <div class="mb-4">
-                        {{ form.password2|add_class:"input input-bordered w-full rounded-full p-5 focus:outline-none focus:ring-2 ring-offset-2 ring-[#16423C] shadow-md" }}
+                    <div>
+                        {{ form.password2|add_class:"input w-full rounded-full p-4 bg-gray-100 focus:outline-none focus:ring-2 focus:ring-sahaya-green focus:bg-white transition duration-300" }}
                         {% if form.password2.errors %}
-                            <div class="text-red-500">
+                            <div class="text-red-500 text-sm mt-1">
                                 {% for error in form.password2.errors %}
                                     <p>{{ error }}</p>
                                 {% endfor %}
@@ -129,37 +142,59 @@
                         {% endif %}
                     </div>
 
-                    <!-- Submit Button -->
                     <button type="submit"
-                        class="btn bg-gradient-to-r from-[#6A9C89] to-[#16423C] text-white w-full rounded-full py-4 mt-2 shadow-md hover:bg-gradient-to-r hover:from-[#6A9C89] hover:to-[#16423C]">
-                        Sign up Now
-                    </button>
+                    class="btn bg-gradient-to-r from-sahaya-light-green to-sahaya-green text-white w-full rounded-full py-4 text-lg font-semibold shadow-lg hover:shadow-xl transition duration-300 transform hover:scale-105"
+                    style="line-height: 0.5;">
+                    Sign up Now
+                </button>
                 </form>
                 
-                <!-- Other Sign Up Options -->
-                <hr class="my-8">
-                <p class="text-center font-bold mb-4">Sign Up with Others</p>
-                <button class="btn w-full py-4 mb-3 shadow-md flex items-center justify-center space-x-2 border border-gray-300 text-black">
-                    <img src="{% static 'users/googlelogo.png' %}" alt="Google" class="w-6">
-                    <span>Sign up with Google</span>
-                </button>
-                <button class="btn w-full py-4 shadow-md flex items-center justify-center space-x-2 border border-gray-300 text-blue-600">
-                    <img src="{% static 'users/fblogo.png' %}" alt="Facebook" class="w-6">
-                    <span>Sign up with Facebook</span>
-                </button>
+                <div class="mt-10">
+                    <div class="relative">
+                        <div class="absolute inset-0 flex items-center">
+                            <div class="w-full border-t border-gray-300"></div>
+                        </div>
+                        <div class="relative flex justify-center text-sm">
+                            <span class="px-2 bg-white text-gray-500">Or continue with</span>
+                        </div>
+                    </div>
+
+                    <div class="mt-6 grid grid-cols-2 gap-3">
+                        <button class="w-full inline-flex justify-center py-3 px-4 border border-gray-300 rounded-full shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 transition duration-300">
+                            <img src="{% static 'users/googlelogo.png' %}" alt="Google" class="w-5 h-5 mr-2">
+                            <span>Google</span>
+                        </button>
+                        <button class="w-full inline-flex justify-center py-3 px-4 border border-gray-300 rounded-full shadow-sm bg-white text-sm font-medium text-blue-600 hover:bg-gray-50 transition duration-300">
+                            <img src="{% static 'users/fblogo.png' %}" alt="Facebook" class="w-5 h-5 mr-2">
+                            <span>Facebook</span>
+                        </button>
+                    </div>
+                </div>
             </div>
 
-            <!-- Right Section (Image and Text) -->
-            <div class="relative md:w-1/2 overflow-hidden">
-                <div class="absolute top-0 left-0 right-0 bottom-0 bg-cover bg-center" style="background-image: url('{% static 'users/rect.png' %}')"></div>
-                <div class="relative z-10 flex flex-col items-center justify-center p-10 bg-[#E9EFEC] bg-opacity-50 rounded-3xl w-[80%] h-[70%] mt-20 ml-10">
-                    <h4 class="text-2xl font-bold mb-6 text-[#E9EFEC]">Very good events are waiting for you. Sign Up Now!!!</h4>
-                </div>
-                <div class="relative z-20 flex justify-center items-center mt-[-18rem]">
-                    <img src="{% static 'users/women.png' %}" alt="Happy Woman">
-                </div>
-            </div>
+<!-- Right Section (Image and Text) -->
+<div class="relative md:w-1/2 overflow-hidden">
+    <div class="absolute top-0 left-0 right-0 bottom-0 bg-cover bg-center" style="background-image: url('{% static 'users/rect.png' %}')"></div>
+    <div class="relative z-10 flex flex-col items-center justify-center p-10 bg-[#E9EFEC] bg-opacity-50 rounded-3xl w-[80%] h-[70%] mt-20 ml-10">
+        <h4 class="text-2xl font-bold mb-6 text-[#16423C]">Very good events are waiting for you Signup Now!!!</h4>
+    </div>
+    <div class="relative z-20 flex justify-center items-center mt-[-18rem]">
+        <img src="{% static 'users/women.png' %}" alt="Happy Woman">
+    </div>
+</div>
         </div>
     </div>
+
+    <script>
+        // Add some interactivity
+        document.querySelectorAll('input').forEach(input => {
+            input.addEventListener('focus', function() {
+                this.parentElement.classList.add('scale-105');
+            });
+            input.addEventListener('blur', function() {
+                this.parentElement.classList.remove('scale-105');
+            });
+        });
+    </script>
 </body>
 </html>
