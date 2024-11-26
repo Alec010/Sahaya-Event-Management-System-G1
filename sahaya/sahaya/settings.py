@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'registration',
     'notification',
     'report',
+    'discover'
 ]
 
 import os

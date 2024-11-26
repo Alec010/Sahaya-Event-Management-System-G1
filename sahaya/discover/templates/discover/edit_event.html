@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Event | Sahaya</title>
+    <link href="{% static 'css/styles.css' %}" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gradient-to-br from-green-50 to-green-100 min-h-screen flex items-center justify-center p-4 md:p-8">
+    <div class="w-full max-w-4xl bg-white p-8 rounded-2xl shadow-2xl">
+        <h2 class="text-4xl font-bold text-green-800 mb-6">Edit Event</h2>
+        <form action="{% url 'discover:edit_event' event.id %}" method="post" enctype="multipart/form-data" class="space-y-6">
+            {% csrf_token %}
+            <div>
+                <label for="title">Event Title</label>
+                <input type="text" id="title" name="title" value="{{ event.title }}" required class="w-full">
+            </div>
+            <div>
+                <label for="description">Description</label>
+                <textarea id="description" name="description" required class="w-full">{{ event.description }}</textarea>
+            </div>
+            <div>
+                <label for="author">Author</label>
+                <input type="text" id="author" name="author" value="{{ event.author }}" required class="w-full">
+            </div>
+            <div>
+                <label for="date_time">Date and Time</label>
+                <input type="datetime-local" id="date_time" name="date_time" value="{{ event.date_time|date:'Y-m-d\TH:i' }}" required class="w-full">
+            </div>
+            <div>
+                <label for="image">Event Image</label>
+                <input type="file" id="image" name="image" class="w-full">
+            </div>
+            <div>
+                <label for="link">Link</label>
+                <input type="url" id="link" name="link" value="{{ event.link }}" class="w-full">
+            </div>
+            <div class="flex justify-between">
+                <a href="{% url 'discover:app' %}" class="bg-gray-600 text-white px-4 py-2 rounded">Cancel</a>
+                <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded">Save Changes</button>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

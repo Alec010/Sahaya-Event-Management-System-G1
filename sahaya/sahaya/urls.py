@@ -29,5 +29,6 @@ urlpatterns = [
     path('event/', include('event.urls')),  # For event-related URLs
     path('registration/', include('registration.urls')),  # For registration-related URLs
     path('notification/', include('notification.urls')),  # For registration-related URLs
+    path('discover/', include('discover.urls')),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
