@@ -298,26 +298,31 @@
         });
 
         function registerForEvent() {
-            fetch("{% url 'event:register_for_event' event.id %}", {
-                method: "POST",
-                headers: {
-                    "X-CSRFToken": "{{ csrf_token }}",
-                    "Content-Type": "application/json"
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    showModal(); // Show modal on successful registration
-                } else {
-                    alert(data.error || "Failed to register for the event.");
-                }
-            })
-            .catch(error => {
-                console.error("Error:", error);
-                alert("An error occurred. Please try again.");
-            });
+    // Show modal first
+    showModal();
+
+    // Proceed with the fetch call after showing the modal
+    fetch("{% url 'event:register_for_event' event.id %}", {
+        method: "POST",
+        headers: {
+            "X-CSRFToken": "{{ csrf_token }}",
+            "Content-Type": "application/json"
         }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            console.log("Registration successful.");
+        } else {
+            alert(data.error || "Failed to register for the event.");
+        }
+    })
+    .catch(error => {
+        console.error("Error:", error);
+        alert("An error occurred. Please try again.");
+    });
+}
+
 
         function cancelRegistration() {
             showCancelModal();
