@@ -90,10 +90,11 @@ def logout_view(request):
 
 @login_required
 def dashboard_view(request):
-    trending_events = Event.objects.all()  
+    # Fetch all events excluding finished events
+    trending_events = Event.objects.exclude(status='finished')  
 
-    # Fetch events the user is already registered in
-    user_registered_events = Event.objects.filter(registration__participant=request.user)
+    # Fetch events the user is already registered for (excluding finished events)
+    user_registered_events = Event.objects.filter(registration__participant=request.user).exclude(status='finished')
 
     context = {
         'trending_events': trending_events,

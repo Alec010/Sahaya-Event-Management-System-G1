@@ -101,7 +101,6 @@
                             to {{ event.end_time|time:"h:i A" }}
                         </p>
                         <a href="{% url 'event:edit_event' event.id %}" class="btn w-full mt-4 bg-[#16423C] hover:bg-[#0E2C23] text-white">Edit Event</a>
-
                     </div>
                 </div>
                 {% empty %}
@@ -111,7 +110,7 @@
         </section>
 
         <!-- Events Participated Section -->
-        <section>
+        <section class="mb-16">
             <h3 class="text-3xl font-semibold mb-6 text-[#6A9C89]">Events Participated</h3>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {% for event in participated_events %}
@@ -134,7 +133,6 @@
                             to {{ event.end_time|time:"h:i A" }}
                         </p>
                         <a href="{% url 'event:view_event' event.id %}" class="btn w-full mt-4 bg-[#16423C] hover:bg-[#0E2C23] text-white">View Event</a>
-
                     </div>
                 </div>
                 {% empty %}
@@ -142,38 +140,48 @@
                 {% endfor %}
             </div>
         </section>
+
+<!-- Finished Events Section -->
+<section>
+    <h3 class="text-3xl font-semibold mb-6 text-[#6A9C89]">Finished Events</h3>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {% for event in finished_events %}
+        <div class="card bg-white shadow-lg rounded-lg overflow-hidden transition-transform hover:scale-105">
+            <figure class="h-48">
+                {% if event.image %}
+                    <img src="{{ event.image.url }}" alt="{{ event.title }}" class="w-full h-full object-cover">
+                {% else %}
+                    <div class="h-full bg-gradient-to-br from-[#E9EFEC] to-[#C4DAD2] flex items-center justify-center text-gray-400 text-xl">
+                        <i class="fas fa-image"></i>
+                    </div>
+                {% endif %}
+            </figure>
+            <div class="p-4">
+                <h3 class="text-xl font-semibold text-[#16423C]">{{ event.title }}</h3>
+                <p class="text-sm text-gray-600">By {{ event.organizer.first_name }} {{ event.organizer.last_name }}</p>
+                <p class="text-sm text-gray-700 my-2">
+                    {{ event.start_date|date:"F j, Y" }} 
+                    from {{ event.start_time|time:"h:i A" }} 
+                    to {{ event.end_time|time:"h:i A" }}
+                </p>
+                <a href="{% url 'report:report_page' event.id %}" class="btn w-full mt-4 bg-[#16423C] hover:bg-[#0E2C23] text-white">View Report</a>
+            </div>
+        </div>
+        {% empty %}
+        <p class="text-gray-600 text-center">No finished events to display.</p>
+        {% endfor %}
+    </div>
+</section>
     </div>
 
-    <!-- JavaScript -->
     <script>
-       // Sidebar Functionality
-       const menuButton = document.getElementById('menuButton');
-        const closeSidebar = document.getElementById('closeSidebar');
-        const sidebar = document.getElementById('sidebar');
-
-        menuButton.addEventListener('click', () => {
-            sidebar.classList.toggle('-translate-x-full');
-            menuButton.classList.toggle('hidden');
+        document.getElementById('menuButton').addEventListener('click', function() {
+            document.getElementById('sidebar').classList.toggle('-translate-x-full');
         });
 
-        closeSidebar.addEventListener('click', () => {
-            sidebar.classList.add('-translate-x-full');
-            menuButton.classList.remove('hidden');
-        });
-
-        // Toggle Sidebar
-        menuButton.addEventListener('click', () => {
-            sidebar.classList.toggle('sidebar-hidden');
-            sidebar.classList.toggle('sidebar-visible');
-            menuButton.classList.add('menu-hidden');
-        });
-
-        closeSidebar.addEventListener('click', () => {
-            sidebar.classList.toggle('sidebar-hidden');
-            sidebar.classList.toggle('sidebar-visible');
-            menuButton.classList.remove('menu-hidden');
+        document.getElementById('closeSidebar').addEventListener('click', function() {
+            document.getElementById('sidebar').classList.add('-translate-x-full');
         });
     </script>
-
 </body>
 </html>

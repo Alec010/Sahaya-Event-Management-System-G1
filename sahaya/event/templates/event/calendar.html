@@ -4,93 +4,105 @@
     {% load static %}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Events Calendar</title>
+    <title>My Events Calendar | Sahaya</title>
     
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- FullCalendar CSS -->
     <link href='https://cdn.jsdelivr.net/npm/fullcalendar@5.10.2/main.min.css' rel='stylesheet' />
-
-    <!-- FullCalendar JS -->
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.10.2/main.min.js'></script>
-
-    <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#16423C',
+                        secondary: '#6A9C89',
+                        accent: '#C4DAD2',
+                        background: '#E9EFEC',
+                    },
+                    fontFamily: {
+                        sans: ['Poppins', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+
     <style>
-        :root {
-            --color-primary: #16423C;
-            --color-secondary: #6A9C89;
-            --color-accent: #C4DAD2;
-            --color-background: #E9EFEC;
-        }
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
         body {
-            font-family: 'Inter', system-ui, -apple-system, sans-serif;
-        }
-        .sidebar-transition {
-            transition: transform 0.3s ease-in-out;
-        }
-        .glassmorphism {
-            background: rgba(255, 255, 255, 0.25);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.18);
+            font-family: 'Poppins', sans-serif;
         }
         .fc-toolbar-title {
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: var(--color-primary);
+            font-size: 1.75rem !important;
+            font-weight: 600 !important;
+            color: #16423C !important;
         }
-        .fc-button {
-            background-color: var(--color-primary);
-            color: #fff;
-            border: none;
-            border-radius: 0.375rem;
-            padding: 0.5rem 1rem;
-            transition: background-color 0.3s;
+        .fc-button-primary {
+            background-color: #6A9C89 !important;
+            border-color: #6A9C89 !important;
+            font-weight: 500 !important;
+            transition: all 0.3s ease !important;
         }
-        .fc-button:hover {
-            background-color: var(--color-secondary);
+        .fc-button-primary:hover {
+            background-color: #16423C !important;
+            transform: translateY(-2px) !important;
+        }
+        .fc-daygrid-day {
+            transition: all 0.3s ease !important;
+        }
+        .fc-daygrid-day:hover {
+            background-color: #E9EFEC !important;
         }
         .fc-event {
-            background-color: var(--color-secondary);
-            border: none;
-            color: #fff;
-            font-weight: 500;
+            background-color: #6A9C89 !important;
+            border: none !important;
+            color: #fff !important;
+            font-weight: 500 !important;
+            border-radius: 4px !important;
+            transition: all 0.3s ease !important;
+        }
+        .fc-event:hover {
+            transform: translateY(-2px) !important;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1) !important;
+        }
+        .fc-day-today {
+            background-color: #C4DAD2 !important;
         }
     </style>
 </head>
-<body class="bg-gradient-to-br from-[var(--color-background)] to-[var(--color-accent)] min-h-screen">
+<body class="bg-background min-h-screen">
     <!-- Sidebar -->
-    <div id="sidebar" class="fixed top-0 left-0 h-full w-64 bg-[var(--color-primary)] text-white p-6 transform -translate-x-full sidebar-transition z-50 glassmorphism">
+    <div id="sidebar" class="fixed top-0 left-0 h-full w-64 bg-primary text-white p-6 transform -translate-x-full transition-transform duration-300 ease-in-out z-50">
         <div class="flex items-center justify-between mb-8">
             <h2 class="text-2xl font-bold">Sahaya</h2>
-            <button id="closeSidebar" class="text-white hover:text-[var(--color-accent)] transition-colors">
+            <button id="closeSidebar" class="text-white hover:text-accent transition-colors">
                 <i class="fas fa-times text-xl"></i>
             </button>
         </div>
         <nav>
             <ul class="space-y-4">
                 <li>
-                    <a href="{% url 'users:dashboard' %}" class="flex items-center space-x-3 p-2 rounded-lg hover:bg-[var(--color-secondary)] transition-all duration-300 transform hover:scale-105">
+                    <a href="{% url 'users:dashboard' %}" class="flex items-center space-x-3 p-2 rounded-lg hover:bg-secondary transition-all duration-300">
                         <i class="fas fa-th-large w-5"></i>
                         <span>Dashboard</span>
                     </a>
                 </li>
                 <li>
-                    <a href="{% url 'event:list_of_events' %}" class="flex items-center space-x-3 p-2 rounded-lg hover:bg-[var(--color-secondary)] transition-all duration-300 transform hover:scale-105">
+                    <a href="{% url 'event:list_of_events' %}" class="flex items-center space-x-3 p-2 rounded-lg hover:bg-secondary transition-all duration-300">
                         <i class="fas fa-calendar-alt w-5"></i>
                         <span>Events</span>
                     </a>
                 </li>
                 <li>
-                    <a href="{% url 'event:calendar' %}" class="flex items-center space-x-3 p-2 rounded-lg hover:bg-[var(--color-secondary)] transition-all duration-300 transform hover:scale-105">
-                        <i class="fas fa-envelope w-5"></i>
+                    <a href="{% url 'event:calendar' %}" class="flex items-center space-x-3 p-2 rounded-lg bg-secondary">
+                        <i class="fas fa-calendar-check w-5"></i>
                         <span>Calendar</span>
                     </a>
                 </li>
                 <li>
-                    <a href="{% url 'users:account' %}" class="flex items-center space-x-3 p-2 rounded-lg hover:bg-[var(--color-secondary)] transition-all duration-300 transform hover:scale-105">
+                    <a href="{% url 'users:account' %}" class="flex items-center space-x-3 p-2 rounded-lg hover:bg-secondary transition-all duration-300">
                         <i class="fas fa-user w-5"></i>
                         <span>Profile</span>
                     </a>
@@ -98,7 +110,7 @@
             </ul>
         </nav>
         <div class="mt-auto">
-            <a href="{% url 'users:logout' %}" class="flex items-center space-x-3 p-2 rounded-lg hover:bg-red-600 transition-all duration-300 transform hover:scale-105">
+            <a href="{% url 'users:logout' %}" class="flex items-center space-x-3 p-2 rounded-lg hover:bg-red-600 transition-all duration-300">
                 <i class="fas fa-sign-out-alt w-5"></i>
                 <span>Logout</span>
             </a>
@@ -106,42 +118,40 @@
     </div>
 
     <!-- Menu Button -->
-    <button id="menuButton" class="fixed top-4 left-4 z-50 bg-[var(--color-primary)] text-white p-3 rounded-full shadow-lg hover:bg-[var(--color-secondary)] transition-all duration-300 transform hover:scale-110">
+    <button id="menuButton" class="fixed top-4 left-4 z-50 bg-primary text-white p-3 rounded-full shadow-lg hover:bg-secondary transition-all duration-300">
         <i class="fas fa-bars text-lg"></i>
     </button>
 
     <!-- Main Content -->
     <div class="container mx-auto px-4 pt-16 pb-8">
-        <div class="flex justify-center">
-            <div class="w-full max-w-6xl max-h-16">
-                <h1 class="text-4xl font-bold mb-8 text-center text-[var(--color-primary)]">My Events Calendar</h1>
-                <!-- FullCalendar -->
-                <div id="calendar" class="bg-white rounded-lg shadow-lg p-6"></div>
-            </div>
+        <h1 class="text-4xl font-bold mb-8 text-center text-primary">My Events Calendar</h1>
+        <div class="bg-white rounded-2xl shadow-xl p-6 max-w-6xl mx-auto">
+            <div id="calendar"></div>
         </div>
     </div>
 
-    <!-- Tailwind Modal -->
+    <!-- Event Modal -->
     <div id="eventModal" class="fixed z-10 inset-0 overflow-y-auto hidden" aria-labelledby="modal-title" role="dialog" aria-modal="true">
         <div class="flex items-center justify-center min-h-screen px-4 text-center sm:block sm:p-0">
-            <div class="fixed inset-0 bg-black bg-opacity-50 transition-opacity" aria-hidden="true"></div>
+            <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true"></div>
             <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
             <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
-                <div class="bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-secondary)] px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                     <div class="sm:flex sm:items-start">
                         <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
-                            <h3 class="text-lg leading-6 font-medium text-white" id="modal-title"></h3>
-                            <div class="mt-2">
-                                <p id="eventStart" class="text-sm text-white"></p>
-                                <p id="eventEnd" class="text-sm text-white"></p>
-                                <p id="eventRole" class="text-sm text-white"></p>
-                                <p id="eventDescription" class="text-sm text-white"></p>
+                            <h3 class="text-2xl leading-6 font-semibold text-primary mb-4" id="modal-title"></h3>
+                            <div class="mt-2 space-y-3">
+                                <p id="eventStart" class="text-sm text-gray-600"></p>
+                                <p id="eventEnd" class="text-sm text-gray-600"></p>
+                                <p id="eventRole" class="text-sm text-gray-600"></p>
+                                <p id="eventDescription" class="text-sm text-gray-600"></p>
+                                <img id="eventImage" src="" alt="Event Image" class="w-full h-48 object-cover rounded-lg mt-4 hidden">
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-                    <button type="button" id="closeModal" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-[var(--color-primary)] text-base font-medium text-white hover:bg-[var(--color-secondary)] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[var(--color-secondary)] sm:ml-3 sm:w-auto sm:text-sm transition-colors duration-300">
+                    <button type="button" id="closeModal" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-primary text-base font-medium text-white hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-secondary sm:ml-3 sm:w-auto sm:text-sm transition-colors duration-300">
                         Close
                     </button>
                 </div>
@@ -149,7 +159,6 @@
         </div>
     </div>
 
-    <!-- FullCalendar Initialization and Modal Functionality -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             var calendarEl = document.getElementById('calendar');
@@ -173,10 +182,25 @@
                     document.getElementById('eventEnd').textContent = 'End: ' + (info.event.end ? info.event.end.toLocaleString() : 'N/A');
                     document.getElementById('eventRole').textContent = 'Role: ' + (info.event.extendedProps.role || 'N/A');
                     document.getElementById('eventDescription').textContent = 'Description: ' + (info.event.extendedProps.description || 'N/A');
+                    
+                    var eventImage = document.getElementById('eventImage');
+                    if (info.event.extendedProps.image) {
+                        eventImage.src = info.event.extendedProps.image;
+                        eventImage.classList.remove('hidden');
+                    } else {
+                        eventImage.classList.add('hidden');
+                    }
+                    
                     modal.classList.remove('hidden');
                 },
                 eventContent: function(arg) {
-                    return { html: `<div class="fc-event-title cursor-pointer">${arg.event.title}</div>` };
+                    return { html: `<div class="fc-event-title cursor-pointer p-1">${arg.event.title}</div>` };
+                },
+                dayMaxEvents: true,
+                views: {
+                    dayGrid: {
+                        dayMaxEvents: 3
+                    }
                 }
             });
 
@@ -192,7 +216,6 @@
                 }
             });
 
-            // Sidebar Functionality
             menuButton.addEventListener('click', () => {
                 sidebar.classList.toggle('-translate-x-full');
                 menuButton.classList.toggle('hidden');

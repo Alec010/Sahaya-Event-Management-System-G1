@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sahaya Events</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+  <style>
+    .scrollbar-hide::-webkit-scrollbar {
+      display: none;
+    }
+    .scrollbar-hide {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
+</head>
+<body class="font-sans bg-gray-100">
+
+  <!-- Navbar -->
+  {% load static %}
+  <nav class="bg-white shadow-md">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-16">
+        <a href="{% url 'users:dashboard' %}" class="flex items-center">
+          <img src="{% static 'discover/sahayanew.png' %}" alt="Logo" class="h-12 w-auto">
+        </a>
+        <a href="{% url 'users:dashboard' %}" 
+           class="text-[#16423C] bg-[#E6F2EF] border border-[#16423C] py-2 px-4 rounded-full font-bold text-sm hover:bg-[#16423C] hover:text-white transition duration-300 ease-in-out">
+          ← Back to Dashboard
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section with Side-scrollable Images -->
+  <div class="relative bg-gray-900 overflow-hidden">
+    <div class="max-w-7xl mx-auto">
+      <div class="relative z-10 pb-8 sm:pb-16 md:pb-20 lg:max-w-2xl lg:w-full lg:pb-28 xl:pb-32">
+        <main class="mt-10 mx-auto max-w-7xl px-4 sm:mt-12 sm:px-6 md:mt-16 lg:mt-20 lg:px-8 xl:mt-28">
+          <div class="sm:text-center lg:text-left">
+            <h1 class="text-4xl tracking-tight font-extrabold text-white sm:text-5xl md:text-6xl">
+              <span class="block xl:inline">MADE FOR THOSE</span>
+              <span class="block text-[#E6F2EF] xl:inline">WHO DO</span>
+            </h1>
+            <p class="mt-3 text-base text-gray-300 sm:mt-5 sm:text-lg sm:max-w-xl sm:mx-auto md:mt-5 md:text-xl lg:mx-0">
+              Discover and create amazing events with Sahaya. Join our community of doers and make a difference.
+            </p>
+            <div class="mt-5 sm:mt-8 sm:flex sm:justify-center lg:justify-start">
+              <div class="rounded-md shadow">
+                <a href="#events" class="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-[#16423C] hover:bg-[#0f2b1a] md:py-4 md:text-lg md:px-10">
+                  Explore Events
+                </a>
+              </div>
+            </div>
+          </div>
+        </main>
+      </div>
+    </div>
+    <div class="lg:absolute lg:inset-y-0 lg:right-0 lg:w-1/2">
+      <div class="h-56 sm:h-72 md:h-96 lg:w-full lg:h-full relative overflow-hidden">
+        <div id="imageCarousel" class="flex transition-transform duration-500 ease-in-out h-full w-full">
+          {% for event in events %}
+            {% if event.image %}
+              <img src="{{ event.image.url }}" alt="{{ event.title }}" class="w-full h-full object-cover flex-shrink-0">
+            {% endif %}
+          {% endfor %}
+        </div>
+        <button id="prevBtn" class="absolute top-1/2 left-4 transform -translate-y-1/2 bg-black bg-opacity-50 text-white text-2xl px-3 py-2 rounded-full">
+          &#8249;
+        </button>
+        <button id="nextBtn" class="absolute top-1/2 right-4 transform -translate-y-1/2 bg-black bg-opacity-50 text-white text-2xl px-3 py-2 rounded-full">
+          &#8250;
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Events Section -->
+  <div id="events" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div class="events-header flex flex-col sm:flex-row justify-between items-center mb-8">
+      <h2 class="text-[#16423C] text-3xl font-bold mb-4 sm:mb-0">Discover Events</h2>
+      <div class="search w-full sm:w-auto">
+        <form action="{% url 'discover:app' %}" method="GET" class="flex gap-2">
+          <input type="text" name="search" placeholder="Search events..." 
+                 class="w-full sm:w-64 p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#16423C] focus:border-transparent" 
+                 value="{{ request.GET.search }}">
+          <button type="submit" class="px-4 py-2 bg-[#16423C] text-white rounded-md hover:bg-[#0f2b1a] transition duration-300 flex items-center">
+            <i class="fas fa-search mr-2"></i> Search
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      {% for event in events %}
+      <div class="bg-white rounded-lg shadow-md overflow-hidden transition duration-300 ease-in-out transform hover:-translate-y-1 hover:shadow-xl">
+        <div class="relative pb-48 overflow-hidden">
+          {% if event.image %}
+          <img class="absolute inset-0 h-full w-full object-cover" src="{{ event.image.url }}" alt="{{ event.title }}">
+          {% else %}
+          <div class="absolute inset-0 bg-gray-200 flex items-center justify-center text-gray-600">
+            <i class="fas fa-image text-4xl"></i>
+          </div>
+          {% endif %}
+        </div>
+        <div class="p-4">
+          <h3 class="text-lg font-semibold text-gray-900 mb-2">{{ event.title }}</h3>
+          <p class="text-sm text-gray-600 mb-4">{{ event.description|truncatewords:15 }}</p>
+          <div class="flex items-center text-sm text-gray-500 mb-2">
+            <i class="fas fa-user mr-2"></i>
+            <span>{{ event.author }}</span>
+          </div>
+          <div class="flex items-center text-sm text-gray-500 mb-4">
+            <i class="fas fa-calendar-alt mr-2"></i>
+            <span>{{ event.date_time|date:"F j, Y" }} at {{ event.date_time|time:"h:i A" }}</span>
+          </div>
+          <div class="flex justify-between items-center">
+            {% if event.link %}
+            <a href="{{ event.link }}" class="text-[#16423C] hover:text-[#0f2b1a] font-medium">
+              Learn more <i class="fas fa-arrow-right ml-1"></i>
+            </a>
+            {% endif %}
+            <div class="flex gap-2">
+              <a href="{% url 'discover:edit_event' event.id %}" class="text-gray-600 hover:text-[#16423C] transition duration-200">
+                <i class="fas fa-edit"></i>
+              </a>
+              <form action="{% url 'discover:delete_event' event.id %}" method="post" onsubmit="return confirm('Are you sure you want to delete this event?');" class="inline">
+                {% csrf_token %}
+                <button type="submit" class="text-gray-600 hover:text-red-600 transition duration-200">
+                  <i class="fas fa-trash-alt"></i>
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% empty %}
+      <div class="col-span-full text-center py-12">
+        <p class="text-gray-600 text-lg">No events available. Add an event to get started!</p>
+      </div>
+      {% endfor %}
+
+      <!-- Add Event Card -->
+      <div class="bg-gray-100 rounded-lg shadow-md p-8 flex flex-col items-center justify-center text-center transition duration-300 ease-in-out transform hover:-translate-y-1 hover:shadow-xl">
+        <i class="fas fa-plus-circle text-5xl text-[#16423C] mb-4"></i>
+        <h3 class="text-xl font-semibold text-gray-900 mb-4">Create New Event</h3>
+        <a href="{% url 'discover:add_event' %}" class="btn bg-[#16423C] text-white rounded-full px-6 py-3 hover:bg-[#0f2b1a] transition duration-300">
+          Add Event
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const carousel = document.getElementById('imageCarousel');
+    const images = carousel.children;
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    let currentIndex = 0;
+
+    function showImage(index) {
+      carousel.style.transform = `translateX(-${index * 100}%)`;
+    }
+
+    function nextImage() {
+      currentIndex = (currentIndex + 1) % images.length;
+      showImage(currentIndex);
+    }
+
+    function prevImage() {
+      currentIndex = (currentIndex - 1 + images.length) % images.length;
+      showImage(currentIndex);
+    }
+
+    nextBtn.addEventListener('click', nextImage);
+    prevBtn.addEventListener('click', prevImage);
+
+    // Auto-scroll every 5 seconds
+    setInterval(nextImage, 5000);
+
+    // Hide navigation buttons if there's only one or no images
+    if (images.length <= 1) {
+      prevBtn.style.display = 'none';
+      nextBtn.style.display = 'none';
+    }
+  </script>
+</body>
+</html>

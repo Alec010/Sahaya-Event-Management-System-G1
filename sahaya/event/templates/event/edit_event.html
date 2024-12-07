@@ -109,6 +109,14 @@
                     <button onclick="deleteEvent()" class="bg-red-500 text-white px-6 py-2 rounded-full hover:bg-red-600 transition-all duration-300 transform hover:scale-105 flex items-center">
                         <i class="fas fa-trash-alt mr-2"></i> Delete Event
                     </button>
+                    <a href="{% url 'report:create_report' event_id=event.id %}" class="inline-block">
+                        <button class="bg-blue-500 text-white px-6 py-2 rounded-full hover:bg-blue-600 transition-all duration-300 transform hover:scale-105 flex items-center">
+                            <i class="fas fa-edit mr-2"></i> Finish Event
+                        </button>
+                    </a>
+                    
+
+                                    
                 </div>
             </div>
 

@@ -136,15 +136,19 @@ def remove_participant(request, event_id):
         return JsonResponse({"success": False, "error": "An unexpected error occurred."}, status=500)
 @login_required
 def list_of_events(request):
-    # Get events organized by the logged-in user
-    organized_events = Event.objects.filter(organizer=request.user)
+    # Get events organized by the logged-in user, excluding finished events
+    organized_events = Event.objects.filter(organizer=request.user).exclude(status='finished')
 
-    # Get events the user has registered for (participated in)
-    participated_events = Event.objects.filter(registration__participant=request.user).distinct()
+    # Get events the user has registered for (participated in), excluding finished events
+    participated_events = Event.objects.filter(registration__participant=request.user).exclude(status='finished').distinct()
+
+    # Get finished events (assuming 'status' is the field that tracks event status)
+    finished_events = Event.objects.filter(status='finished')
 
     return render(request, "event/list_of_events.html", {
         "organized_events": organized_events,
         "participated_events": participated_events,
+        "finished_events": finished_events,  # Add finished events to context
     })
 @login_required
 def view_event(request, event_id):
@@ -195,10 +199,11 @@ def get_calendar_events(request):
             'title': f"{event.title} (Organizer)",
             'start': f"{event.start_date}T{event.start_time}",
             'end': f"{event.end_date}T{event.end_time}",
-            'allDay': False,  
+            'allDay': False,
             'extendedProps': {
                 'role': 'organizer',
-                'description': event.description,  
+                'description': event.description,
+                'image': event.image.url if event.image else None,  # Add image URL if available
             }
         })
 
@@ -209,14 +214,16 @@ def get_calendar_events(request):
             'title': f"{event.title} (Participant)",
             'start': f"{event.start_date}T{event.start_time}",
             'end': f"{event.end_date}T{event.end_time}",
-            'allDay': False,  
+            'allDay': False,
             'extendedProps': {
                 'role': 'participant',
-                'description': event.description, 
+                'description': event.description,
+                'image': event.image.url if event.image else None,  # Add image URL if available
             }
         })
 
     return JsonResponse(events, safe=False)
+
 
 @login_required
 def calendar_view(request):

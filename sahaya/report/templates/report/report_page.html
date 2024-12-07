@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Report | Sahaya</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+
+    <h2>Report Details</h2>
+    <p><strong>Event:</strong> {{ report.event.title }}</p>
+    <p><strong>Report ID:</strong> {{ report.report_id }}</p>
+    <p><strong>Generated At:</strong> {{ report.generated_at }}</p>
+    <p><strong>Report Type:</strong> {{ report.report_type }}</p>
+    <p><strong>Report Content:</strong> {{ report.report_content }}</p>
+
+    <p><strong>Number of Participants:</strong> {{ num_participants }}</p>
+
+    <!-- Display buttons based on user role -->
+    {% if is_organizer %}
+        <!-- Only the organizer can edit or delete the report -->
+        <a href="#" onclick="openEditModal()" class="btn btn-edit">Edit</a>
+        <a href="#" onclick="openDeleteModal()" class="btn btn-delete">Delete</a>
+    {% elif is_participant %}
+        <!-- Only participants can view the report -->
+        <p>You are a participant of this event. You can only view the report.</p>
+    {% else %}
+        <!-- No access for users who are neither organizer nor participant -->
+        <p>You do not have access to edit or delete this report.</p>
+    {% endif %}
+
+    <!-- Edit Report Modal -->
+    <div id="editModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden">
+        <div class="bg-white p-6 rounded-lg w-1/3">
+            <h3 class="text-xl font-semibold mb-4">Edit Report</h3>
+            <form method="POST" action="{% url 'report:edit_report' report.id %}">
+                {% csrf_token %}
+                <!-- Add the fields that you want to edit -->
+                <label for="report_type" class="block text-sm">Report Type</label>
+                <input type="text" name="report_type" value="{{ report.report_type }}" class="border p-2 w-full mb-4" required>
+                
+                <label for="report_content" class="block text-sm">Report Content</label>
+                <textarea name="report_content" class="border p-2 w-full mb-4" rows="4" required>{{ report.report_content }}</textarea>
+
+                <button type="submit" class="btn btn-primary">Save Changes</button>
+                <button type="button" onclick="closeEditModal()" class="btn btn-secondary">Cancel</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Delete Report Modal -->
+    <div id="deleteModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden">
+        <div class="bg-white p-6 rounded-lg w-1/3">
+            <h3 class="text-xl font-semibold mb-4">Delete Report</h3>
+            <p>Are you sure you want to delete this report?</p>
+            <form method="POST" action="{% url 'report:delete_report' report.id %}">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger">Yes, Delete</button>
+                <button type="button" onclick="closeDeleteModal()" class="btn btn-secondary">Cancel</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function openEditModal() {
+            document.getElementById('editModal').classList.remove('hidden');
+        }
+
+        function closeEditModal() {
+            document.getElementById('editModal').classList.add('hidden');
+        }
+
+        function openDeleteModal() {
+            document.getElementById('deleteModal').classList.remove('hidden');
+        }
+
+        function closeDeleteModal() {
+            document.getElementById('deleteModal').classList.add('hidden');
+        }
+    </script>
+
+</body>
+</html>

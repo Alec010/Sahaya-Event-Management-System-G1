@@ -6,61 +6,59 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Account | Sahaya</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdn.jsdelivr.net/npm/daisyui@latest/dist/full.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#16423C',
+                        secondary: '#6A9C89',
+                        accent: '#C4DAD2',
+                        background: '#E9EFEC',
+                    }
+                }
+            }
+        }
+    </script>
     <style>
-        :root {
-            --color-primary: #16423C;
-            --color-secondary: #6A9C89;
-            --color-accent: #C4DAD2;
-            --color-background: #E9EFEC;
-        }
-
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
         body {
-            font-family: 'Inter', sans-serif;
-        }
-
-        .sidebar-transition {
-            transition: transform 0.3s ease-in-out;
-        }
-
-        .avatar-upload:hover .avatar-upload-icon {
-            opacity: 1;
+            font-family: 'Poppins', sans-serif;
         }
     </style>
 </head>
-<body class="bg-gradient-to-br from-[var(--color-background)] to-[var(--color-accent)] min-h-screen">
-
+<body class="bg-background min-h-screen">
     <!-- Sidebar -->
-    <div id="sidebar" class="fixed top-0 left-0 h-full w-64 bg-[var(--color-primary)] text-white p-6 transform -translate-x-full sidebar-transition z-50">
+    <div id="sidebar" class="fixed top-0 left-0 h-full w-72 bg-primary text-white p-6 transform -translate-x-full transition-transform duration-300 ease-in-out z-50">
         <div class="flex items-center justify-between mb-8">
             <h2 class="text-2xl font-bold">Sahaya</h2>
-            <button id="closeSidebar" class="text-white hover:text-[var(--color-accent)]">
+            <button id="closeSidebar" class="text-white hover:text-accent transition-colors">
                 <i class="fas fa-times text-xl"></i>
             </button>
         </div>
         <nav>
             <ul class="space-y-4">
                 <li>
-                    <a href="{% url 'users:dashboard' %}" class="flex items-center space-x-3 p-2 rounded-lg hover:bg-[var(--color-secondary)] transition-colors">
+                    <a href="{% url 'users:dashboard' %}" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-secondary transition-colors">
                         <i class="fas fa-th-large w-5"></i>
                         <span>Dashboard</span>
                     </a>
                 </li>
                 <li>
-                    <a href="{% url 'event:list_of_events' %}" class="flex items-center space-x-3 p-2 rounded-lg hover:bg-[var(--color-secondary)] transition-colors">
+                    <a href="{% url 'event:list_of_events' %}" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-secondary transition-colors">
                         <i class="fas fa-tv w-5"></i>
                         <span>Events</span>
                     </a>
                 </li>
                 <li>
-                    <a href="{% url 'event:calendar' %}" class="flex items-center space-x-3 p-2 rounded-lg hover:bg-[var(--color-secondary)] transition-colors">
-                        <i class="fas fa-envelope w-5"></i>
+                    <a href="{% url 'event:calendar' %}" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-secondary transition-colors">
+                        <i class="fas fa-calendar-alt w-5"></i>
                         <span>Calendar</span>
                     </a>
                 </li>
                 <li>
-                    <a href="{% url 'users:account' %}" class="flex items-center space-x-3 p-2 rounded-lg hover:bg-[var(--color-secondary)] transition-colors">
+                    <a href="{% url 'users:account' %}" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-secondary transition-colors">
                         <i class="fas fa-user w-5"></i>
                         <span>Profile</span>
                     </a>
@@ -68,7 +66,7 @@
             </ul>
         </nav>
         <div class="mt-auto">
-            <a href="{% url 'home' %}" class="flex items-center space-x-3 p-2 rounded-lg hover:bg-red-600 transition-colors">
+            <a href="{% url 'home' %}" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-red-600 transition-colors">
                 <i class="fas fa-sign-out-alt w-5"></i>
                 <span>Logout</span>
             </a>
@@ -76,28 +74,26 @@
     </div>
 
     <!-- Menu Button -->
-    <button id="menuButton" class="fixed top-4 left-4 z-50 bg-[var(--color-primary)] text-white p-3 rounded-full shadow-lg hover:bg-[var(--color-secondary)] transition-colors">
+    <button id="menuButton" class="fixed top-4 left-4 z-50 bg-primary text-white p-3 rounded-full shadow-lg hover:bg-secondary transition-colors">
         <i class="fas fa-bars text-lg"></i>
     </button>
 
- <!-- Main Wrapper -->
-<div class="min-h-screen flex items-center justify-center bg-gray-100">
     <!-- Main Content -->
-    <div class="container mx-auto px-4 py-8">
+    <div class="container mx-auto px-4 py-8 mt-16">
         <div class="bg-white shadow-2xl rounded-3xl overflow-hidden max-w-4xl mx-auto">
-            <div class="relative h-48 bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-secondary)]">
+            <div class="relative h-64 bg-gradient-to-r from-primary to-secondary">
                 <div class="absolute -bottom-20 left-1/2 transform -translate-x-1/2">
                     <div class="relative">
                         <div class="w-40 h-40 rounded-full overflow-hidden border-4 border-white shadow-lg">
                             {% if user.profile_picture %}
                                 <img src="{{ user.profile_picture.url }}" alt="Profile Picture" class="w-full h-full object-cover">
                             {% else %}
-                                <div class="w-full h-full bg-[var(--color-accent)] flex items-center justify-center text-[var(--color-primary)] text-4xl font-bold">
+                                <div class="w-full h-full bg-accent flex items-center justify-center text-primary text-4xl font-bold">
                                     {{ user.first_name|slice:":1" }}{{ user.last_name|slice:":1" }}
                                 </div>
                             {% endif %}
                         </div>
-                        <label for="uploadProfilePicture" class="absolute bottom-0 right-0 bg-[var(--color-secondary)] text-white p-2 rounded-full cursor-pointer shadow-md hover:bg-[var(--color-primary)] transition-colors">
+                        <label for="uploadProfilePicture" class="absolute bottom-0 right-0 bg-secondary text-white p-2 rounded-full cursor-pointer shadow-md hover:bg-primary transition-colors">
                             <i class="fas fa-camera"></i>
                         </label>
                     </div>
@@ -106,85 +102,83 @@
 
             <div class="pt-24 px-8 pb-8">
                 <div class="text-center mb-8">
-                    <h2 class="text-3xl font-bold text-[var(--color-primary)]">{{ user.first_name }} {{ user.last_name }}</h2>
+                    <h2 class="text-3xl font-bold text-primary">{{ user.first_name }} {{ user.last_name }}</h2>
                     <p class="text-gray-600">@{{ user.username }}</p>
                 </div>
 
-                <div class="bg-[var(--color-background)] p-6 rounded-xl shadow-inner mb-8">
+                <div class="bg-background p-6 rounded-xl shadow-inner mb-8">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
-                            <p class="text-gray-600">Username</p>
-                            <p class="font-semibold">{{ user.username }}</p>
+                        <div class="bg-white p-4 rounded-lg shadow">
+                            <p class="text-gray-600 text-sm">Username</p>
+                            <p class="font-semibold text-primary">{{ user.username }}</p>
                         </div>
-                        <div>
-                            <p class="text-gray-600">Email</p>
-                            <p class="font-semibold">{{ user.email }}</p>
+                        <div class="bg-white p-4 rounded-lg shadow">
+                            <p class="text-gray-600 text-sm">Email</p>
+                            <p class="font-semibold text-primary">{{ user.email }}</p>
                         </div>
-                        <div>
-                            <p class="text-gray-600">Contact Number</p>
-                            <p class="font-semibold">{{ user.contact_number|default:"Not Provided" }}</p>
+                        <div class="bg-white p-4 rounded-lg shadow">
+                            <p class="text-gray-600 text-sm">Contact Number</p>
+                            <p class="font-semibold text-primary">{{ user.contact_number|default:"Not Provided" }}</p>
                         </div>
-                        <div>
-                            <p class="text-gray-600">Joined</p>
-                            <p class="font-semibold">{{ user.date_joined|date:"F j, Y" }}</p>
+                        <div class="bg-white p-4 rounded-lg shadow">
+                            <p class="text-gray-600 text-sm">Joined</p>
+                            <p class="font-semibold text-primary">{{ user.date_joined|date:"F j, Y" }}</p>
                         </div>
                     </div>
                 </div>
 
                 <div class="flex justify-center space-x-4">
-                    <label for="editModal" class="btn bg-[var(--color-secondary)] hover:bg-[var(--color-primary)] text-white border-none">Edit Profile</label>
-                    <label for="deleteModal" class="btn bg-red-500 hover:bg-red-600 text-white border-none">Delete Account</label>
+                    <label for="editModal" class="btn bg-secondary hover:bg-primary text-white border-none px-6 py-2 rounded-full transition-colors duration-300 cursor-pointer">Edit Profile</label>
+                    <label for="deleteModal" class="btn bg-red-500 hover:bg-red-600 text-white border-none px-6 py-2 rounded-full transition-colors duration-300 cursor-pointer">Delete Account</label>
                 </div>
             </div>
         </div>
     </div>
-</div>
-
 
     <!-- Edit Modal -->
-<input type="checkbox" id="editModal" class="modal-toggle">
-<div class="modal">
-    <div class="modal-box max-w-lg bg-white rounded-xl shadow-lg">
-        <h3 class="text-2xl font-bold mb-6 text-[var(--color-primary)]">Edit Account Details</h3>
-        <form method="post" action="{% url 'users:edit_account' %}">
-            {% csrf_token %}
-            <div class="space-y-4">
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">First Name</label>
-                    <input type="text" name="first_name" value="{{ user.first_name }}" class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[var(--color-secondary)] focus:border-transparent bg-white" required>
+    <input type="checkbox" id="editModal" class="modal-toggle hidden">
+    <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden" id="editModalOverlay">
+        <div class="bg-white rounded-xl shadow-lg p-8 max-w-lg w-full">
+            <h3 class="text-2xl font-bold mb-6 text-primary">Edit Account Details</h3>
+            <form method="post" action="{% url 'users:edit_account' %}">
+                {% csrf_token %}
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">First Name</label>
+                        <input type="text" name="first_name" value="{{ user.first_name }}" class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-secondary focus:border-transparent bg-white" required>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Last Name</label>
+                        <input type="text" name="last_name" value="{{ user.last_name }}" class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-secondary focus:border-transparent bg-white" required>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                        <input type="email" name="email" value="{{ user.email }}" class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-secondary focus:border-transparent bg-white" required>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Contact Number</label>
+                        <input type="text" name="contact_number" value="{{ user.contact_number }}" class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-secondary focus:border-transparent bg-white">
+                    </div>
                 </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Last Name</label>
-                    <input type="text" name="last_name" value="{{ user.last_name }}" class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[var(--color-secondary)] focus:border-transparent bg-white" required>
+                <div class="mt-6 flex justify-end space-x-4">
+                    <button type="button" onclick="closeEditModal()" class="px-4 py-2 bg-gray-300 hover:bg-gray-400 text-gray-800 rounded-md transition-colors duration-300">Cancel</button>
+                    <button type="submit" class="px-4 py-2 bg-secondary hover:bg-primary text-white rounded-md transition-colors duration-300">Save Changes</button>
                 </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
-                    <input type="email" name="email" value="{{ user.email }}" class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[var(--color-secondary)] focus:border-transparent bg-white" required>
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Contact Number</label>
-                    <input type="text" name="contact_number" value="{{ user.contact_number }}" class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[var(--color-secondary)] focus:border-transparent bg-white">
-                </div>
-            </div>
-            <div class="modal-action mt-6">
-                <label for="editModal" class="btn bg-gray-300 hover:bg-gray-400 text-gray-800">Cancel</label>
-                <button type="submit" class="btn bg-[var(--color-secondary)] hover:bg-[var(--color-primary)] text-white">Save Changes</button>
-            </div>
-        </form>
+            </form>
+        </div>
     </div>
-</div>
 
     <!-- Delete Modal -->
-    <input type="checkbox" id="deleteModal" class="modal-toggle">
-    <div class="modal">
-        <div class="modal-box max-w-md bg-white rounded-xl shadow-lg text-center">
+    <input type="checkbox" id="deleteModal" class="modal-toggle hidden">
+    <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden" id="deleteModalOverlay">
+        <div class="bg-white rounded-xl shadow-lg p-8 max-w-md w-full text-center">
             <h3 class="text-2xl font-bold mb-4 text-red-600">Delete Account</h3>
             <p class="text-gray-600 mb-6">Are you sure you want to delete your account? This action cannot be undone.</p>
             <form method="post" action="{% url 'users:delete_account' %}">
                 {% csrf_token %}
-                <div class="modal-action justify-center space-x-4">
-                    <label for="deleteModal" class="btn bg-gray-300 hover:bg-gray-400 text-gray-800">Cancel</label>
-                    <button type="submit" name="delete_account" value="1" class="btn bg-red-500 hover:bg-red-600 text-white">Delete Account</button>
+                <div class="flex justify-center space-x-4">
+                    <button type="button" onclick="closeDeleteModal()" class="px-4 py-2 bg-gray-300 hover:bg-gray-400 text-gray-800 rounded-md transition-colors duration-300">Cancel</button>
+                    <button type="submit" name="delete_account" value="1" class="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-md transition-colors duration-300">Delete Account</button>
                 </div>
             </form>
         </div>
@@ -204,6 +198,8 @@
         const uploadProfilePicture = document.getElementById('uploadProfilePicture');
         const profilePictureInput = document.getElementById('profilePictureInput');
         const profilePictureForm = document.getElementById('profilePictureForm');
+        const editModal = document.getElementById('editModalOverlay');
+        const deleteModal = document.getElementById('deleteModalOverlay');
 
         menuButton.addEventListener('click', () => {
             sidebar.classList.toggle('-translate-x-full');
@@ -219,6 +215,25 @@
             profilePictureInput.files = uploadProfilePicture.files;
             profilePictureForm.submit();
         });
+
+        function openEditModal() {
+            editModal.classList.remove('hidden');
+        }
+
+        function closeEditModal() {
+            editModal.classList.add('hidden');
+        }
+
+        function openDeleteModal() {
+            deleteModal.classList.remove('hidden');
+        }
+
+        function closeDeleteModal() {
+            deleteModal.classList.add('hidden');
+        }
+
+        document.querySelector('label[for="editModal"]').addEventListener('click', openEditModal);
+        document.querySelector('label[for="deleteModal"]').addEventListener('click', openDeleteModal);
     </script>
 </body>
 </html>

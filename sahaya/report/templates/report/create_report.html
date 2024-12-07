@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Report | Sahaya</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100">
+
+    <div class="max-w-lg mx-auto my-10 p-8 bg-white shadow-md rounded-md">
+        <h2 class="text-2xl font-bold mb-6">Create a New Report</h2>
+
+        <form method="POST">
+            {% csrf_token %}
+            
+            <div class="mb-4">
+                <label for="event" class="block text-sm font-medium text-gray-700">Event</label>
+                {{ form.event }}  <!-- Event is displayed as read-only or pre-filled -->
+            </div>
+
+            <div class="mb-4">
+                <label for="generated_at" class="block text-sm font-medium text-gray-700">Generated At</label>
+                {{ form.generated_at }}
+            </div>
+        
+            <div class="mb-4">
+                <label for="report_type" class="block text-sm font-medium text-gray-700">Report Type</label>
+                {{ form.report_type }}
+            </div>
+        
+            <div class="mb-4">
+                <label for="report_content" class="block text-sm font-medium text-gray-700">Report Content</label>
+                {{ form.report_content }}
+            </div>
+        
+            <button type="submit" class="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Submit</button>
+        </form>
+    </div>
+
+</body>
+</html>
