@@ -7,6 +7,7 @@ def app(request):
     events = Event.objects.all()
     return render(request, 'discover/app.html', {'events': events})
 
+
 @login_required  # Ensure the user is logged in
 def add_event(request):
     if request.method == 'POST':
