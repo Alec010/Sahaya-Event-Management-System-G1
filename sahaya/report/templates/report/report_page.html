@@ -3,66 +3,176 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Report | Sahaya</title>
+    <title>Event Report | Sahaya</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        .glassmorphism {
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+        }
+        .sidebar-transition {
+            transition: transform 0.3s ease-in-out;
+        }
+    </style>
 </head>
-<body>
+<body class="bg-gradient-to-br from-[#E9EFEC] to-[#C4DAD2] min-h-screen font-sans">
+    <!-- Sidebar -->
+    <div id="sidebar" class="fixed top-0 left-0 h-full w-64 bg-[#16423C] text-white p-6 transform -translate-x-full sidebar-transition z-50">
+        <div class="flex items-center justify-between mb-8">
+            <h2 class="text-2xl font-bold">Sahaya</h2>
+            <button id="closeSidebar" class="text-white hover:text-[#C4DAD2]">
+                <i class="fas fa-times text-xl"></i>
+            </button>
+        </div>
+        <nav>
+            <ul class="space-y-4">
+                <li>
+                    <a href="{% url 'users:dashboard' %}" class="flex items-center space-x-3 p-2 rounded-lg hover:bg-[#6A9C89] transition-colors">
+                        <i class="fas fa-th-large w-5"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'event:list_of_events' %}" class="flex items-center space-x-3 p-2 rounded-lg hover:bg-[#6A9C89] transition-colors">
+                        <i class="fas fa-tv w-5"></i>
+                        <span>Events</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'event:calendar' %}" class="flex items-center space-x-3 p-2 rounded-lg hover:bg-[#6A9C89] transition-colors">
+                        <i class="fas fa-calendar w-5"></i>
+                        <span>Calendar</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'users:account' %}" class="flex items-center space-x-3 p-2 rounded-lg hover:bg-[#6A9C89] transition-colors">
+                        <i class="fas fa-user w-5"></i>
+                        <span>Profile</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+        <div class="mt-auto">
+            <a href="{% url 'home' %}" class="flex items-center space-x-3 p-2 rounded-lg hover:bg-red-600 transition-colors">
+                <i class="fas fa-sign-out-alt w-5"></i>
+                <span>Logout</span>
+            </a>
+        </div>
+    </div>
 
-    <h2>Report Details</h2>
-    <p><strong>Event:</strong> {{ report.event.title }}</p>
-    <p><strong>Report ID:</strong> {{ report.report_id }}</p>
-    <p><strong>Generated At:</strong> {{ report.generated_at }}</p>
-    <p><strong>Report Type:</strong> {{ report.report_type }}</p>
-    <p><strong>Report Content:</strong> {{ report.report_content }}</p>
+    <!-- Menu Button -->
+    <button id="menuButton" class="fixed top-4 left-4 z-50 bg-[#16423C] text-white p-3 rounded-full shadow-lg hover:bg-[#6A9C89] transition-colors">
+        <i class="fas fa-bars text-lg"></i>
+    </button>
 
-    <p><strong>Number of Participants:</strong> {{ num_participants }}</p>
+    <div class="container mx-auto px-4 py-8 ml-0 md:ml-64">
+        <div class="bg-white rounded-lg shadow-lg overflow-hidden glassmorphism">
+            <div class="bg-[#16423C] p-8">
+                <h2 class="text-4xl font-bold text-white mb-2">Event Report</h2>
+                <p class="text-[#C4DAD2] text-xl">{{ report.event.title }}</p>
+            </div>
+            
+            <div class="p-8">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                    <div class="bg-[#E9EFEC] p-6 rounded-lg shadow-md">
+                        <p class="text-[#16423C] mb-2 text-sm uppercase font-semibold"><i class="fas fa-calendar-alt mr-2"></i>Generated At</p>
+                        <p class="text-xl font-bold text-[#6A9C89]">{{ report.generated_at|date:"F j, Y" }}</p>
+                        <p class="text-lg text-[#6A9C89]">{{ report.generated_at|time:"g:i a" }}</p>
+                    </div>
+                    <div class="bg-[#E9EFEC] p-6 rounded-lg shadow-md">
+                        <p class="text-[#16423C] mb-2 text-sm uppercase font-semibold"><i class="fas fa-file-alt mr-2"></i>Report Type</p>
+                        <p class="text-xl font-bold text-[#6A9C89]">{{ report.report_type }}</p>
+                    </div>
+                    <div class="bg-[#E9EFEC] p-6 rounded-lg shadow-md">
+                        <p class="text-[#16423C] mb-2 text-sm uppercase font-semibold"><i class="fas fa-users mr-2"></i>Participants</p>
+                        <p class="text-xl font-bold text-[#6A9C89]">{{ num_participants }}</p>
+                    </div>
+                </div>
+                
+                <div class="bg-[#E9EFEC] p-6 rounded-lg shadow-md mb-8">
+                    <p class="text-[#16423C] mb-4 text-lg font-semibold"><i class="fas fa-file-text mr-2"></i>Report Content</p>
+                    <p class="text-lg text-[#6A9C89] leading-relaxed">{{ report.report_content }}</p>
+                </div>
 
-    <!-- Display buttons based on user role -->
-    {% if is_organizer %}
-        <!-- Only the organizer can edit or delete the report -->
-        <a href="#" onclick="openEditModal()" class="btn btn-edit">Edit</a>
-        <a href="#" onclick="openDeleteModal()" class="btn btn-delete">Delete</a>
-    {% elif is_participant %}
-        <!-- Only participants can view the report -->
-        <p>You are a participant of this event. You can only view the report.</p>
-    {% else %}
-        <!-- No access for users who are neither organizer nor participant -->
-        <p>You do not have access to edit or delete this report.</p>
-    {% endif %}
+                <div class="flex flex-wrap gap-4 justify-between items-center">
+                    <div class="space-x-4">
+                        {% if is_organizer %}
+                            <button onclick="openEditModal()" class="bg-[#16423C] hover:bg-[#6A9C89] text-white px-6 py-3 rounded-full transition duration-300 ease-in-out transform hover:scale-105 shadow-md">
+                                <i class="fas fa-edit mr-2"></i>Edit Report
+                            </button>
+                            <button onclick="openDeleteModal()" class="bg-red-500 hover:bg-red-600 text-white px-6 py-3 rounded-full transition duration-300 ease-in-out transform hover:scale-105 shadow-md">
+                                <i class="fas fa-trash-alt mr-2"></i>Delete Event
+                            </button>
+                        {% elif is_participant %}
+                            <p class="text-[#16423C] italic bg-[#E9EFEC] p-3 rounded-lg">You are a participant of this event. You can only view the report.</p>
+                        {% else %}
+                            <p class="text-[#16423C] italic bg-[#E9EFEC] p-3 rounded-lg">You do not have access to edit or delete this report.</p>
+                        {% endif %}
+                    </div>
+                    <a href="{% url 'report:export_report_pdf' report.id %}" class="bg-[#6A9C89] hover:bg-[#16423C] text-white px-6 py-3 rounded-full transition duration-300 ease-in-out transform hover:scale-105 shadow-md">
+                        <i class="fas fa-file-pdf mr-2"></i>Export as PDF
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Edit Report Modal -->
-    <div id="editModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden">
-        <div class="bg-white p-6 rounded-lg w-1/3">
-            <h3 class="text-xl font-semibold mb-4">Edit Report</h3>
+    <div id="editModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden" role="dialog" aria-labelledby="editReportModalLabel" aria-hidden="true">
+        <div class="bg-white p-8 rounded-lg w-full max-w-2xl glassmorphism">
+            <h3 id="editReportModalLabel" class="text-3xl font-bold mb-6 text-[#16423C]">Edit Report</h3>
             <form method="POST" action="{% url 'report:edit_report' report.id %}">
                 {% csrf_token %}
-                <!-- Add the fields that you want to edit -->
-                <label for="report_type" class="block text-sm">Report Type</label>
-                <input type="text" name="report_type" value="{{ report.report_type }}" class="border p-2 w-full mb-4" required>
+                <div class="mb-6">
+                    <label for="report_type" class="block text-sm font-medium text-[#16423C] mb-2">Report Type</label>
+                    <input type="text" name="report_type" value="{{ report.report_type }}" class="w-full px-4 py-3 border border-[#C4DAD2] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#6A9C89] text-[#16423C]" required>
+                </div>
                 
-                <label for="report_content" class="block text-sm">Report Content</label>
-                <textarea name="report_content" class="border p-2 w-full mb-4" rows="4" required>{{ report.report_content }}</textarea>
+                <div class="mb-6">
+                    <label for="report_content" class="block text-sm font-medium text-[#16423C] mb-2">Report Content</label>
+                    <textarea name="report_content" class="w-full px-4 py-3 border border-[#C4DAD2] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#6A9C89] text-[#16423C]" rows="8" required>{{ report.report_content }}</textarea>
+                </div>
 
-                <button type="submit" class="btn btn-primary">Save Changes</button>
-                <button type="button" onclick="closeEditModal()" class="btn btn-secondary">Cancel</button>
+                <div class="flex justify-end space-x-4">
+                    <button type="button" onclick="closeEditModal()" class="px-6 py-3 bg-[#C4DAD2] text-[#16423C] rounded-full hover:bg-[#6A9C89] hover:text-white transition duration-300 shadow-md">Cancel</button>
+                    <button type="submit" class="px-6 py-3 bg-[#16423C] text-white rounded-full hover:bg-[#6A9C89] transition duration-300 shadow-md">Save Changes</button>
+                </div>
             </form>
         </div>
     </div>
 
-    <!-- Delete Report Modal -->
+    <!-- Delete Modal -->
     <div id="deleteModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden">
-        <div class="bg-white p-6 rounded-lg w-1/3">
-            <h3 class="text-xl font-semibold mb-4">Delete Report</h3>
-            <p>Are you sure you want to delete this report?</p>
-            <form method="POST" action="{% url 'report:delete_report' report.id %}">
-                {% csrf_token %}
-                <button type="submit" class="btn btn-danger">Yes, Delete</button>
-                <button type="button" onclick="closeDeleteModal()" class="btn btn-secondary">Cancel</button>
-            </form>
+        <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md glassmorphism">
+            <h3 class="text-2xl font-bold mb-4 text-[#16423C]">Delete Event</h3>
+            <p class="mb-6 text-[#6A9C89] text-lg">Are you sure you want to delete this event? This action cannot be undone.</p>
+            <div class="flex justify-end space-x-4">
+                <button type="button" onclick="closeDeleteModal()" class="px-6 py-3 bg-[#C4DAD2] text-[#16423C] rounded-full hover:bg-[#6A9C89] hover:text-white transition duration-300 shadow-md">Cancel</button>
+                <form method="POST" action="{% url 'event:delete_event' event.id %}">
+                    {% csrf_token %}
+                    <button type="submit" class="px-6 py-3 bg-red-500 text-white rounded-full hover:bg-red-600 transition duration-300 shadow-md">Yes, Delete</button>
+                </form>
+            </div>
         </div>
     </div>
 
     <script>
+        const menuButton = document.getElementById('menuButton');
+        const closeSidebar = document.getElementById('closeSidebar');
+        const sidebar = document.getElementById('sidebar');
+
+        menuButton.addEventListener('click', () => {
+            sidebar.classList.toggle('-translate-x-full');
+            menuButton.classList.toggle('hidden');
+        });
+
+        closeSidebar.addEventListener('click', () => {
+            sidebar.classList.add('-translate-x-full');
+            menuButton.classList.remove('hidden');
+        });
+
         function openEditModal() {
             document.getElementById('editModal').classList.remove('hidden');
         }
@@ -79,6 +189,5 @@
             document.getElementById('deleteModal').classList.add('hidden');
         }
     </script>
-
 </body>
 </html>

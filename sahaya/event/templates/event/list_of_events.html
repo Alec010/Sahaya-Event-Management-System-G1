@@ -20,6 +20,11 @@
         .sidebar-transition {
             transition: transform 0.3s ease-in-out;
         }
+        .glassmorphism {
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+        }
     </style>
 </head>
 <body class="bg-[var(--color-background)] min-h-screen">
@@ -175,12 +180,19 @@
     </div>
 
     <script>
-        document.getElementById('menuButton').addEventListener('click', function() {
-            document.getElementById('sidebar').classList.toggle('-translate-x-full');
+        // Sidebar Functionality
+        const menuButton = document.getElementById('menuButton');
+        const closeSidebar = document.getElementById('closeSidebar');
+        const sidebar = document.getElementById('sidebar');
+
+        menuButton.addEventListener('click', () => {
+            sidebar.classList.toggle('-translate-x-full');
+            menuButton.classList.toggle('hidden');
         });
 
-        document.getElementById('closeSidebar').addEventListener('click', function() {
-            document.getElementById('sidebar').classList.add('-translate-x-full');
+        closeSidebar.addEventListener('click', () => {
+            sidebar.classList.add('-translate-x-full');
+            menuButton.classList.remove('hidden');
         });
     </script>
 </body>

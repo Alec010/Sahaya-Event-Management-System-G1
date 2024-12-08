@@ -176,14 +176,17 @@ def cancel_registration(request, event_id):
 @login_required
 @require_POST
 def delete_event(request, event_id):
+    # Get the event or return a 404 if not found
     event = get_object_or_404(Event, id=event_id, organizer=request.user)
     
     try:
+        # Attempt to delete the event
         event.delete()
-        return JsonResponse({"success": True, "message": "Event deleted successfully."})
+        # Redirect to the list of events after successful deletion
+        return redirect('events:list_of_events')
     except Exception as e:
+        # Return an error response in case of failure
         return JsonResponse({"success": False, "error": "Failed to delete event."}, status=500)
-    
 
 @login_required
 def get_calendar_events(request):

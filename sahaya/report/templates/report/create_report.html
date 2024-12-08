@@ -1,42 +1,109 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    {% load static %}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Create Report | Sahaya</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+    </style>
 </head>
-<body class="bg-gray-100">
-
-    <div class="max-w-lg mx-auto my-10 p-8 bg-white shadow-md rounded-md">
-        <h2 class="text-2xl font-bold mb-6">Create a New Report</h2>
-
-        <form method="POST">
+<body class="bg-gradient-to-br from-green-50 to-green-100 min-h-screen flex items-center justify-center p-4 md:p-8">
+    
+    <!-- Main Container -->
+    <div class="w-full max-w-2xl bg-white p-8 rounded-2xl shadow-2xl transition-all duration-300 ease-in-out hover:shadow-3xl">
+        <!-- Logo and Title -->
+        <div class="flex flex-col items-center mb-10">
+            <img src="{% static 'users/sahayalogo2.png' %}" alt="Sahaya Logo" class="w-40 mb-6 transform hover:scale-105 transition-transform duration-300">
+            <h2 class="text-4xl font-bold text-green-800 mb-2">Create Report</h2>
+            <p class="text-gray-600">Fill in the details to create your amazing report</p>
+        </div>
+        
+        <!-- Report Form -->
+        <form method="POST" class="space-y-6">
             {% csrf_token %}
             
+            <!-- Event -->
             <div class="mb-4">
-                <label for="event" class="block text-sm font-medium text-gray-700">Event</label>
-                {{ form.event }}  <!-- Event is displayed as read-only or pre-filled -->
-            </div>
+                <label for="{{ form.event.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">Event</label>
+                <div class="relative">
+                    {{ form.event }}
+                    <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
 
-            <div class="mb-4">
-                <label for="generated_at" class="block text-sm font-medium text-gray-700">Generated At</label>
-                {{ form.generated_at }}
+                    </div>
+                </div>
             </div>
-        
+            
+            <!-- Generated At -->
             <div class="mb-4">
-                <label for="report_type" class="block text-sm font-medium text-gray-700">Report Type</label>
-                {{ form.report_type }}
+                <label for="{{ form.generated_at.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">Generated At</label>
+                <div class="relative">
+                    {{ form.generated_at }}
+                    <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+
+                    </div>
+                </div>
             </div>
-        
+            
+            <!-- Report Type -->
             <div class="mb-4">
-                <label for="report_content" class="block text-sm font-medium text-gray-700">Report Content</label>
+                <label for="{{ form.report_type.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">Report Type</label>
+                <div class="relative">
+                    {{ form.report_type }}
+                    <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Report Content -->
+            <div class="mb-4">
+                <label for="{{ form.report_content.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">Report Content</label>
                 {{ form.report_content }}
             </div>
-        
-            <button type="submit" class="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Submit</button>
+            
+            <!-- Submit Button -->
+            <div class="flex justify-between pt-6">
+                <a href="{% url 'users:dashboard' %}" 
+                   class="px-6 py-3 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition duration-300 ease-in-out transform hover:-translate-y-1">
+                   Back to Dashboard
+                </a>
+                <button type="submit" 
+                        class="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition duration-300 ease-in-out transform hover:-translate-y-1">
+                   Create Report
+                </button>
+            </div>
         </form>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script>
+        // Initialize Flatpickr for date-time input
+        flatpickr("#{{ form.generated_at.id_for_label }}", {
+            enableTime: true,
+            dateFormat: "Y-m-d H:i",
+        });
+
+        // Add custom classes to form fields
+        document.addEventListener('DOMContentLoaded', (event) => {
+            const formFields = document.querySelectorAll('input, select, textarea');
+            formFields.forEach(field => {
+                field.classList.add('w-full', 'px-4', 'py-2', 'border', 'border-gray-300', 'rounded-lg', 'focus:ring-2', 'focus:ring-green-500', 'focus:border-transparent', 'transition', 'duration-200', 'ease-in-out');
+                
+                if (field.tagName === 'SELECT') {
+                    field.classList.add('appearance-none');
+                }
+                
+                if (field.tagName === 'TEXTAREA') {
+                    field.classList.add('h-32', 'resize-none');
+                }
+            });
+        });
+    </script>
 </body>
 </html>
