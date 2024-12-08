@@ -1,6 +1,6 @@
-from pyexpat.errors import messages
+
 from django.shortcuts import render, get_object_or_404, redirect
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from registration.models import Registration
 from weasyprint import HTML
 from .models import Report
@@ -8,6 +8,7 @@ from .forms import ReportForm
 from event.models import Event  # Import Event model from the event app
 from django.contrib.auth.decorators import login_required
 from django.template.loader import render_to_string
+from django.contrib import messages
 
 def create_report(request, event_id):
     event = get_object_or_404(Event, pk=event_id)
@@ -63,26 +64,26 @@ def report_page(request, event_id):
     return render(request, 'report/report_page.html', context)
 
 
-@login_required
 def edit_report(request, report_id):
-    report = get_object_or_404(Report, pk=report_id)
-    event = report.event
-
-    # Check if the user is the organizer of the event
-    if request.user != event.organizer:
-        return redirect('report:report_page', report_id=report.id)  # Redirect if not the organizer
+    report = get_object_or_404(Report, id=report_id)
 
     if request.method == 'POST':
-        # Handle form submission for editing the report
-        form = ReportForm(request.POST, instance=report)
-        if form.is_valid():
-            form.save()
-            return redirect('report:report_page', report_id=report.id)
+        # Process form data (assuming you're using Django forms or request.POST)
+        report_type = request.POST.get('report_type')
+        report_content = request.POST.get('report_content')
 
-    else:
-        form = ReportForm(instance=report)
+        # Update the report fields
+        report.report_type = report_type
+        report.report_content = report_content
+        report.save()
 
-    return render(request, 'report/edit_report.html', {'form': form, 'report': report})
+        # Instead of returning JsonResponse, return a redirect to the report_page
+        return redirect('report:report_page', event_id=report.event.id)
+
+    return JsonResponse({
+        'success': False,
+        'message': 'Invalid request.',
+    })
 
 @login_required
 def delete_report(request, report_id):

@@ -123,7 +123,7 @@
     <div id="editModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden" role="dialog" aria-labelledby="editReportModalLabel" aria-hidden="true">
         <div class="bg-white p-8 rounded-lg w-full max-w-2xl glassmorphism">
             <h3 id="editReportModalLabel" class="text-3xl font-bold mb-6 text-[#16423C]">Edit Report</h3>
-            <form method="POST" action="{% url 'report:edit_report' report.id %}">
+            <form id="editReportForm" method="POST" action="{% url 'report:edit_report' report.id %}">
                 {% csrf_token %}
                 <div class="mb-6">
                     <label for="report_type" class="block text-sm font-medium text-[#16423C] mb-2">Report Type</label>
@@ -134,12 +134,12 @@
                     <label for="report_content" class="block text-sm font-medium text-[#16423C] mb-2">Report Content</label>
                     <textarea name="report_content" class="w-full px-4 py-3 border border-[#C4DAD2] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#6A9C89] text-[#16423C]" rows="8" required>{{ report.report_content }}</textarea>
                 </div>
-
+            
                 <div class="flex justify-end space-x-4">
                     <button type="button" onclick="closeEditModal()" class="px-6 py-3 bg-[#C4DAD2] text-[#16423C] rounded-full hover:bg-[#6A9C89] hover:text-white transition duration-300 shadow-md">Cancel</button>
                     <button type="submit" class="px-6 py-3 bg-[#16423C] text-white rounded-full hover:bg-[#6A9C89] transition duration-300 shadow-md">Save Changes</button>
                 </div>
-            </form>
+            </form>            
         </div>
     </div>
 
@@ -159,6 +159,7 @@
     </div>
 
     <script>
+
         const menuButton = document.getElementById('menuButton');
         const closeSidebar = document.getElementById('closeSidebar');
         const sidebar = document.getElementById('sidebar');
@@ -188,6 +189,53 @@
         function closeDeleteModal() {
             document.getElementById('deleteModal').classList.add('hidden');
         }
+
+        ocument.getElementById('editReportForm').addEventListener('submit', function(event) {
+    event.preventDefault();  // Prevent the default form submission
+
+    const formData = new FormData(this);  // Get the form data
+
+    // Send the AJAX request to the backend
+    fetch("{% url 'report:edit_report' report.id %}", {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': document.querySelector('[name="csrfmiddlewaretoken"]').value,  // CSRF token
+        },
+        body: formData
+    })
+    .then(response => {
+        console.log('Response Status:', response.status);
+        return response.json();  // Try parsing JSON
+    })
+    .then(data => {
+        console.log('Response Data:', data);
+
+        if (data.success) {
+            // If the report was successfully edited, close the modal and show a success message
+            closeEditModal();
+            alert(data.message);  // Show success message
+
+            // Update the content dynamically on the page
+            // Ensure these elements exist
+            const reportTypeElement = document.querySelector('.report-type');
+            const reportContentElement = document.querySelector('.report-content');
+
+            if (reportTypeElement && reportContentElement) {
+                reportTypeElement.textContent = data.report_type;
+                reportContentElement.textContent = data.report_content;
+            } else {
+                console.error('Elements not found for updating dynamically');
+            }
+        } else {
+            // Handle error if the edit failed
+            alert('Failed to edit the report: ' + data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('An error occurred while submitting the form.');
+    });
+});
     </script>
 </body>
 </html>
