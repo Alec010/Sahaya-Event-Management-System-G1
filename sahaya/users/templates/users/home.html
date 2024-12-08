@@ -37,7 +37,6 @@
                     <label tabindex="0" class="btn btn-sm bg-transparent hover:bg-[#6A9C89] text-[#16423C] border-none">EN ▼</label>
                     <ul tabindex="0" class="dropdown-content menu p-2 shadow bg-white rounded-box w-32 mt-3">
                         <li><a>EN</a></li>
-                        <li><a>PH</a></li>
                     </ul>
                 </div>
                 <a href="{% url 'users:signup' %}" class="btn btn-sm bg-[#16423C] hover:bg-[#0D2E2A] text-white rounded-full px-6 py-2 transition-colors duration-300">Sign up</a>
@@ -66,10 +65,7 @@
                         <a href="{% url 'users:signup' %}" class="btn bg-[#16423C] hover:bg-[#0D2E2A] text-white rounded-full px-8 py-3 transition-colors duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1">
                             Sign up for free
                         </a>
-                        <div class="flex justify-center lg:justify-start gap-6 items-center">
-                            <img src="{% static 'users/appstore.png' %}" alt="App Store" class="h-10 w-auto hover:opacity-80 transition-opacity duration-300">
-                            <img src="{% static 'users/googleplay.png' %}" alt="Google Play" class="w-32 h-auto hover:opacity-80 transition-opacity duration-300">               
-                        </div>
+
                     </div>
                 </div>
 

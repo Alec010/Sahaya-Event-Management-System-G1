@@ -110,7 +110,7 @@
           <p class="text-sm text-gray-600 mb-4">{{ event.description|truncatewords:15 }}</p>
           <div class="flex items-center text-sm text-gray-500 mb-2">
             <i class="fas fa-user mr-2"></i>
-            <span>{{ event.author }}</span>
+            <span>{{ event.author.first_name }} {{ event.author.last_name }}</span>
           </div>
           <div class="flex items-center text-sm text-gray-500 mb-4">
             <i class="fas fa-calendar-alt mr-2"></i>
