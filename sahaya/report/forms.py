@@ -11,6 +11,17 @@ class ReportForm(forms.ModelForm):
         model = Report
         fields = ['generated_at', 'report_type', 'report_content', 'event']
 
+        
+    REPORT_TYPE_CHOICES = [
+        ('completion', 'Completion Report'),
+        ('summary', 'Summary Report'),
+        ('feedback', 'Feedback Report'),
+        ('performance', 'Performance Report'),
+    ]
+
+    # Use ChoiceField for report_type with the defined choices
+    report_type = forms.ChoiceField(choices=REPORT_TYPE_CHOICES)
+
     generated_at = forms.DateTimeField(widget=forms.DateTimeInput(attrs={'type': 'datetime-local'}))
 
     # Use ModelChoiceField to associate the Event
@@ -23,3 +34,6 @@ class ReportForm(forms.ModelForm):
             # Pre-fill the event field and make it readonly
             self.fields['event'].initial = event
             self.fields['event'].queryset = Event.objects.filter(id=event.id)
+
+       # Disable the 'generated_at' field (making it read-only)
+        self.fields['generated_at'].widget.attrs['disabled'] = 'disabled'

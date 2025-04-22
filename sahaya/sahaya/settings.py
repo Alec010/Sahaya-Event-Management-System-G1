@@ -119,7 +119,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+
 
 USE_I18N = True
 
@@ -145,6 +145,6 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'arelaalec@gmail.com' 
 EMAIL_HOST_PASSWORD = 'jbey uwer jtyf ifox'  
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER  
-
+TIME_ZONE = 'Asia/Manila'
 
 

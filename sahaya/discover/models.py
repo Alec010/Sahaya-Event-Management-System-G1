@@ -15,7 +15,7 @@ class Event(models.Model):
     image = models.ImageField(upload_to='article_images/', blank=True, null=True)  # Event image
     link = models.URLField(blank=True, null=True)  # Event link
     categories = models.ManyToManyField('Category', blank=True)  # Categories related to the event
-    created_at = models.DateTimeField(auto_now_add=True)
+    
 
     def __str__(self):
         return self.title

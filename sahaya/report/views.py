@@ -1,4 +1,5 @@
 
+from datetime import timezone
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse, JsonResponse
 from registration.models import Registration
@@ -8,6 +9,7 @@ from .forms import ReportForm
 from event.models import Event  # Import Event model from the event app
 from django.contrib.auth.decorators import login_required
 from django.template.loader import render_to_string
+from django.utils import timezone
 from django.contrib import messages
 
 def create_report(request, event_id):
@@ -18,6 +20,9 @@ def create_report(request, event_id):
         form_data = request.POST.copy()  # Make a copy of POST data
         form_data['event'] = event.id  # Explicitly set the event ID
         
+        # Pre-populate 'generated_at' with the current time
+        form_data['generated_at'] = timezone.now().strftime('%Y-%m-%dT%H:%M')  # Format it for datetime-local input
+
         form = ReportForm(form_data)
         
         if form.is_valid():
@@ -35,8 +40,11 @@ def create_report(request, event_id):
         else:
             print(form.errors)  # Debugging any form errors
     else:
-        # Prepopulate the form with the current event
-        form = ReportForm(initial={'event': event})
+        # Prepopulate the form with the current event and set 'generated_at' to current time
+        form = ReportForm(initial={
+            'event': event,
+            'generated_at': timezone.now()  # Set current date and time as default
+        })
 
     return render(request, 'report/create_report.html', {'form': form, 'event': event})
 
@@ -119,7 +127,7 @@ def export_report_pdf(request, report_id):
         'num_participants': num_participants,
     }
 
-    # Render the template to an HTML string (for PDF generation)
+   
     html_content = render_to_string('report/export_report.html', context)
 
     # Generate the PDF from the HTML string
