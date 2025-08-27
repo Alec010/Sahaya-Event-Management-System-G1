@@ -2,7 +2,7 @@
 
 Sahaya is a comprehensive event management platform designed to streamline the process of creating, managing, and participating in events. Built with Django, this system provides a robust set of tools for event organizers and participants.
 
-![Sahaya Logo](sahaya/event/static/users/sahayalogo2.png)
+![Sahaya Logo](sahaya/sahayamainlogo.png)
 
 ## Features
 
